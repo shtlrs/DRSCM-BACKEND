@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from backend.drscm.models import WorkSession
+from drscm.models import WorkSession
 
 
 class WorkSessionSerializer(ModelSerializer):

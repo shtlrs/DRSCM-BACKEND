@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from utils.date import get_timestamp_with_null_seconds
+from .project import Project
 
 
 class WorkSession(models.Model):
@@ -8,6 +9,7 @@ class WorkSession(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     start_timestamp = models.IntegerField(editable=True)
     end_timestamp = models.IntegerField(editable=True)
+    project = models.ForeignKey(to=Project, on_delete=models.CASCADE)
 
     @classmethod
     def create(cls):

@@ -5,9 +5,10 @@ import { ClientsComponent } from './clients/clients/clients.component';
 import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
 
 const routes: Routes = [
-  {path: 'login', component: LoginComponent},
-  {path: 'clients', component: ClientsComponent},
-  {path: 'dashboard', component: DashboardComponent},
+  { path: 'login', component: LoginComponent },
+  { path: 'clients', component: ClientsComponent },
+  { path: 'dashboard', component: DashboardComponent },
+  { path: '**', redirectTo: 'dashboard' },
 ];
 
 @NgModule({

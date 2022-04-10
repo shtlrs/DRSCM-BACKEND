@@ -12,6 +12,6 @@ class Project(models.Model):
     travel_fixed_rate = models.FloatField()
     currency = models.CharField(max_length=10)
 
-    client = models.ForeignKey(to=Client, on_delete=models.CASCADE)
+    client = models.ForeignKey(to=Client, on_delete=models.CASCADE, related_name="projects")
 
 

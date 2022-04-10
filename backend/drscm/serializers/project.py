@@ -1,9 +1,12 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 from drscm.models import Project
+from drscm.models import Client
 
 
-class ProjectSerializer(ModelSerializer):
+class ProjectSerializer(serializers.ModelSerializer):
+
+    clients = serializers.PrimaryKeyRelatedField(queryset=Client.objects.all(), many=False)
 
     class Meta:
         model = Project
-        fields = ['id', 'name', 'hourly_rate', 'travel_hourly_rate', 'travel_fixed_rate', 'currency', '']
+        fields = ['id', 'name', 'hourly_rate', 'travel_hourly_rate', 'travel_fixed_rate', 'currency']

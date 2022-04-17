@@ -2,7 +2,7 @@ from django.urls import reverse
 from rest_framework import status
 from drscm.models import Client
 from drscm.serializers.client import ClientSerializer
-from drscm.tests.helpers.client import create_fake_client
+from drscm.tests.helpers.client import create_random_client
 from drscm.views.client import CreateAndListClientsView
 from rest_framework.test import APITestCase
 
@@ -12,8 +12,8 @@ class ClientViewTests(APITestCase):
     def test_create_clients_view(self):
         url = reverse(CreateAndListClientsView.view_name)
 
-        first_client = create_fake_client()
-        second_client = create_fake_client()
+        first_client = create_random_client()
+        second_client = create_random_client()
 
         first_client_data = ClientSerializer(instance=first_client).data
         second_client_data = ClientSerializer(instance=second_client).data
@@ -37,9 +37,9 @@ class ClientViewTests(APITestCase):
 
         url = reverse(CreateAndListClientsView.view_name)
 
-        first_client = create_fake_client()
+        first_client = create_random_client()
         first_client.save()
-        second_client = create_fake_client()
+        second_client = create_random_client()
         second_client.save()
 
         response = self.client.get(url)

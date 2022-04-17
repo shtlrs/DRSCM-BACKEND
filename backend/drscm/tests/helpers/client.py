@@ -4,8 +4,8 @@ from drscm.models import Client
 fake = Faker()
 
 
-def create_fake_client(name=fake.name(), country=fake.country(), postal_code=fake.postcode(),
-                       city=fake.city(), street=fake.street_name()):
+def create_random_client(name=fake.name(), country=fake.country(), postal_code=fake.postcode(),
+                         city=fake.city(), street=fake.street_name()):
 
     return Client(name=name,
                   country=country,

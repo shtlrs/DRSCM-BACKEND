@@ -1,9 +1,6 @@
 from django.test import TestCase
 from drscm.models import Client
-from drscm.tests.helpers.client import create_fake_client
-from faker import Faker
-
-fake = Faker()
+from drscm.tests.helpers.client import create_random_client
 
 
 class ClientModelTests(TestCase):
@@ -15,14 +12,11 @@ class ClientModelTests(TestCase):
         Test adding a new client
         """
 
-        new_client = create_fake_client()
-
+        new_client = create_random_client()
         client_id = new_client.id
-
         new_client.save()
 
         available_clients = Client.objects.all()
-
         self.assertEqual(len(available_clients), 1)
 
         client = Client.objects.get(id=client_id)
@@ -39,10 +33,10 @@ class ClientModelTests(TestCase):
         Test deletion of a client
         """
 
-        first_client = create_fake_client()
+        first_client = create_random_client()
         first_client.save()
 
-        second_client = create_fake_client()
+        second_client = create_random_client()
         second_client.save()
 
         available_clients = Client.objects.all()
@@ -61,7 +55,7 @@ class ClientModelTests(TestCase):
 
         new_name = "new_name"
 
-        first_client = create_fake_client()
+        first_client = create_random_client()
         first_client.save()
 
         clients = Client.objects.all()

@@ -67,9 +67,17 @@ class ClientViewTests(APITestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        client_serializer = ClientSerializer(data=response.json())
-        self.assertTrue(client_serializer.is_valid())
+        fetched_client_serializer = ClientSerializer(data=response.json())
+        self.assertTrue(fetched_client_serializer.is_valid())
 
-        fetched_client_data = client_serializer.data
-        client_data = ClientSerializer(instance=client).data
+        fetched_client_data = fetched_client_serializer.validated_data
+        client_serializer = ClientSerializer(instance=client)
+        client_data = client_serializer.data
+
+        self.assertEqual(client_data.get('projects'), [])
+        self.assertEqual(client_data.get('id'), str(client.id))
+
+        client_data.pop('id')
+        client_data.pop('projects')
+
         self.assertEqual(fetched_client_data, client_data)

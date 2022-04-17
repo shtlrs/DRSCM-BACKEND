@@ -4,3 +4,4 @@
 /backend/.coverage
 /.idea/dataSources.xml
 /backend/.idea/
+/.idea/dataSources.local.xml

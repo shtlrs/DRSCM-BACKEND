@@ -10,3 +10,6 @@ class Client(models.Model):
     postal_code = models.CharField(max_length=25)
     city = models.CharField(max_length=50)
     street = models.CharField(max_length=100)
+
+    def __repr__(self):
+        return self.name

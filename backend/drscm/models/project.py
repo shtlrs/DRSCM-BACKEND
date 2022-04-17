@@ -14,4 +14,5 @@ class Project(models.Model):
 
     client = models.ForeignKey(to=Client, on_delete=models.CASCADE, related_name="projects")
 
-
+    def __repr__(self):
+        return f"Project: {self.name}. Client: {self.client.name}"

@@ -1,0 +1,7 @@
+name: Run Django tests
+
+on:
+  pull_request:
+    types: [review_requested]
+
+jobs:

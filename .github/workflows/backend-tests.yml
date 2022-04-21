@@ -1,11 +1,8 @@
 name: run-django-tests
 
 on:
-  pull_request:
-    branches:
-      - master
-    types:
-      - review_requested
+  [push]
+
 jobs:
   build:
     runs-on: ubuntu-latest

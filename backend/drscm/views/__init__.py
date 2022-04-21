@@ -1,0 +1,2 @@
+from .client import ClientDetailsView, CreateAndListClientsView
+from .project import ProjectDetailsView, CreateAndListProjectsView

@@ -1,0 +1,7 @@
+./venv
+/backend/db.sqlite3
+/backend/htmlcov/
+/backend/.coverage
+/.idea/dataSources.xml
+/backend/.idea/
+/.idea/dataSources.local.xml

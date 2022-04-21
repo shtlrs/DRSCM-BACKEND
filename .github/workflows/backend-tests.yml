@@ -1,7 +1,7 @@
 name: run-django-tests
 
 on:
-  [push]
+  [push, pull_request]
 
 jobs:
   build:

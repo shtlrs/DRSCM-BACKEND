@@ -1,7 +1,7 @@
 from rest_framework.permissions import IsAuthenticated
 
 from drscm.models import Project
-from drscm.permissions.model.is_owner import IsOwner
+from drscm.permissions.model.is_owner import IsSuperUserOrOwner
 from drscm.serializers.project import ProjectSerializer
 from rest_framework import generics
 
@@ -25,6 +25,6 @@ class ProjectDetailsView(generics.RetrieveUpdateDestroyAPIView):
     view_name = "project_details"
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    permission_classes = (IsAuthenticated, IsOwner,)
+    permission_classes = (IsAuthenticated, IsSuperUserOrOwner,)
 
 

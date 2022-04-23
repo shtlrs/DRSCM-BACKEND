@@ -15,6 +15,11 @@ class CreateAndListProjectsView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
+    def get_queryset(self):
+        user = self.request.user
+        return Project.objects.filter(owner=user)
+
+
 class ProjectDetailsView(generics.RetrieveUpdateDestroyAPIView):
     view_name = "project_details"
     queryset = Project.objects.all()

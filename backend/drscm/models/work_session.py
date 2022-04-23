@@ -10,6 +10,7 @@ class WorkSession(models.Model):
     start_timestamp = models.IntegerField(editable=True)
     end_timestamp = models.IntegerField(editable=True)
     project = models.ForeignKey(to=Project, on_delete=models.CASCADE)
+    owner = models.ForeignKey(to='User', related_name='work_sessions', on_delete=models.CASCADE)
 
     @classmethod
     def create(cls):

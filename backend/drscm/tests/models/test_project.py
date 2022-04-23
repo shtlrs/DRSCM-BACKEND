@@ -6,6 +6,8 @@ from drscm.tests.helpers.client import create_random_client
 
 class ProjectModelTests(TestCase):
 
+    def test_unauthenticated_request(self):
+        self.assertEqual(1, 2)
 
     def test_add_new_project(self):
         """
@@ -67,3 +69,6 @@ class ProjectModelTests(TestCase):
         client = projects[0]
 
         self.assertEqual(client.name, new_name)
+
+    def test_list_appropriate_projects_per_owner(self):
+        self.assertEqual(1, 2)

@@ -5,7 +5,8 @@ from drscm.tests.helpers.client import create_random_client
 
 class ClientModelTests(TestCase):
 
-
+    def test_unauthenticated_request(self):
+        self.assertEqual(1, 2)
 
     def test_add_new_client(self):
         """
@@ -68,4 +69,6 @@ class ClientModelTests(TestCase):
 
         self.assertEqual(client.name, new_name)
 
+    def test_list_appropriate_clients_per_owner(self):
+        self.assertEqual(1, 2)
 

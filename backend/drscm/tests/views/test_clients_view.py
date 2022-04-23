@@ -99,4 +99,5 @@ class ClientViewTests(APITestCase):
         client_data.pop('id')
         client_data.pop('projects')
 
-        self.assertEqual(fetched_client_data, client_data)
+        for field in fetched_client_data.keys():
+            self.assertEqual(fetched_client_data[field], client_data[field])

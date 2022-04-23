@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from drscm.models import User, Client, Project
+from drscm.models import Client, Project, User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -9,5 +9,4 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'first_name', 'last_name',
-                  'role', 'is_active', 'clients', 'projects']
+        fields = ['id', 'email', 'clients', 'projects']

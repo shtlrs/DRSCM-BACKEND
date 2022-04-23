@@ -1,7 +1,6 @@
 from rest_framework.permissions import IsAuthenticated
-
-from drscm.models import User
 from drscm.serializers.user import UserSerializer
+from drscm.models.user import User
 from rest_framework import generics
 
 

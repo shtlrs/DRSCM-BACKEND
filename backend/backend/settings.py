@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+AUTH_USER_MODEL = 'drscm.User'
+
 from pathlib import Path
 from datetime import timedelta
 
@@ -28,8 +30,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-# Referencing the custom user model
-AUTH_USER_MODEL = 'drscm.User'
+# AUTH_USER_MODEL = 'drscm.User'
 
 # Application definition
 
@@ -56,7 +57,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'backend.urls'
 
-REST_FRAMEWORK  = {
+REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),

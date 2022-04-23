@@ -1,8 +1,8 @@
 import uuid
+from django.contrib.auth.models import User
 from django.db import models
 from utils.date import get_timestamp_with_null_seconds
 from .project import Project
-
 
 class WorkSession(models.Model):
 

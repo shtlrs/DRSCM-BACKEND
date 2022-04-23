@@ -1,6 +1,7 @@
 from django.test import TestCase
 from drscm.models import Client
 from drscm.tests.helpers.client import create_random_client
+from drscm.tests.helpers.user import create_random_user
 
 
 class ClientModelTests(TestCase):
@@ -13,8 +14,11 @@ class ClientModelTests(TestCase):
         Test adding a new client
         """
 
+        owner = create_random_user()
+        owner.save()
         new_client = create_random_client()
         client_id = new_client.id
+        new_client.owner = owner
         new_client.save()
 
         available_clients = Client.objects.all()

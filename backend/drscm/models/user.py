@@ -4,21 +4,14 @@ from django.db import models
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.utils import timezone
+from utils.roles import Role
 
 from drscm.managers.user import UserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
 
-    ADMIN = 1
-    MANAGER = 2
-    EMPLOYEE = 3
-
-    ROLES = (
-        (ADMIN, 'Admin'),
-        (MANAGER, 'Manager'),
-        (EMPLOYEE, 'Employee'))
-
+    ROLES = Role.extract_roles_tuple()
 
     id = models.UUIDField(primary_key=True, unique=True, editable=False,
                           default=uuid.uuid4, verbose_name='Public identifier')

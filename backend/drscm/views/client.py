@@ -11,6 +11,13 @@ class CreateAndListClientsView(generics.ListCreateAPIView):
     serializer_class = ClientSerializer
     permission_classes = (IsAuthenticated,)
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+    def get_queryset(self):
+        user = self.request.user
+        return Client.objects.filter(owner=user)
+
 
 class ClientDetailsView(generics.RetrieveUpdateDestroyAPIView):
 

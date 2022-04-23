@@ -11,6 +11,7 @@ class Project(models.Model):
     travel_hourly_rate = models.FloatField()
     travel_fixed_rate = models.FloatField()
     currency = models.CharField(max_length=10)
+    owner = models.ForeignKey(to='User', related_name='projects', on_delete=models.CASCADE)
 
     client = models.ForeignKey(to=Client, on_delete=models.CASCADE, related_name="projects")
 

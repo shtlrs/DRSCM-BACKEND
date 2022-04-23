@@ -14,4 +14,5 @@ def create_random_user(username=None, email=None, password=None, is_superuser=Fa
     else:
         user = User.objects.create_user(username=username, email=email, password=password)
 
+    user.raw_password = password
     return user

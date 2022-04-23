@@ -7,7 +7,6 @@ from drscm.tests.helpers.user import create_random_user
 from drscm.views.client import CreateAndListClientsView, ClientDetailsView
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.test import force_authenticate
 
 
 
@@ -88,7 +87,7 @@ class ClientViewTests(APITestCase):
 
         fetched_client_serializer = ClientSerializer(data=response.json())
         self.assertTrue(fetched_client_serializer.is_valid())
-
+    
         fetched_client_data = fetched_client_serializer.validated_data
         client_serializer = ClientSerializer(instance=client)
         client_data = client_serializer.data

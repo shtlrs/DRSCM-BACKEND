@@ -18,3 +18,10 @@ class Project(models.Model):
 
     def __repr__(self):
         return f"Project: {self.name}. Client: {self.client.name}"
+
+
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        self.owner = self.client.owner
+        super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)

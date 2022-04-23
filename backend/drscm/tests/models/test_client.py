@@ -6,9 +6,6 @@ from drscm.tests.helpers.user import create_random_user
 
 class ClientModelTests(TestCase):
 
-    def test_unauthenticated_request(self):
-        self.assertEqual(1, 2)
-
     def test_add_new_client(self):
         """
         Test adding a new client
@@ -38,10 +35,15 @@ class ClientModelTests(TestCase):
         Test deletion of a client
         """
 
+        owner = create_random_user()
+        owner.save()
+
         first_client = create_random_client()
+        first_client.owner = owner
         first_client.save()
 
         second_client = create_random_client()
+        second_client.owner = owner
         second_client.save()
 
         available_clients = Client.objects.all()
@@ -58,9 +60,13 @@ class ClientModelTests(TestCase):
 
     def test_update_client(self):
 
+        owner = create_random_user()
+        owner.save()
+
         new_name = "new_name"
 
         first_client = create_random_client()
+        first_client.owner = owner
         first_client.save()
 
         clients = Client.objects.all()
@@ -72,7 +78,3 @@ class ClientModelTests(TestCase):
         client = clients[0]
 
         self.assertEqual(client.name, new_name)
-
-    def test_list_appropriate_clients_per_owner(self):
-        self.assertEqual(1, 2)
-

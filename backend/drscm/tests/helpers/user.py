@@ -4,10 +4,14 @@ from drscm.models import User
 fake = Faker()
 
 
-def create_random_user(username=fake.name(), email=fake.email(), password=fake.password()):
+def create_random_user(username=None, email=None, password=None, is_superuser=False) -> User:
+    username = username if username else fake.name()
+    email = email if email else fake.email()
+    password = password if password else fake.password()
 
-    user = User(username=username, email=email)
-
-    user.set_password(password)
+    if is_superuser:
+        user = User.objects.create_superuser(username=username, email=email, password=password)
+    else:
+        user = User.objects.create_user(username=username, email=email, password=password)
 
     return user

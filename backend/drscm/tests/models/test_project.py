@@ -2,19 +2,22 @@ from django.test import TestCase
 from drscm.models import Project
 from drscm.tests.helpers.project import create_random_project
 from drscm.tests.helpers.client import create_random_client
+from drscm.tests.helpers.user import create_random_user
 
 
 class ProjectModelTests(TestCase):
 
-    def test_unauthenticated_request(self):
-        self.assertEqual(1, 2)
 
     def test_add_new_project(self):
         """
         Tests adding a new project
         """
 
+        owner = create_random_user()
+        owner.save()
+
         client = create_random_client()
+        client.owner = owner
         client.save()
 
         new_project = create_random_project()
@@ -36,11 +39,15 @@ class ProjectModelTests(TestCase):
         self.assertEqual(project.client_id, client.id)
 
     def test_delete_project(self):
+        owner = create_random_user()
+        owner.save()
+
         client = create_random_client()
+        client.owner = owner
         client.save()
 
         new_project = create_random_project()
-        new_project.client_id = client.id
+        new_project.client = client
         new_project.save()
 
         available_projects = Project.objects.all()
@@ -55,11 +62,15 @@ class ProjectModelTests(TestCase):
 
         new_name = "new_name"
 
+        owner = create_random_user()
+        owner.save()
+
         client = create_random_client()
+        client.owner = owner
         client.save()
 
         first_project = create_random_project()
-        first_project.client_id = client.id
+        first_project.client = client
         first_project.save()
 
         first_project.name = new_name
@@ -69,6 +80,3 @@ class ProjectModelTests(TestCase):
         client = projects[0]
 
         self.assertEqual(client.name, new_name)
-
-    def test_list_appropriate_projects_per_owner(self):
-        self.assertEqual(1, 2)

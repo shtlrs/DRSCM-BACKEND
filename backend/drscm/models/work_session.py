@@ -4,6 +4,7 @@ from django.db import models
 from utils.date import get_timestamp_with_null_seconds
 from .project import Project
 
+
 class WorkSession(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -21,4 +22,5 @@ class WorkSession(models.Model):
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         self.end_timestamp = get_timestamp_with_null_seconds()
+        self.owner = self.project.owner
         super(WorkSession, self).save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)

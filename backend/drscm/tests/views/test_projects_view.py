@@ -8,7 +8,6 @@ from drscm.serializers import ProjectSerializer
 from drscm.tests.helpers.client import create_random_client
 from drscm.tests.helpers.project import create_random_project
 from drscm.tests.helpers.user import create_random_user
-from drscm.views import CreateAndListClientsView
 from drscm.views import CreateAndListProjectsView, ProjectDetailsView
 
 
@@ -103,7 +102,8 @@ class ProjectViewTest(APITestCase):
 
     def test_list_appropriate_projects_per_owner(self):
         """
-        Test that projects can only be seen by their owners, unless they are admins
+        Test that projects can only be seen
+        by their owners, unless they are admins
         """
 
         superuser = create_random_user(is_superuser=True)
@@ -152,7 +152,8 @@ class ProjectViewTest(APITestCase):
 
     def test_query_projects_by_id_per_owner(self):
         """
-        Test that projects can only be queried by their id by their owners, unless they are admins
+        Test that projects can only be queried by their id
+        by their owners, unless they are admins
         """
         superuser = create_random_user(is_superuser=True)
         superuser.save()

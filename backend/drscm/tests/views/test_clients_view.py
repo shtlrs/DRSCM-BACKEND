@@ -142,7 +142,8 @@ class ClientViewTests(APITestCase):
 
     def test_query_clients_by_id_per_owner(self):
         """
-        Test that clients can only be queried by their id by their owners, unless they are admins
+        Test that clients can only be queried using their id
+        by their owners, unless they are admins
         """
         superuser = create_random_user(is_superuser=True)
         superuser.save()

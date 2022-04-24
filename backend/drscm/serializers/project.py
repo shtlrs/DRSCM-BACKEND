@@ -5,9 +5,7 @@ from drscm.models import Client
 
 class ProjectSerializer(serializers.ModelSerializer):
 
-    client = serializers.PrimaryKeyRelatedField(
-        queryset=Client.objects.all(), many=False
-    )
+    client = serializers.PrimaryKeyRelatedField(queryset=Client.objects.all(), many=False)
     owner = serializers.ReadOnlyField(source="owner.email")
 
     class Meta:

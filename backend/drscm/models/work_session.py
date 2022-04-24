@@ -20,9 +20,7 @@ class WorkSession(models.Model):
         work_session = cls(start_timestamp=get_timestamp_with_null_seconds())
         return work_session
 
-    def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
-    ):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.end_timestamp = get_timestamp_with_null_seconds()
         self.owner = self.project.owner
         super(WorkSession, self).save(

@@ -118,9 +118,7 @@ class ClientViewTests(APITestCase):
 
         url = reverse(CreateAndListClientsView.view_name)
 
-        self.client.credentials(
-            HTTP_AUTHORIZATION=f"JWT {superuser_token.access_token}"
-        )
+        self.client.credentials(HTTP_AUTHORIZATION=f"JWT {superuser_token.access_token}")
         response = self.client.get(path=url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -165,9 +163,7 @@ class ClientViewTests(APITestCase):
         )
         user_clients_url = reverse(ClientDetailsView.view_name, args=[user_client.id])
 
-        self.client.credentials(
-            HTTP_AUTHORIZATION=f"JWT {superuser_token.access_token}"
-        )
+        self.client.credentials(HTTP_AUTHORIZATION=f"JWT {superuser_token.access_token}")
 
         response = self.client.get(path=superuser_client_url)
         self.assertEqual(status.HTTP_200_OK, response.status_code)

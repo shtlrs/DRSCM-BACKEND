@@ -21,12 +21,8 @@ from rest_framework_simplejwt.views import TokenVerifyView, TokenBlacklistView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path(
-        "api/token/", TokenObtainPairView.as_view(), name=TokenObtainPairView.__name__
-    ),
-    path(
-        "api/token/refresh/", TokenRefreshView.as_view(), name=TokenRefreshView.__name__
-    ),
+    path("api/token/", TokenObtainPairView.as_view(), name=TokenObtainPairView.__name__),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name=TokenRefreshView.__name__),
     path(
         "api/token/blacklist/",
         TokenBlacklistView.as_view(),

@@ -47,9 +47,7 @@ class ProjectViewTest(APITestCase):
         available_projects = Project.objects.all()
         self.assertEqual(len(available_projects), 1)
 
-        project_names = [
-            available_project.name for available_project in available_projects
-        ]
+        project_names = [available_project.name for available_project in available_projects]
         self.assertTrue(project.name in project_names)
 
     def test_get_all_projects_view(self):
@@ -130,9 +128,7 @@ class ProjectViewTest(APITestCase):
 
         url = reverse(CreateAndListProjectsView.view_name)
 
-        self.client.credentials(
-            HTTP_AUTHORIZATION=f"JWT {superuser_token.access_token}"
-        )
+        self.client.credentials(HTTP_AUTHORIZATION=f"JWT {superuser_token.access_token}")
         response = self.client.get(path=url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -183,9 +179,7 @@ class ProjectViewTest(APITestCase):
         )
         user_project_url = reverse(ProjectDetailsView.view_name, args=[user_project.id])
 
-        self.client.credentials(
-            HTTP_AUTHORIZATION=f"JWT {superuser_token.access_token}"
-        )
+        self.client.credentials(HTTP_AUTHORIZATION=f"JWT {superuser_token.access_token}")
 
         response = self.client.get(path=superuser_project_url)
         self.assertEqual(status.HTTP_200_OK, response.status_code)

@@ -1,10 +1,13 @@
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
+from rest_framework_simplejwt.tokens import RefreshToken
+
 from drscm.models import Project
 from drscm.serializers import ProjectSerializer
 from drscm.tests.helpers.client import create_random_client
 from drscm.tests.helpers.project import create_random_project
+from drscm.tests.helpers.user import create_random_user
 from drscm.views.project import CreateAndListProjectsView, ProjectDetailsView
 
 
@@ -13,6 +16,15 @@ class ProjectViewTest(APITestCase):
     Tests for the Project views
     """
 
+    @classmethod
+    def setUpTestData(cls):
+        cls.owner = create_random_user()
+        cls.owner.save()
+        cls.token = RefreshToken.for_user(cls.owner)
+
+    def setUp(self) -> None:
+        self.client.credentials(HTTP_AUTHORIZATION=f'JWT {self.token.access_token}')
+
     def test_create_project(self):
         """
         Test creating a new project via an API call
@@ -20,10 +32,12 @@ class ProjectViewTest(APITestCase):
         url = reverse(CreateAndListProjectsView.view_name)
 
         client = create_random_client()
+        client.owner = self.owner
         client.save()
 
         project = create_random_project()
         project.client = client
+        project.owner = client.owner
         project_data = ProjectSerializer(instance=project).data
 
         response = self.client.post(path=url, data=project_data)
@@ -44,6 +58,7 @@ class ProjectViewTest(APITestCase):
         url = reverse(CreateAndListProjectsView.view_name)
 
         client = create_random_client()
+        client.owner = self.owner
         client.save()
 
         first_project = create_random_project()
@@ -66,8 +81,8 @@ class ProjectViewTest(APITestCase):
         Tests retrieving a project by id
         """
 
-
         client = create_random_client()
+        client.owner = self.owner
         client.save()
 
         project = create_random_project()
@@ -84,7 +99,8 @@ class ProjectViewTest(APITestCase):
         project_fetched_data = serialized_project.data
         project_data = ProjectSerializer(instance=project).data
         project_data.pop('id')
-        self.assertEqual(project_data, project_fetched_data)
+        for key in project_fetched_data:
+            self.assertEqual(project_data[key], project_fetched_data[key])
 
 
 

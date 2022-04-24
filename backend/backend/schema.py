@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 class JWTAuthenticationSchema(OpenApiAuthenticationExtension):
 
     target_class = "rest_framework_simplejwt.authentication.JWTAuthentication"
-    name = "JWT Authentication"
+    name = "JWT-Authentication"
 
     def get_security_definition(self, auto_schema):
 

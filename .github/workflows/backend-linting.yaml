@@ -1,4 +1,4 @@
-name: run-linters
+name: Run linter checks
 
 on:
   [push]

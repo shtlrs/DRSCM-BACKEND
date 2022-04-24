@@ -1,3 +1,5 @@
+name: Generate and validate api docs
+
 on: [push]
 
 jobs:

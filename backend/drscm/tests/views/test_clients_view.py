@@ -100,3 +100,46 @@ class ClientViewTests(APITestCase):
 
         for field in fetched_client_data.keys():
             self.assertEqual(fetched_client_data[field], client_data[field])
+
+
+    def test_list_appropriate_clients_per_owner(self):
+
+        superuser = create_random_user(is_superuser=True)
+        superuser.save()
+        superuser_token = RefreshToken.for_user(superuser)
+
+        user = create_random_user()
+        user.save()
+        user_token = RefreshToken.for_user(user)
+
+        superuser_client = create_random_client()
+        superuser_client.owner = superuser
+        superuser_client.save()
+
+        user_client = create_random_client()
+        user_client.owner = user
+        user_client.save()
+
+        url = reverse(CreateAndListClientsView.view_name)
+
+        self.client.credentials(HTTP_AUTHORIZATION=f'JWT {superuser_token.access_token}')
+        response = self.client.get(path=url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        clients = response.json()
+        client_ids = [client.get('id') for client in clients]
+        self.assertEqual(2, len(client_ids))
+        self.assertIn(str(superuser_client.id), client_ids)
+        self.assertIn(str(user_client.id), client_ids)
+
+        self.client.credentials(HTTP_AUTHORIZATION=f'JWT {user_token.access_token}')
+        response = self.client.get(path=url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        clients = response.json()
+        client_ids = [client.get('id') for client in clients]
+        self.assertEqual(1, len(client_ids))
+        self.assertNotIn(str(superuser_client.id), client_ids)
+        self.assertIn(str(user_client.id), client_ids)

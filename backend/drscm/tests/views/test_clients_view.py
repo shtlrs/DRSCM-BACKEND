@@ -100,3 +100,81 @@ class ClientViewTests(APITestCase):
 
         for field in fetched_client_data.keys():
             self.assertEqual(fetched_client_data[field], client_data[field])
+
+
+    def test_list_appropriate_clients_per_owner(self):
+
+        superuser = create_random_user(is_superuser=True)
+        superuser.save()
+        superuser_token = RefreshToken.for_user(superuser)
+
+        user = create_random_user()
+        user.save()
+        user_token = RefreshToken.for_user(user)
+
+        superuser_client = create_random_client()
+        superuser_client.owner = superuser
+        superuser_client.save()
+
+        user_client = create_random_client()
+        user_client.owner = user
+        user_client.save()
+
+        url = reverse(CreateAndListClientsView.view_name)
+
+        self.client.credentials(HTTP_AUTHORIZATION=f'JWT {superuser_token.access_token}')
+        response = self.client.get(path=url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        clients = response.json()
+        client_ids = [client.get('id') for client in clients]
+        self.assertEqual(2, len(client_ids))
+        self.assertIn(str(superuser_client.id), client_ids)
+        self.assertIn(str(user_client.id), client_ids)
+
+        self.client.credentials(HTTP_AUTHORIZATION=f'JWT {user_token.access_token}')
+        response = self.client.get(path=url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        clients = response.json()
+        client_ids = [client.get('id') for client in clients]
+        self.assertEqual(1, len(client_ids))
+        self.assertNotIn(str(superuser_client.id), client_ids)
+        self.assertIn(str(user_client.id), client_ids)
+
+    def test_query_clients_by_id_per_owner(self):
+        """
+        Test that clients can only be queried by their id by their owners, unless they are admins
+        """
+        superuser = create_random_user(is_superuser=True)
+        superuser.save()
+        superuser_token = RefreshToken.for_user(superuser)
+        superuser_client = create_random_client()
+        superuser_client.owner = superuser
+        superuser_client.save()
+
+        user = create_random_user()
+        user.save()
+        user_token = RefreshToken.for_user(user)
+        user_client = create_random_client()
+        user_client.owner = user
+        user_client.save()
+
+        superuser_client_url = reverse(ClientDetailsView.view_name, args=[superuser_client.id])
+        user_clients_url = reverse(ClientDetailsView.view_name, args=[user_client.id])
+
+        self.client.credentials(HTTP_AUTHORIZATION=f'JWT {superuser_token.access_token}')
+
+        response = self.client.get(path=superuser_client_url)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        response = self.client.get(path=user_clients_url)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+
+        self.client.credentials(HTTP_AUTHORIZATION=f'JWT {user_token.access_token}')
+        response = self.client.get(path=superuser_client_url)
+        self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
+        response = self.client.get(path=user_clients_url)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+

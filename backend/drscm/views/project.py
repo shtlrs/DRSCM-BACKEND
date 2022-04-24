@@ -18,7 +18,12 @@ class CreateAndListProjectsView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return Project.objects.filter(owner=user)
+        if user.is_superuser:
+            query_set = Project.objects.all()
+        else:
+            query_set = Project.objects.filter(owner=user)
+
+        return query_set
 
 
 class ProjectDetailsView(generics.RetrieveUpdateDestroyAPIView):

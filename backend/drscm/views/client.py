@@ -17,7 +17,12 @@ class CreateAndListClientsView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return Client.objects.filter(owner=user)
+        if user.is_superuser:
+            queryset = Client.objects.all()
+        else:
+            queryset = Client.objects.filter(owner=user)
+
+        return queryset
 
 
 class ClientDetailsView(generics.RetrieveUpdateDestroyAPIView):

@@ -1,4 +1,4 @@
-name: Generate and validate api docs
+name: Validate api docs
 
 on: [push]
 

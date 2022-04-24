@@ -11,7 +11,9 @@ class WorkSession(models.Model):
     start_timestamp = models.IntegerField(editable=True)
     end_timestamp = models.IntegerField(editable=True)
     project = models.ForeignKey(to=Project, on_delete=models.CASCADE)
-    owner = models.ForeignKey(to='User', related_name='work_sessions', on_delete=models.CASCADE)
+    owner = models.ForeignKey(
+        to="User", related_name="work_sessions", on_delete=models.CASCADE
+    )
 
     @classmethod
     def create(cls):
@@ -23,4 +25,9 @@ class WorkSession(models.Model):
     ):
         self.end_timestamp = get_timestamp_with_null_seconds()
         self.owner = self.project.owner
-        super(WorkSession, self).save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
+        super(WorkSession, self).save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )

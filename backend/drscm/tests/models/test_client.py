@@ -5,7 +5,6 @@ from drscm.tests.helpers.user import create_random_user
 
 
 class ClientModelTests(TestCase):
-
     def test_add_new_client(self):
         """
         Test adding a new client

@@ -30,6 +30,7 @@ class ClientDetailsView(generics.RetrieveUpdateDestroyAPIView):
     view_name = "client_details_view"
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
-    permission_classes = (IsAuthenticated, IsSuperUserOrOwner,)
-
-
+    permission_classes = (
+        IsAuthenticated,
+        IsSuperUserOrOwner,
+    )

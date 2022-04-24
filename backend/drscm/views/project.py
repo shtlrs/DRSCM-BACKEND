@@ -30,6 +30,7 @@ class ProjectDetailsView(generics.RetrieveUpdateDestroyAPIView):
     view_name = "project_details"
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    permission_classes = (IsAuthenticated, IsSuperUserOrOwner,)
-
-
+    permission_classes = (
+        IsAuthenticated,
+        IsSuperUserOrOwner,
+    )

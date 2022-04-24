@@ -4,7 +4,6 @@ from drscm.tests.helpers.user import create_random_user
 
 
 class UserModelTests(TestCase):
-
     def test_create_user(self):
         user1 = create_random_user()
         user1.save()
@@ -17,7 +16,6 @@ class UserModelTests(TestCase):
         self.assertIn(user1, users)
         self.assertIn(user2, users)
 
-
     def test_create_superuser(self):
 
         superuser = create_random_user(is_superuser=True)
@@ -29,7 +27,6 @@ class UserModelTests(TestCase):
         users = User.objects.filter(is_superuser=True)
         self.assertIn(superuser, users)
         self.assertEqual(1, len(users))
-
 
     def list_all_clients_for_superuser(self):
         """

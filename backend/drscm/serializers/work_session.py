@@ -4,8 +4,8 @@ from drscm.models import WorkSession
 
 class WorkSessionSerializer(serializers.ModelSerializer):
 
-    owner = serializers.ReadOnlyField(source='owner.email')
+    owner = serializers.ReadOnlyField(source="owner.email")
 
     class Meta:
         model = WorkSession
-        fields = ['id', 'start_timestamp', 'end_timestamp', 'owner']
+        fields = ["id", "start_timestamp", "end_timestamp", "owner"]

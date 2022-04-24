@@ -6,8 +6,6 @@ from drscm.tests.helpers.user import create_random_user
 
 
 class ProjectModelTests(TestCase):
-
-
     def test_add_new_project(self):
         """
         Tests adding a new project
@@ -56,7 +54,6 @@ class ProjectModelTests(TestCase):
         new_project.delete()
         available_projects = Project.objects.all()
         self.assertEqual(len(available_projects), 0)
-
 
     def test_update_project(self):
 

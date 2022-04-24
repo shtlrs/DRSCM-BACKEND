@@ -1,0 +1,10 @@
+[flake8]
+
+max-line-length = 92
+--max-doc-length = 100
+
+extend-exclude = backend/settings/
+
+exclude =
+    __init__.py,
+    __pycache__

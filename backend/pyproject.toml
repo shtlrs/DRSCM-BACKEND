@@ -1,0 +1,8 @@
+[tool.black]
+
+line-length = 92
+
+[tool.isort]
+
+py_version=310
+line_length = 92

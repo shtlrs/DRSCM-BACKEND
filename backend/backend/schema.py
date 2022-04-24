@@ -13,7 +13,6 @@ class JWTAuthenticationSchema(OpenApiAuthenticationExtension):
         security_schema = build_bearer_security_scheme_object(
             header_name="Authorization", token_prefix="Bearer", bearer_format="JWT"
         )
-
         security_schema["description"] = _(
             r"Our api uses JSON Web Tokens for authentication purposes.<br>"
             "In order to obtain a token, you need to be registered by an admin first.<br>"

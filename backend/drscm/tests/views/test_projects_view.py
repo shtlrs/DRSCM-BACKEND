@@ -8,7 +8,8 @@ from drscm.serializers import ProjectSerializer
 from drscm.tests.helpers.client import create_random_client
 from drscm.tests.helpers.project import create_random_project
 from drscm.tests.helpers.user import create_random_user
-from drscm.views.project import CreateAndListProjectsView, ProjectDetailsView
+from drscm.views import CreateAndListClientsView
+from drscm.views import CreateAndListProjectsView, ProjectDetailsView
 
 
 class ProjectViewTest(APITestCase):
@@ -103,4 +104,94 @@ class ProjectViewTest(APITestCase):
             self.assertEqual(project_data[key], project_fetched_data[key])
 
 
+
+    def test_list_appropriate_projects_per_owner(self):
+        """
+        Test that projects can only be seen by their owners, unless they are admins
+        """
+
+        superuser = create_random_user(is_superuser=True)
+        superuser.save()
+        superuser_token = RefreshToken.for_user(superuser)
+        superuser_client = create_random_client()
+        superuser_client.owner = superuser
+        superuser_client.save()
+        superuser_project = create_random_project()
+        superuser_project.client = superuser_client
+        superuser_project.save()
+
+        user = create_random_user()
+        user.save()
+        user_token = RefreshToken.for_user(user)
+        user_client = create_random_client()
+        user_client.owner = user
+        user_client.save()
+        user_project = create_random_project()
+        user_project.client = user_client
+        user_project.save()
+
+        url = reverse(CreateAndListProjectsView.view_name)
+
+        self.client.credentials(HTTP_AUTHORIZATION=f'JWT {superuser_token.access_token}')
+        response = self.client.get(path=url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        projects = response.json()
+        project_ids = [project.get('id') for project in projects]
+        self.assertEqual(2, len(project_ids))
+        self.assertIn(str(superuser_project.id), project_ids)
+        self.assertIn(str(user_project.id), project_ids)
+
+        self.client.credentials(HTTP_AUTHORIZATION=f'JWT {user_token.access_token}')
+        response = self.client.get(path=url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        projects = response.json()
+        project_ids = [project.get('id') for project in projects]
+        self.assertEqual(1, len(project_ids))
+        self.assertNotIn(str(superuser_project.id), project_ids)
+        self.assertIn(str(user_project.id), project_ids)
+
+
+    def test_query_projects_by_id_per_owner(self):
+        """
+        Test that projects can only be queried by their id by their owners, unless they are admins
+        """
+        superuser = create_random_user(is_superuser=True)
+        superuser.save()
+        superuser_token = RefreshToken.for_user(superuser)
+        superuser_client = create_random_client()
+        superuser_client.owner = superuser
+        superuser_client.save()
+        superuser_project = create_random_project()
+        superuser_project.client = superuser_client
+        superuser_project.save()
+
+        user = create_random_user()
+        user.save()
+        user_token = RefreshToken.for_user(user)
+        user_client = create_random_client()
+        user_client.owner = user
+        user_client.save()
+        user_project = create_random_project()
+        user_project.client = user_client
+        user_project.save()
+
+        superuser_project_url = reverse(ProjectDetailsView.view_name, args=[superuser_project.id])
+        user_project_url = reverse(ProjectDetailsView.view_name, args=[user_project.id])
+
+        self.client.credentials(HTTP_AUTHORIZATION=f'JWT {superuser_token.access_token}')
+
+        response = self.client.get(path=superuser_project_url)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        response = self.client.get(path=user_project_url)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+
+        self.client.credentials(HTTP_AUTHORIZATION=f'JWT {user_token.access_token}')
+        response = self.client.get(path=superuser_project_url)
+        self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
+        response = self.client.get(path=user_project_url)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
 

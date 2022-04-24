@@ -6,9 +6,10 @@ from rest_framework import generics
 
 
 @extend_schema_view(
-     get=extend_schema(description='Returns the list of the available users',
-                       operation_id="List users"),
- )
+    get=extend_schema(
+        description="Returns the list of the available users", operation_id="List users"
+    ),
+)
 class ListUsersView(generics.ListAPIView):
 
     view_name = "list_users_view"

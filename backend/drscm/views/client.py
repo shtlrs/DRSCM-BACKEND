@@ -2,6 +2,7 @@ from rest_framework.permissions import IsAuthenticated
 from drscm.models import Client
 from drscm.permissions.model.is_owner import IsSuperUserOrOwner
 from drscm.serializers.client import ClientSerializer
+from drf_spectacular.utils import extend_schema
 from rest_framework import generics
 
 

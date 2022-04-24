@@ -16,8 +16,6 @@ SECRET_KEY = "django-insecure-azg*81=#c_p9+u=i#1c82n6hrr+l&#7eagfoq=2r3m0%mvbyby
 
 ALLOWED_HOSTS = []
 
-# Application definition
-
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -28,6 +26,7 @@ INSTALLED_APPS = [
     "drscm",
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -47,6 +46,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 SIMPLE_JWT = {
@@ -127,3 +127,9 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'DRSCM public API',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}

@@ -3,11 +3,23 @@ from rest_framework import status
 from drscm.models import Client
 from drscm.serializers import ClientSerializer
 from drscm.tests.helpers.client import create_random_client
+from drscm.tests.helpers.user import create_random_user
 from drscm.views.client import CreateAndListClientsView, ClientDetailsView
 from rest_framework.test import APITestCase
+from rest_framework_simplejwt.tokens import RefreshToken
+
 
 
 class ClientViewTests(APITestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.owner = create_random_user()
+        cls.owner.save()
+        cls.token = RefreshToken.for_user(cls.owner)
+
+    def setUp(self) -> None:
+        self.client.credentials(HTTP_AUTHORIZATION=f'JWT {self.token.access_token}')
 
     def test_create_clients_view(self):
         """
@@ -17,7 +29,9 @@ class ClientViewTests(APITestCase):
         url = reverse(CreateAndListClientsView.view_name)
 
         first_client = create_random_client()
+        first_client.owner = self.owner
         second_client = create_random_client()
+        second_client.owner = self.owner
 
         first_client_data = ClientSerializer(instance=first_client).data
         second_client_data = ClientSerializer(instance=second_client).data
@@ -42,11 +56,14 @@ class ClientViewTests(APITestCase):
         url = reverse(CreateAndListClientsView.view_name)
 
         first_client = create_random_client()
+        first_client.owner = self.owner
         first_client.save()
         second_client = create_random_client()
+        second_client.owner = self.owner
         second_client.save()
 
         response = self.client.get(url)
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.json()), 2)
         client_names = [data.get('name') for data in response.json()]
@@ -60,6 +77,7 @@ class ClientViewTests(APITestCase):
         """
 
         client = create_random_client()
+        client.owner = self.owner
         client.save()
 
         url = reverse(ClientDetailsView.view_name, args=[client.id])
@@ -69,7 +87,7 @@ class ClientViewTests(APITestCase):
 
         fetched_client_serializer = ClientSerializer(data=response.json())
         self.assertTrue(fetched_client_serializer.is_valid())
-
+    
         fetched_client_data = fetched_client_serializer.validated_data
         client_serializer = ClientSerializer(instance=client)
         client_data = client_serializer.data
@@ -80,4 +98,5 @@ class ClientViewTests(APITestCase):
         client_data.pop('id')
         client_data.pop('projects')
 
-        self.assertEqual(fetched_client_data, client_data)
+        for field in fetched_client_data.keys():
+            self.assertEqual(fetched_client_data[field], client_data[field])

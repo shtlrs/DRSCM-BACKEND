@@ -1,2 +1,7 @@
 from django.contrib import admin
-# Register your model_classes here.
+from drscm.models import Client, Project, WorkSession, User
+
+admin.site.register(User)
+admin.site.register(Client)
+admin.site.register(Project)
+admin.site.register(WorkSession)

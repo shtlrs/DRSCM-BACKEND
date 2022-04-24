@@ -15,8 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework_simplejwt.views import TokenVerifyView , TokenBlacklistView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/token/', TokenObtainPairView.as_view(), name=TokenObtainPairView.__name__),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name=TokenRefreshView.__name__),
+    path('api/token/blacklist/', TokenBlacklistView.as_view(), name=TokenBlacklistView.__name__),
+    path('api/token/verify/', TokenVerifyView.as_view(), name=TokenVerifyView.__name__),
     path('', include('drscm.urls'))
 ]

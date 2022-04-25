@@ -13,7 +13,8 @@ from rest_framework import generics
         operation_id="List work sessions",
     ),
     post=extend_schema(
-        description="Creates a new work session of a particular project", operation_id="Create Worksession"
+        description="Creates a new work session of a particular project",
+        operation_id="Create Worksession",
     ),
 )
 class CreateAndListWorkSessionView(generics.ListCreateAPIView):
@@ -43,7 +44,9 @@ class CreateAndListWorkSessionView(generics.ListCreateAPIView):
     delete=extend_schema(
         description="Deletes a particular work session", operation_id="Delete work session"
     ),
-    put=extend_schema(description="Updates a work session fully", operation_id="Update work session"),
+    put=extend_schema(
+        description="Updates a work session fully", operation_id="Update work session"
+    ),
     patch=extend_schema(
         description="Patches a work session by doing a partial update of specific fields",
         operation_id="Patch work session",

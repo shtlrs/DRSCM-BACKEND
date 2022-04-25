@@ -18,7 +18,7 @@ def date_time_to_timestamp(date_time: datetime):
     return date_time.timestamp()
 
 
-def timestamp_to_date(timestamp: int, date_format: str = '%Y-%m-%d %H:%M'):
+def timestamp_to_date_string(timestamp: int, date_format: str = "%Y-%m-%d %H:%M"):
     """
     Returns a string representing a timestamp in a particular format
     """

@@ -10,7 +10,8 @@ def create_random_client(
     postal_code=fake.postcode(),
     city=fake.city(),
     street=fake.street_name(),
-    owner=None
+    owner=None,
+    save=False,
 ):
     client = Client(
         name=name, country=country, postal_code=postal_code, city=city, street=street
@@ -18,5 +19,8 @@ def create_random_client(
 
     if owner:
         client.owner = owner
+
+    if save:
+        client.save()
 
     return client

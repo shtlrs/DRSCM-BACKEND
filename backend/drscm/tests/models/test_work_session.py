@@ -12,70 +12,49 @@ class WorkSessionModelTests(TestCase):
         Tests adding a new work session
         """
 
-        owner = create_random_user()
-        owner.save()
-
-        client = create_random_client()
-        client.owner = owner
-        client.save()
-
-        new_project = create_random_project()
-        new_project.client = client
-        new_project.save()
-
-        work_session = create_random_work_session()
+        owner = create_random_user(save=True)
+        client = create_random_client(owner=owner, save=True)
+        project = create_random_project(client=client, save=True)
+        new_work_session_1 = create_random_work_session(project=project, save=True)
+        new_work_session_2 = create_random_work_session(project=project, save=True)
 
         available_work_sessions = WorkSession.objects.all()
-        self.assertEqual(len(available_projects), 1)
+        self.assertEqual(len(available_work_sessions), 2)
 
-        project: Project = Project.objects.get(id=project_id)
+        work_session_1: WorkSession = WorkSession.objects.get(id=new_work_session_1.id)
 
-        self.assertEqual(project.name, new_project.name)
-        self.assertEqual(project.id, new_project.id)
-        self.assertEqual(project.hourly_rate, new_project.hourly_rate)
-        self.assertEqual(project.travel_hourly_rate, new_project.travel_hourly_rate)
-        self.assertEqual(project.travel_fixed_rate, new_project.travel_fixed_rate)
-        self.assertEqual(project.currency, new_project.currency)
-        self.assertEqual(project.client_id, client.id)
+        self.assertEqual(work_session_1.project_id, project.id)
+        self.assertEqual(work_session_1.start_timestamp, new_work_session_1.start_timestamp)
+        self.assertEqual(work_session_1.end_timestamp, new_work_session_1.end_timestamp)
+
+        work_session_2: WorkSession = WorkSession.objects.get(id=new_work_session_2.id)
+
+        self.assertEqual(work_session_2.project_id, project.id)
+        self.assertEqual(work_session_2.start_timestamp, new_work_session_2.start_timestamp)
+        self.assertEqual(work_session_2.end_timestamp, new_work_session_2.end_timestamp)
 
     def test_delete_work_session(self):
-        owner = create_random_user()
-        owner.save()
+        owner = create_random_user(save=True)
+        client = create_random_client(owner=owner)
+        project = create_random_project(client=client)
+        work_session = create_random_work_session(project=project, save=True)
 
-        client = create_random_client()
-        client.owner = owner
-        client.save()
+        available_work_sessions = WorkSession.objects.all()
+        self.assertEqual(len(available_work_sessions), 1)
 
-        new_project = create_random_project()
-        new_project.client = client
-        new_project.save()
-
-        available_projects = Project.objects.all()
-        self.assertEqual(len(available_projects), 1)
-
-        new_project.delete()
-        available_projects = Project.objects.all()
-        self.assertEqual(len(available_projects), 0)
+        work_session.delete()
+        available_work_sessions = WorkSession.objects.all()
+        self.assertEqual(len(available_work_sessions), 0)
 
     def test_update_work_session(self):
 
         new_name = "new_name"
-
-        owner = create_random_user()
-        owner.save()
-
-        client = create_random_client()
-        client.owner = owner
-        client.save()
-
-        first_project = create_random_project()
-        first_project.client = client
-        first_project.save()
-
-        first_project.name = new_name
-        first_project.save()
-
-        projects = Project.objects.all()
-        client = projects[0]
+        owner = create_random_user(save=True)
+        client = create_random_client(owner=owner, save=True)
+        project = create_random_project(client=client, save=True)
+        new_work_session = create_random_work_session(project=project, save=True)
+        work_session = WorkSession.objects.first()
+        self.assertEqual(work_session.start_timestamp, new_work_session.start_timestamp)
+        self.assertEqual(work_session.end_timestamp, new_work_session.end_timestamp)
 
         self.assertEqual(client.name, new_name)

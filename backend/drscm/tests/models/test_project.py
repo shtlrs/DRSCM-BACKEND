@@ -14,19 +14,16 @@ class ProjectModelTests(TestCase):
         owner = create_random_user()
         owner.save()
 
-        client = create_random_client()
-        client.owner = owner
+        client = create_random_client(owner=owner)
         client.save()
 
-        new_project = create_random_project()
-        new_project.client_id = client.id
-        project_id = new_project.id
+        new_project = create_random_project(client=client)
         new_project.save()
 
         available_projects = Project.objects.all()
         self.assertEqual(len(available_projects), 1)
 
-        project: Project = Project.objects.get(id=project_id)
+        project: Project = Project.objects.get(id=new_project.id)
 
         self.assertEqual(project.name, new_project.name)
         self.assertEqual(project.id, new_project.id)
@@ -37,16 +34,12 @@ class ProjectModelTests(TestCase):
         self.assertEqual(project.client_id, client.id)
 
     def test_delete_project(self):
-        owner = create_random_user()
-        owner.save()
 
-        client = create_random_client()
-        client.owner = owner
-        client.save()
+        owner = create_random_user(save=True)
 
-        new_project = create_random_project()
-        new_project.client = client
-        new_project.save()
+        client = create_random_client(owner=owner, save=True)
+
+        new_project = create_random_project(client=client, save=True)
 
         available_projects = Project.objects.all()
         self.assertEqual(len(available_projects), 1)
@@ -59,16 +52,11 @@ class ProjectModelTests(TestCase):
 
         new_name = "new_name"
 
-        owner = create_random_user()
-        owner.save()
+        owner = create_random_user(save=True)
 
-        client = create_random_client()
-        client.owner = owner
-        client.save()
+        client = create_random_client(owner=owner, save=True)
 
-        first_project = create_random_project()
-        first_project.client = client
-        first_project.save()
+        first_project = create_random_project(client=client, save=True)
 
         first_project.name = new_name
         first_project.save()

@@ -15,8 +15,8 @@ class Project(models.Model):
 
     client = models.ForeignKey(to=Client, on_delete=models.CASCADE, related_name="projects")
 
-    def __repr__(self):
-        return f"Project: {self.name}. Client: {self.client.name}"
+    def __str__(self):
+        return f"Project: {self.name}"
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.owner = self.client.owner

@@ -1,6 +1,8 @@
 from django.urls import path
+from drscm.views import ListUsersView
 from drscm.views import CreateAndListClientsView, ClientDetailsView
-from drscm.views import ProjectDetailsView, CreateAndListProjectsView, ListUsersView
+from drscm.views import ProjectDetailsView, CreateAndListProjectsView
+from drscm.views import WorkSessionDetailsView, CreateAndListWorkSessionView
 
 urlpatterns = [
     path(
@@ -12,6 +14,16 @@ urlpatterns = [
         "clients/<uuid:pk>",
         ClientDetailsView.as_view(),
         name=ClientDetailsView.view_name,
+    ),
+    path(
+        "worksession/",
+        CreateAndListWorkSessionView.as_view(),
+        name=CreateAndListWorkSessionView.view_name,
+    ),
+    path(
+        "worksession/<uuid:pk>",
+        WorkSessionDetailsView.as_view(),
+        name=WorkSessionDetailsView.view_name,
     ),
     path(
         "projects/",

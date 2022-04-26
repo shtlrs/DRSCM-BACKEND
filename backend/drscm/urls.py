@@ -3,6 +3,12 @@ from drscm.views import ListUsersView
 from drscm.views import CreateAndListClientsView, ClientDetailsView
 from drscm.views import ProjectDetailsView, CreateAndListProjectsView
 from drscm.views import WorkSessionDetailsView, CreateAndListWorkSessionView
+from drscm.views import (
+    HourlyTravelDetailsView,
+    CreateAndListHourlyTravelsView,
+    CreateAndListFixedTravelsView,
+    FixedTravelDetailsView,
+)
 
 urlpatterns = [
     path(
@@ -36,4 +42,24 @@ urlpatterns = [
         name=ProjectDetailsView.view_name,
     ),
     path("users", ListUsersView.as_view(), name=ListUsersView.view_name),
+    path(
+        "travel/fixed",
+        CreateAndListFixedTravelsView.as_view(),
+        name=CreateAndListFixedTravelsView.view_name,
+    ),
+    path(
+        "travel/fixed/<uuid:pk>",
+        FixedTravelDetailsView.as_view(),
+        name=FixedTravelDetailsView.view_name,
+    ),
+    path(
+        "travel/hourly",
+        CreateAndListHourlyTravelsView.as_view(),
+        name=CreateAndListHourlyTravelsView.view_name,
+    ),
+    path(
+        "travel/hourly/<uuid:pk>",
+        HourlyTravelDetailsView.as_view(),
+        name=HourlyTravelDetailsView.view_name,
+    ),
 ]

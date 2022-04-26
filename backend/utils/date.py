@@ -1,6 +1,15 @@
 from datetime import datetime
 
 
+def purify_timestamp(timestamp: int) -> int:
+    """
+    Removes the seconds & the milliseconds from the input timestamp
+    """
+
+    date = datetime.utcfromtimestamp(timestamp)
+    return date_time_to_timestamp(date)
+
+
 def get_current_timestamp_with_null_seconds():
     """
     Returns the current timestamp where seconds = 0 and microseconds = 0

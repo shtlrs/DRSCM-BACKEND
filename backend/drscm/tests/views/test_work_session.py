@@ -79,7 +79,7 @@ class WorkSessionViewTests(APITestCase):
     def test_patch_work_session(self):
         self.superuser_work_session.save()
         superuser_work_session = (
-            WorkSession.objects.all().filter(project=self.superuser_project).first()
+            WorkSession.objects.all().filter(owner=self.superuser).first()
         )
         self.assertEqual(
             superuser_work_session.end_timestamp, self.superuser_work_session.end_timestamp
@@ -100,7 +100,7 @@ class WorkSessionViewTests(APITestCase):
         response = self.client.patch(path=url, data=data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         superuser_work_session = (
-            WorkSession.objects.all().filter(project=self.superuser_project).first()
+            WorkSession.objects.all().filter(owner=self.superuser).first()
         )
         self.assertEqual(superuser_work_session.end_timestamp, new_end_timestamp)
 

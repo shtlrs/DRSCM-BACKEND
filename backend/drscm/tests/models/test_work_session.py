@@ -48,7 +48,6 @@ class WorkSessionModelTests(TestCase):
 
     def test_update_work_session(self):
 
-        new_name = "new_name"
         owner = create_random_user(save=True)
         client = create_random_client(owner=owner, save=True)
         project = create_random_project(client=client, save=True)

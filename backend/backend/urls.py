@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from rest_framework_simplejwt.views import TokenVerifyView, TokenBlacklistView
+from rest_framework_simplejwt.views import TokenVerifyView
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,

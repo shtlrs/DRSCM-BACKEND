@@ -5,8 +5,9 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
     TokenVerifyView,
-    TokenBlacklistView
 )
+
+
 from drscm.tests.helpers.user import create_random_user
 
 

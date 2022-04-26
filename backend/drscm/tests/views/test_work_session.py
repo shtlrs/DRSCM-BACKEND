@@ -87,4 +87,9 @@ class WorkSessionViewTests(APITestCase):
         self.assertEqual(superuser_work_session.end_timestamp, new_end_timestamp)
 
     def test_delete_work_session(self):
-        self.fail()
+        self.superuser_work_session.save()
+        url = reverse(WorkSessionDetailsView.view_name, args=[self.superuser_work_session.id])
+        response = self.client.delete(path=url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        superuser_work_session = WorkSession.objects.all()
+        self.assertEqual(len(superuser_work_session), 0)

@@ -5,7 +5,7 @@ from .abtract import Travel
 
 class HourlyTravel(Travel):
 
-    hours = models.IntegerField(null=False, blank=False)
+    hours = models.FloatField(null=False, blank=False)
     owner = models.ForeignKey(
         to="User",
         related_name="hourly_travels",

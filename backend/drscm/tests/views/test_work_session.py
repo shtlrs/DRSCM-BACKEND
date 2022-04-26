@@ -58,9 +58,6 @@ class WorkSessionViewTests(APITestCase):
         self.assertNotIn(str(superuser_work_session.id), work_session_ids)
         self.assertIn(str(user_work_session.id), work_session_ids)
 
-
-
-
     def test_create_work_session(self):
         url = reverse(CreateAndListWorkSessionView.view_name)
         work_session = create_random_work_session(project=self.superuser_project)
@@ -72,8 +69,22 @@ class WorkSessionViewTests(APITestCase):
         available_work_sessions = WorkSession.objects.all()
         self.assertEqual(len(available_work_sessions), 1)
 
-    def test_update_work_session(self):
-        self.fail()
+    def test_patch_work_session(self):
+        self.superuser_work_session.save()
+        superuser_work_session = WorkSession.objects.all().filter(owner=self.superuser).first()
+        self.assertEqual(superuser_work_session.end_timestamp, self.superuser_work_session.end_timestamp)
+        self.assertEqual(superuser_work_session.start_timestamp, self.superuser_work_session.start_timestamp)
+
+        new_end_timestamp = superuser_work_session.end_timestamp + 10
+        superuser_work_session.end_timestamp = new_end_timestamp
+
+        data = WorkSessionSerializer(instance=superuser_work_session).data
+
+        url = reverse(WorkSessionDetailsView.view_name, args=[self.superuser_work_session.id])
+        response = self.client.patch(path=url, data=data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        superuser_work_session = WorkSession.objects.all().filter(owner=self.superuser).first()
+        self.assertEqual(superuser_work_session.end_timestamp, new_end_timestamp)
 
     def test_delete_work_session(self):
         self.fail()

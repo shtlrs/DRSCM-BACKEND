@@ -65,7 +65,3 @@ class TokenViewTest(APITestCase):
 
         response = self.client.post(refresh_token_url, data=data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-
-    def test_black_list_token(self):
-        self.fail()

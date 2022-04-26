@@ -16,12 +16,12 @@ urlpatterns = [
         name=ClientDetailsView.view_name,
     ),
     path(
-        "worksession/",
+        "worksessions/",
         CreateAndListWorkSessionView.as_view(),
         name=CreateAndListWorkSessionView.view_name,
     ),
     path(
-        "worksession/<uuid:pk>",
+        "worksessions/<uuid:pk>",
         WorkSessionDetailsView.as_view(),
         name=WorkSessionDetailsView.view_name,
     ),

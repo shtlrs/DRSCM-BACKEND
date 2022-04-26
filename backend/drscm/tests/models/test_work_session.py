@@ -57,4 +57,8 @@ class WorkSessionModelTests(TestCase):
         self.assertEqual(work_session.start_timestamp, new_work_session.start_timestamp)
         self.assertEqual(work_session.end_timestamp, new_work_session.end_timestamp)
 
-        self.assertEqual(client.name, new_name)
+        new_work_session.end_timestamp += 100
+        new_work_session.save()
+
+        work_session = WorkSession.objects.first()
+        self.assertEqual(work_session.end_timestamp, new_work_session.end_timestamp)

@@ -32,7 +32,7 @@ class CreateAndListWorkSessionView(generics.ListCreateAPIView):
         if user.is_superuser:
             query_set = WorkSession.objects.all()
         else:
-            query_set = WorkSession.objects.filter(project__in=user.projects.all())
+            query_set = WorkSession.objects.filter(owner=user)
         return query_set
 
 

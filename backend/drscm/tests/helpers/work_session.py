@@ -24,6 +24,7 @@ def create_random_work_session(
     )
     if project:
         work_session.project = project
+        work_session.owner = project.owner
 
     if save:
         work_session.save()

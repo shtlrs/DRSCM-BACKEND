@@ -10,6 +10,9 @@ class WorkSession(models.Model):
     start_timestamp = models.IntegerField(editable=True, null=False, blank=False)
     end_timestamp = models.IntegerField(editable=True, null=False, blank=False)
     project = models.ForeignKey(to=Project, on_delete=models.CASCADE)
+    owner = models.ForeignKey(
+        to="User", related_name="work_sessions", on_delete=models.CASCADE
+    )
 
     @classmethod
     def create(cls):
@@ -27,6 +30,8 @@ class WorkSession(models.Model):
         self.save()
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.owner = self.project.owner
+
         if self.start_timestamp > self.end_timestamp:
             raise ValueError(
                 f"Start time: {timestamp_to_date_string(self.start_timestamp)} should be"

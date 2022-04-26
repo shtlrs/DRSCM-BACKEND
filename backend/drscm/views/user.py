@@ -22,6 +22,6 @@ class ListUsersView(generics.ListAPIView):
         if user.is_superuser:
             query_set = User.objects.all()
         else:
-            query_set = User.objects.filter(pk=user.id)
+            query_set = []
 
         return query_set

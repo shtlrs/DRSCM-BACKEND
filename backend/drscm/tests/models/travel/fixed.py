@@ -18,11 +18,22 @@ class FixedModelTests(APITestCase):
         travels = FixedTravel.objects.all()
         self.assertEqual(len(travels), 1)
 
-    def test_update_fixed_travel_record(self):
-        self.travel.save()
 
     def test_patch_fixed_travel_record(self):
         self.travel.save()
+        new_occurrences = self.travel.occurrences + 1
+        new_timestamp = float(self.travel.timestamp + 200)
+        new_project = create_random_project(client=self.client_, save=True)
+
+        self.travel.occurrences = new_occurrences
+        self.travel.project = new_project
+        self.travel.timestamp = new_timestamp
+        self.travel.save()
+
+        travel = FixedTravel.objects.all().first()
+        self.assertEqual(travel.occurrences, new_occurrences)
+        self.assertEqual(float(travel.timestamp), new_timestamp)
+        self.assertEqual(travel.project, new_project)
 
     def test_delete_fixed_travel_record(self):
         self.travel.save()

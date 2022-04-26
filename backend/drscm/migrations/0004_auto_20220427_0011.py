@@ -7,18 +7,22 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('drscm', '0003_alter_hourlytravel_hours'),
+        ("drscm", "0003_alter_hourlytravel_hours"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='fixedtravel',
-            name='id',
-            field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
+            model_name="fixedtravel",
+            name="id",
+            field=models.UUIDField(
+                default=uuid.uuid4, editable=False, primary_key=True, serialize=False
+            ),
         ),
         migrations.AlterField(
-            model_name='hourlytravel',
-            name='id',
-            field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
+            model_name="hourlytravel",
+            name="id",
+            field=models.UUIDField(
+                default=uuid.uuid4, editable=False, primary_key=True, serialize=False
+            ),
         ),
     ]

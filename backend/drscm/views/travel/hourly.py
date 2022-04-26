@@ -12,7 +12,8 @@ from rest_framework import generics
         operation_id="List hourly travels",
     ),
     post=extend_schema(
-        description="Creates a new hourly travel log for the user", operation_id="Create hourly travel"
+        description="Creates a new hourly travel log for the user",
+        operation_id="Create hourly travel",
     ),
 )
 class CreateAndListHourlyTravelsView(generics.ListCreateAPIView):
@@ -37,12 +38,16 @@ class CreateAndListHourlyTravelsView(generics.ListCreateAPIView):
 
 @extend_schema_view(
     get=extend_schema(
-        description="Returns the details of a particular hourly travel", operation_id="Get hourly travel"
+        description="Returns the details of a particular hourly travel",
+        operation_id="Get hourly travel",
     ),
     delete=extend_schema(
-        description="Deletes a particular hourly travel log", operation_id="Delete hourly travel"
+        description="Deletes a particular hourly travel log",
+        operation_id="Delete hourly travel",
     ),
-    put=extend_schema(description="Updates an hourly travel fully", operation_id="Update hourly travel"),
+    put=extend_schema(
+        description="Updates an hourly travel fully", operation_id="Update hourly travel"
+    ),
     patch=extend_schema(
         description="Patches an hourly travel by doing a partial update of specific fields",
         operation_id="Patch hourly travel",

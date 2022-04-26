@@ -6,7 +6,9 @@ from utils.date import purify_timestamp
 faker = Faker()
 
 
-def create_random_hourly_travel(timestamp, project: Project = None, hours: int = 1, save = False):
+def create_random_hourly_travel(
+    timestamp, project: Project = None, hours: int = 1, save=False
+):
 
     timestamp = timestamp or faker.future_datetime().timestamp()
     timestamp = purify_timestamp(timestamp)

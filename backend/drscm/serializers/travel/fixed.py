@@ -3,7 +3,9 @@ from drscm.models import FixedTravel
 
 
 class FixedTravelSerializer(serializers.ModelSerializer):
-    project = serializers.PrimaryKeyRelatedField(many=False, read_only=True, allow_null=False, allow_empty=False)
+    project = serializers.PrimaryKeyRelatedField(
+        many=False, read_only=True, allow_null=False, allow_empty=False
+    )
     owner = serializers.ReadOnlyField(source="owner.email")
 
     class Meta:
@@ -15,4 +17,3 @@ class FixedTravelSerializer(serializers.ModelSerializer):
             "project",
             "owner",
         ]
-

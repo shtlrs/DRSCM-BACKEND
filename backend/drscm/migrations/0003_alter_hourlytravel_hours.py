@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('drscm', '0002_fixedtravel_hourlytravel'),
+        ("drscm", "0002_fixedtravel_hourlytravel"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='hourlytravel',
-            name='hours',
+            model_name="hourlytravel",
+            name="hours",
             field=models.FloatField(),
         ),
     ]

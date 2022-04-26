@@ -5,7 +5,9 @@ from faker import Faker
 faker = Faker()
 
 
-def create_random_fixed_travel(timestamp = None, project: Project = None, occurrences: int = 1, save=False):
+def create_random_fixed_travel(
+    timestamp=None, project: Project = None, occurrences: int = 1, save=False
+):
 
     timestamp = timestamp or faker.future_datetime().timestamp()
     timestamp = purify_timestamp(timestamp)

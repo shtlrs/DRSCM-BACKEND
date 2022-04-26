@@ -1,11 +1,14 @@
 from rest_framework.test import APITestCase
 from drscm.tests.helpers.travel import create_random_fixed_travel
 from drscm.models import FixedTravel
-from drscm.tests.helpers import create_random_user, create_random_client, create_random_project
+from drscm.tests.helpers import (
+    create_random_user,
+    create_random_client,
+    create_random_project,
+)
 
 
 class FixedTravelModelTests(APITestCase):
-
     @classmethod
     def setUpTestData(cls):
         cls.owner = create_random_user(save=True)
@@ -17,7 +20,6 @@ class FixedTravelModelTests(APITestCase):
         self.travel.save()
         travels = FixedTravel.objects.all()
         self.assertEqual(len(travels), 1)
-
 
     def test_patch_fixed_travel_record(self):
         self.travel.save()

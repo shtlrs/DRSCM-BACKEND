@@ -12,7 +12,8 @@ from rest_framework import generics
         operation_id="List fixed travels",
     ),
     post=extend_schema(
-        description="Creates a new fixed travel log for the user", operation_id="Create fixed travel"
+        description="Creates a new fixed travel log for the user",
+        operation_id="Create fixed travel",
     ),
 )
 class CreateAndListFixedTravelsView(generics.ListCreateAPIView):
@@ -37,12 +38,16 @@ class CreateAndListFixedTravelsView(generics.ListCreateAPIView):
 
 @extend_schema_view(
     get=extend_schema(
-        description="Returns the details of a particular fixed travel", operation_id="Get fixed travel"
+        description="Returns the details of a particular fixed travel",
+        operation_id="Get fixed travel",
     ),
     delete=extend_schema(
-        description="Deletes a particular fixed travel log", operation_id="Delete fixed travel"
+        description="Deletes a particular fixed travel log",
+        operation_id="Delete fixed travel",
     ),
-    put=extend_schema(description="Updates a fixed travel fully", operation_id="Update fixed travel"),
+    put=extend_schema(
+        description="Updates a fixed travel fully", operation_id="Update fixed travel"
+    ),
     patch=extend_schema(
         description="Patches a fixed travel by doing a partial update of specific fields",
         operation_id="Patch fixed travel",

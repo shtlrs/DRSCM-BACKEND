@@ -8,34 +8,62 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('drscm', '0001_initial'),
+        ("drscm", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='HourlyTravel',
+            name="HourlyTravel",
             fields=[
-                ('id', models.UUIDField(editable=False, primary_key=True, serialize=False)),
-                ('timestamp', models.IntegerField(unique=True)),
-                ('hours', models.IntegerField()),
-                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='hourly_travels', to=settings.AUTH_USER_MODEL)),
-                ('project', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='hourly_travels', to='drscm.project')),
+                ("id", models.UUIDField(editable=False, primary_key=True, serialize=False)),
+                ("timestamp", models.IntegerField(unique=True)),
+                ("hours", models.IntegerField()),
+                (
+                    "owner",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="hourly_travels",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "project",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="hourly_travels",
+                        to="drscm.project",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='FixedTravel',
+            name="FixedTravel",
             fields=[
-                ('id', models.UUIDField(editable=False, primary_key=True, serialize=False)),
-                ('timestamp', models.IntegerField(unique=True)),
-                ('occurrences', models.IntegerField()),
-                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='fixed_travels', to=settings.AUTH_USER_MODEL)),
-                ('project', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='fixed_travels', to='drscm.project')),
+                ("id", models.UUIDField(editable=False, primary_key=True, serialize=False)),
+                ("timestamp", models.IntegerField(unique=True)),
+                ("occurrences", models.IntegerField()),
+                (
+                    "owner",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="fixed_travels",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "project",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="fixed_travels",
+                        to="drscm.project",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
     ]

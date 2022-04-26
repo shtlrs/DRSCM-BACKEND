@@ -4,7 +4,7 @@ from drscm.models import FixedTravel
 from drscm.tests.helpers import create_random_user, create_random_client, create_random_project
 
 
-class FixedModelTests(APITestCase):
+class FixedTravelModelTests(APITestCase):
 
     @classmethod
     def setUpTestData(cls):

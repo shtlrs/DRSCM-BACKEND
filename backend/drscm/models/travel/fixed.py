@@ -3,7 +3,7 @@ from drscm.models import Project
 from .abtract import Travel
 
 
-class HourlyTravel(Travel):
+class FixedTravel(Travel):
 
     occurrences = models.IntegerField(null=False, blank=False)
     owner = models.ForeignKey(

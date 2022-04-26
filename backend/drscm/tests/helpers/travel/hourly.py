@@ -7,7 +7,7 @@ faker = Faker()
 
 
 def create_random_hourly_travel(
-    timestamp, project: Project = None, hours: int = 1, save=False
+    timestamp = None, project: Project = None, hours: int = 1, save=False
 ):
 
     timestamp = timestamp or faker.future_datetime().timestamp()

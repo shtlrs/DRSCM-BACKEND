@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from drscm.models import FixedTravel
 from drscm.serializers import FixedTravelSerializer
 from drscm.tests.helpers import (
     create_random_user,
@@ -11,7 +12,7 @@ from drscm.tests.helpers import (
     create_random_fixed_travel,
 )
 
-from drscm.views import CreateAndListFixedTravelsView
+from drscm.views import CreateAndListFixedTravelsView, FixedTravelDetailsView
 
 
 class FixedTravelViewTests(APITestCase):
@@ -43,16 +44,33 @@ class FixedTravelViewTests(APITestCase):
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
 
     def test_add_new_fixed_travel_record_with_non_existent_project(self):
-        self.fail()
-
-    def test_update_travel_record(self):
-        self.fail()
+        url = reverse(CreateAndListFixedTravelsView.view_name)
+        project = create_random_project(client=self.super_client)
+        fixed_travel_record = create_random_fixed_travel(project=project)
+        data = FixedTravelSerializer(instance=fixed_travel_record).data
+        response = self.client.post(path=url, data=data)
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
+        self.assertEqual({'project': [f'Invalid pk "{project.id}" - object does not exist.']}, response.json())
 
     def test_patch_fixed_travel_record(self):
-        self.fail()
+        self.super_fixed_travel.save()
+        url = reverse(FixedTravelDetailsView.view_name, args=[self.super_fixed_travel.id])
+        new_timestamp = self.super_fixed_travel.timestamp + 200
+        self.super_fixed_travel.timestamp = new_timestamp
+        data = FixedTravelSerializer(instance=self.super_fixed_travel).data
+        response = self.client.patch(path=url, data=data)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        fixed_travel_record = FixedTravel.objects.get(pk=self.super_fixed_travel.id)
+        self.assertEqual(fixed_travel_record.timestamp, self.super_fixed_travel.timestamp)
 
     def test_delete_fixed_travel_record(self):
-        self.fail()
+        self.super_fixed_travel.save()
+        url = reverse(FixedTravelDetailsView.view_name, args=[self.super_fixed_travel.id])
+        data = FixedTravelSerializer(instance=self.super_fixed_travel).data
+        response = self.client.delete(path=url, data=data)
+        self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
+        fixed_travel_records = FixedTravel.objects.filter(owner=self.superuser)
+        self.assertEqual(len(fixed_travel_records), 0)
 
     def test_list_fixed_travel_records_per_appropriate_user(self):
         self.fail()

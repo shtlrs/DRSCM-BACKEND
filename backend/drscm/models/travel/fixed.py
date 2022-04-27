@@ -10,22 +10,17 @@ class FixedTravel(Travel):
         to="User",
         related_name="fixed_travels",
         on_delete=models.CASCADE,
-        null=False,
-        blank=False,
     )
     project = models.ForeignKey(
         to=Project,
         related_name="fixed_travels",
         on_delete=models.CASCADE,
-        null=False,
-        blank=False,
     )
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.owner = self.project.owner
-        super().save(
+        super(FixedTravel, self).save(
             force_insert=force_insert,
             force_update=force_update,
             using=using,
-            update_fields=update_fields,
-        )
+            update_fields=update_fields)

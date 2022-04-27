@@ -40,7 +40,6 @@ class FixedTravelViewTests(APITestCase):
         url = reverse(CreateAndListFixedTravelsView.view_name)
         data = FixedTravelSerializer(instance=self.super_fixed_travel).data
         response = self.client.post(path=url, data=data)
-
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
 
     def test_add_new_fixed_travel_record_with_non_existent_project(self):

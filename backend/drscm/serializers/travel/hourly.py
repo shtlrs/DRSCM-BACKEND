@@ -1,11 +1,11 @@
 from rest_framework import serializers
-from drscm.models import HourlyTravel
+from drscm.models import HourlyTravel, Project
 
 
 class HourlyTravelSerializer(serializers.ModelSerializer):
     project = serializers.PrimaryKeyRelatedField(
-        many=False, read_only=True, allow_null=False, allow_empty=False
-    )
+        queryset=Project.objects.all(),
+        many=False, allow_null=False, allow_empty=False)
     owner = serializers.ReadOnlyField(source="owner.email")
 
     class Meta:

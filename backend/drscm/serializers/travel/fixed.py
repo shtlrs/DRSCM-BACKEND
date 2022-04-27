@@ -1,10 +1,14 @@
 from rest_framework import serializers
-from drscm.models import FixedTravel
+from drscm.models import FixedTravel, Project
 
 
 class FixedTravelSerializer(serializers.ModelSerializer):
+
     project = serializers.PrimaryKeyRelatedField(
-        many=False, read_only=True, allow_null=False, allow_empty=False
+        queryset=Project.objects.all(),
+        many=False,
+        allow_null=False,
+        allow_empty=False,
     )
     owner = serializers.ReadOnlyField(source="owner.email")
 

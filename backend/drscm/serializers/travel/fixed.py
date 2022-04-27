@@ -13,6 +13,7 @@ class FixedTravelSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "occurrences",
+            "rate",
             "timestamp",
             "project",
             "owner",

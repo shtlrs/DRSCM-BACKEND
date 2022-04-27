@@ -13,6 +13,7 @@ class HourlyTravelSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "hours",
+            "rate",
             "timestamp",
             "project",
             "owner",

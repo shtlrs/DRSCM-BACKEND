@@ -1,8 +1,8 @@
+from uuid import UUID
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
-
 from drscm.models import FixedTravel
 from drscm.serializers import FixedTravelSerializer
 from drscm.tests.helpers import (
@@ -50,7 +50,10 @@ class FixedTravelViewTests(APITestCase):
         data = FixedTravelSerializer(instance=fixed_travel_record).data
         response = self.client.post(path=url, data=data)
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
-        self.assertEqual({'project': [f'Invalid pk "{project.id}" - object does not exist.']}, response.json())
+        self.assertEqual(
+            {"project": [f'Invalid pk "{project.id}" - object does not exist.']},
+            response.json(),
+        )
 
     def test_patch_fixed_travel_record(self):
         self.super_fixed_travel.save()
@@ -73,10 +76,41 @@ class FixedTravelViewTests(APITestCase):
         self.assertEqual(len(fixed_travel_records), 0)
 
     def test_list_fixed_travel_records_per_appropriate_user(self):
-        self.fail()
+        self.super_fixed_travel.save()
+        self.user_fixed_travel.save()
+        url = reverse(CreateAndListFixedTravelsView.view_name)
+        response = self.client.get(path=url)
+        fixed_travel_ids = [
+            UUID(fixed_travel.get("id")) for fixed_travel in response.json()
+        ]
+
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(len(fixed_travel_ids), 2)
+        self.assertIn(self.super_fixed_travel.id, fixed_travel_ids)
+        self.assertIn(self.user_fixed_travel.id, fixed_travel_ids)
+
+        self.client.credentials(HTTP_AUTHORIZATION=f"JWT {self.user_token.access_token}")
+        response = self.client.get(path=url)
+        fixed_travel_ids = [
+            UUID(fixed_travel.get("id")) for fixed_travel in response.json()
+        ]
+
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(len(fixed_travel_ids), 1)
+        self.assertNotIn(self.super_fixed_travel.id, fixed_travel_ids)
+        self.assertIn(self.user_fixed_travel.id, fixed_travel_ids)
 
     def test_retrieve_fixed_travel_record(self):
-        self.fail()
+        self.super_fixed_travel.save()
+
+        url = reverse(FixedTravelDetailsView.view_name, args=[self.super_fixed_travel.id])
+        response = self.client.get(url)
+        fixed_travel = response.json()
+
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(UUID(fixed_travel.get("id")), self.super_fixed_travel.id)
 
     def test_retrieve_non_existent_fixed_travel_record(self):
-        self.fail()
+        url = reverse(FixedTravelDetailsView.view_name, args=[self.super_fixed_travel.id])
+        response = self.client.get(url)
+        self.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)

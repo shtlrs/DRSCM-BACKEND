@@ -23,4 +23,5 @@ class FixedTravel(Travel):
             force_insert=force_insert,
             force_update=force_update,
             using=using,
-            update_fields=update_fields)
+            update_fields=update_fields,
+        )

@@ -7,13 +7,13 @@ faker = Faker()
 
 
 def create_random_hourly_travel(
-    timestamp = None, project: Project = None, hours: int = 1, save=False
+    timestamp = None, project: Project = None, rate: float = 2.5, hours: int = 1, save=False
 ):
 
     timestamp = timestamp or faker.future_datetime().timestamp()
     timestamp = purify_timestamp(timestamp)
 
-    hourly_travel = HourlyTravel(timestamp=timestamp, hours=hours)
+    hourly_travel = HourlyTravel(timestamp=timestamp, hours=hours, rate=rate)
 
     if project:
         hourly_travel.project = project

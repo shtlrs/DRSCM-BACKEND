@@ -6,12 +6,12 @@ faker = Faker()
 
 
 def create_random_fixed_travel(
-    timestamp=None, project: Project = None, occurrences: int = 1, save=False
+    timestamp=None, project: Project = None, rate: float = 2.5, occurrences: int = 1, save=False
 ):
 
     timestamp = timestamp or faker.future_datetime().timestamp()
     timestamp = purify_timestamp(timestamp)
-    fixed_travel = FixedTravel(timestamp=timestamp, occurrences=occurrences)
+    fixed_travel = FixedTravel(timestamp=timestamp, occurrences=occurrences, rate=rate)
 
     if project:
         fixed_travel.project = project

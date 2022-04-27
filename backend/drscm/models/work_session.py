@@ -14,6 +14,10 @@ class WorkSession(models.Model):
         to="User", related_name="work_sessions", on_delete=models.CASCADE
     )
 
+    class Meta:
+        ordering = ("start_timestamp",)
+
+        
     @classmethod
     def create(cls):
         """

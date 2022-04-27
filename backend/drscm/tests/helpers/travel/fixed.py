@@ -6,7 +6,11 @@ faker = Faker()
 
 
 def create_random_fixed_travel(
-    timestamp=None, project: Project = None, rate: float = 2.5, occurrences: int = 1, save=False
+    timestamp=None,
+    project: Project = None,
+    rate: float = 2.5,
+    occurrences: int = 1,
+    save=False,
 ):
 
     timestamp = timestamp or faker.future_datetime().timestamp()

@@ -14,4 +14,3 @@ class Travel(models.Model):
 
     class Meta:
         abstract = True
-

@@ -15,8 +15,12 @@ def create_random_project(
 ):
     name = name or fake.name()
     hourly_rate = hourly_rate or fake.pyfloat(positive=True, max_value=175, right_digits=1)
-    travel_hourly_rate = travel_hourly_rate or fake.pyfloat(positive=True, max_value=175, right_digits=1)
-    travel_fixed_rate = travel_fixed_rate or fake.pyfloat(positive=True, max_value=175, right_digits=1)
+    travel_hourly_rate = travel_hourly_rate or fake.pyfloat(
+        positive=True, max_value=175, right_digits=1
+    )
+    travel_fixed_rate = travel_fixed_rate or fake.pyfloat(
+        positive=True, max_value=175, right_digits=1
+    )
     currency = currency or fake.currency_code()
 
     project = Project(

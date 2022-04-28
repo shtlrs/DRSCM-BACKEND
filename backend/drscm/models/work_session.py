@@ -17,7 +17,6 @@ class WorkSession(models.Model):
     class Meta:
         ordering = ("start_timestamp",)
 
-        
     @classmethod
     def create(cls):
         """
@@ -54,3 +53,4 @@ class WorkSession(models.Model):
             f"Session: {timestamp_to_date_string(self.start_timestamp)} ->"
             f" {timestamp_to_date_string(self.end_timestamp)}"
         )
+

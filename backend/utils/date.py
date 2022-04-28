@@ -36,9 +36,9 @@ def seconds_to_hours(seconds: int):
         minutes += 1
 
     if hours > 0:
-        return round(hours + minutes/60, 1)
+        return round(hours + minutes / 60, 1)
 
-    return round(minutes/60, 1)
+    return round(minutes / 60, 1)
 
 
 def time_stamp_to_date_time(timestamp: int):
@@ -56,5 +56,5 @@ def timestamp_to_date_string(timestamp: int, date_format: str = "%Y-%m-%d %H:%M"
     return datetime.utcfromtimestamp(timestamp).strftime(date_format)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     seconds_to_hours(60)

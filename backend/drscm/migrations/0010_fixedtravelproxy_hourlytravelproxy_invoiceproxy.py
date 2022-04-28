@@ -6,41 +6,38 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('drscm', '0009_remove_project_hourly_rate'),
+        ("drscm", "0009_remove_project_hourly_rate"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='FixedTravelProxy',
-            fields=[
-            ],
+            name="FixedTravelProxy",
+            fields=[],
             options={
-                'proxy': True,
-                'indexes': [],
-                'constraints': [],
+                "proxy": True,
+                "indexes": [],
+                "constraints": [],
             },
-            bases=('drscm.fixedtravel',),
+            bases=("drscm.fixedtravel",),
         ),
         migrations.CreateModel(
-            name='HourlyTravelProxy',
-            fields=[
-            ],
+            name="HourlyTravelProxy",
+            fields=[],
             options={
-                'proxy': True,
-                'indexes': [],
-                'constraints': [],
+                "proxy": True,
+                "indexes": [],
+                "constraints": [],
             },
-            bases=('drscm.hourlytravel',),
+            bases=("drscm.hourlytravel",),
         ),
         migrations.CreateModel(
-            name='InvoiceProxy',
-            fields=[
-            ],
+            name="InvoiceProxy",
+            fields=[],
             options={
-                'proxy': True,
-                'indexes': [],
-                'constraints': [],
+                "proxy": True,
+                "indexes": [],
+                "constraints": [],
             },
-            bases=('drscm.invoice',),
+            bases=("drscm.invoice",),
         ),
     ]

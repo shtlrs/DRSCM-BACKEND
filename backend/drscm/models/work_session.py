@@ -53,4 +53,3 @@ class WorkSession(models.Model):
             f"Session: {timestamp_to_date_string(self.start_timestamp)} ->"
             f" {timestamp_to_date_string(self.end_timestamp)}"
         )
-

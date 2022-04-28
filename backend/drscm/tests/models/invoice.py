@@ -1,10 +1,7 @@
 from rest_framework.test import APITestCase
 
 
-
 class InvoiceModelTests(APITestCase):
-
-
     def test_create_new_invoice(self):
         self.fail()
 
@@ -40,4 +37,3 @@ class InvoiceModelTests(APITestCase):
 
     def test_delete_invoice_hourly_travel_sessions(self):
         self.fail()
-

@@ -6,19 +6,18 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('drscm', '0007_alter_worksession_options'),
+        ("drscm", "0007_alter_worksession_options"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='WorkSessionProxy',
-            fields=[
-            ],
+            name="WorkSessionProxy",
+            fields=[],
             options={
-                'proxy': True,
-                'indexes': [],
-                'constraints': [],
+                "proxy": True,
+                "indexes": [],
+                "constraints": [],
             },
-            bases=('drscm.worksession',),
+            bases=("drscm.worksession",),
         ),
     ]

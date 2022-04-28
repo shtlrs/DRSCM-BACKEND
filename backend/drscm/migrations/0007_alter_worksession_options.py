@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('drscm', '0006_invoice'),
+        ("drscm", "0006_invoice"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='worksession',
-            options={'ordering': ('start_timestamp',)},
+            name="worksession",
+            options={"ordering": ("start_timestamp",)},
         ),
     ]

@@ -3,7 +3,6 @@ from utils.date import time_stamp_to_date_time, seconds_to_hours
 
 
 class WorkSessionProxy(WorkSession):
-
     class Meta:
         proxy = True
 
@@ -15,4 +14,3 @@ class WorkSessionProxy(WorkSession):
 
     def get_total(self):
         return self.project.hourly_rate * self.get_session_duration()
-

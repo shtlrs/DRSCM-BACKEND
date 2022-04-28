@@ -2,8 +2,6 @@ from drscm.models import FixedTravel
 
 
 class FixedTravelProxy(FixedTravel):
-
-
     class Meta:
         proxy = True
 

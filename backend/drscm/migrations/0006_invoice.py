@@ -9,20 +9,44 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('drscm', '0005_auto_20220427_0106'),
+        ("drscm", "0005_auto_20220427_0106"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Invoice',
+            name="Invoice",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('client', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='drscm.client')),
-                ('fixed_travels', models.ManyToManyField(to='drscm.FixedTravel')),
-                ('hourly_travels', models.ManyToManyField(to='drscm.HourlyTravel')),
-                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('project', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='drscm.project')),
-                ('work_sessions', models.ManyToManyField(to='drscm.WorkSession')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                (
+                    "client",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="drscm.client"
+                    ),
+                ),
+                ("fixed_travels", models.ManyToManyField(to="drscm.FixedTravel")),
+                ("hourly_travels", models.ManyToManyField(to="drscm.HourlyTravel")),
+                (
+                    "owner",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "project",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="drscm.project"
+                    ),
+                ),
+                ("work_sessions", models.ManyToManyField(to="drscm.WorkSession")),
             ],
         ),
     ]

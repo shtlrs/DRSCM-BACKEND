@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('drscm', '0008_worksessionproxy'),
+        ("drscm", "0008_worksessionproxy"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='project',
-            name='hourly_rate',
+            model_name="project",
+            name="hourly_rate",
         ),
     ]

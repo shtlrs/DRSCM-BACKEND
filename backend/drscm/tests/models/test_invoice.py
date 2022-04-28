@@ -12,7 +12,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from drscm.tests.helpers import (
     create_random_user,
     create_random_client,
-    create_random_work_session,
     create_random_project,
     create_random_hourly_travel,
     create_random_fixed_travel,
@@ -41,8 +40,9 @@ class InvoiceModelTests(APITestCase):
     def test_create_new_invoice(self):
         self.work_session1.save()
         self.work_session2.save()
-        invoice = Invoice(project=self.project)
-        invoice.work_sessions.set([self.work_session1, self.work_session2])
+        invoice = create_random_invoice(
+            project=self.project, work_sessions=[self.work_session1, self.work_session2]
+        )
         invoices = Invoice.objects.all()
         self.assertEqual(0, len(invoices))
 
@@ -55,10 +55,6 @@ class InvoiceModelTests(APITestCase):
         self.work_session2.save()
         invoice = Invoice(project=None)
         self.assertRaises(ObjectDoesNotExist, invoice.save)
-
-    def test_check_invoice_is_created_with_correct_ranges(self):
-        # This needs to be as a view test
-        pass
 
     def test_invoice_total(self):
         invoice_total = 0.0

@@ -9,7 +9,7 @@ def create_random_invoice(
     fixed_travels: List[FixedTravel] = None,
     hourly_travels: List[HourlyTravel] = None,
     save=False,
-):
+) -> InvoiceProxy:
 
     invoice = InvoiceProxy()
 

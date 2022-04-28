@@ -8,3 +8,4 @@ from .travel import (
     CreateAndListFixedTravelsView,
     FixedTravelDetailsView,
 )
+from .invoices import CreateAndListInvoicesView, InvoiceDetailsView

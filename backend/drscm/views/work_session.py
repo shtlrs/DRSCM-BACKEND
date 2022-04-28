@@ -1,10 +1,11 @@
 from drf_spectacular.utils import extend_schema_view, extend_schema
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from drscm.models import WorkSession
 from drscm.permissions.model.is_owner import IsSuperUserOrOwner
 from drscm.serializers import WorkSessionSerializer
-from rest_framework import generics
+from rest_framework import generics, status
 
 
 @extend_schema_view(
@@ -25,7 +26,10 @@ class CreateAndListWorkSessionView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        if serializer.is_valid():
+            serializer.save(owner=self.request.user)
+            return Response(serializer.validated_data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get_queryset(self):
         user = self.request.user

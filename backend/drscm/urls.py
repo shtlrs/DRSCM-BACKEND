@@ -9,6 +9,8 @@ from drscm.views import (
     CreateAndListFixedTravelsView,
     FixedTravelDetailsView,
 )
+from drscm.views import InvoiceDetailsView, CreateAndListInvoicesView
+
 
 urlpatterns = [
     path(
@@ -61,5 +63,15 @@ urlpatterns = [
         "travel/hourly/<uuid:pk>",
         HourlyTravelDetailsView.as_view(),
         name=HourlyTravelDetailsView.view_name,
+    ),
+    path(
+        "invoices",
+        CreateAndListInvoicesView.as_view(),
+        name=CreateAndListInvoicesView.view_name,
+    ),
+    path(
+        "invoices/<uuid:pk>",
+        InvoiceDetailsView.as_view(),
+        name=InvoiceDetailsView.view_name,
     ),
 ]

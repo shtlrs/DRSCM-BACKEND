@@ -54,4 +54,3 @@ def timestamp_to_date_string(timestamp: int, date_format: str = "%Y-%m-%d %H:%M"
     """
 
     return datetime.utcfromtimestamp(timestamp).strftime(date_format)
-

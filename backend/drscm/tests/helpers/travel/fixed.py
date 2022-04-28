@@ -11,7 +11,7 @@ def create_random_fixed_travel(
     rate: float = 2.5,
     occurrences: int = 1,
     save=False,
-):
+) -> FixedTravel:
 
     timestamp = timestamp or faker.future_datetime().timestamp()
     timestamp = purify_timestamp(timestamp)

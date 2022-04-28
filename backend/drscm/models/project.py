@@ -7,8 +7,9 @@ class Project(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     name = models.CharField(max_length=150)
-    travel_hourly_rate = models.FloatField()
-    travel_fixed_rate = models.FloatField()
+    hourly_rate = models.FloatField(null=False, blank=False, default=175)
+    travel_hourly_rate = models.FloatField(null=True, default=0, blank=True)
+    travel_fixed_rate = models.FloatField(null=True, default=0, blank=True)
     currency = models.CharField(max_length=10)
     owner = models.ForeignKey(to="User", related_name="projects", on_delete=models.CASCADE)
     client = models.ForeignKey(to=Client, related_name="projects", on_delete=models.CASCADE)

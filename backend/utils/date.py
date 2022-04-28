@@ -10,7 +10,7 @@ def date_time_to_timestamp(date_time: datetime):
     return date_time.timestamp()
 
 
-def purify_timestamp(timestamp: int) -> float:
+def purify_timestamp(timestamp: float) -> float:
     """
     Removes the seconds & the milliseconds from the input timestamp
     """

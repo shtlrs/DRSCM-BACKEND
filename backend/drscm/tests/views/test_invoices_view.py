@@ -45,12 +45,6 @@ class InvoiceViewTests(APITestCase):
         cls.fixed_travel = create_random_fixed_travel(project=cls.project, save=True)
         cls.hourly_travel = create_random_hourly_travel(project=cls.project, save=True)
         cls.super_token = RefreshToken.for_user(cls.superowner)
-        cls.invoice = create_random_invoice(
-            project=cls.project,
-            work_sessions=[cls.work_session1, cls.work_session2],
-            fixed_travels=[cls.fixed_travel],
-            hourly_travels=[cls.hourly_travel],
-        )
 
     def setUp(self) -> None:
         self.client.credentials(HTTP_AUTHORIZATION=f"JWT {self.super_token.access_token}")
@@ -104,8 +98,14 @@ class InvoiceViewTests(APITestCase):
     def test_delete_invoice(self):
         self.work_session1.save()
         self.work_session2.save()
-        self.invoice.save()
-        url = reverse(InvoiceDetailsView.view_name, args=[self.invoice.id])
+        invoice = create_random_invoice(
+            project=self.project,
+            work_sessions=[self.work_session1, self.work_session2],
+            fixed_travels=[self.fixed_travel],
+            hourly_travels=[self.hourly_travel],
+            save=True
+        )
+        url = reverse(InvoiceDetailsView.view_name, args=[invoice.id])
 
         response = self.client.delete(path=url)
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
@@ -114,27 +114,45 @@ class InvoiceViewTests(APITestCase):
     def test_delete_invoice_work_sessions(self):
         self.work_session1.save()
         self.work_session2.save()
-        self.invoice.save()
+        invoice = create_random_invoice(
+            project=self.project,
+            work_sessions=[self.work_session1, self.work_session2],
+            fixed_travels=[self.fixed_travel],
+            hourly_travels=[self.hourly_travel],
+            save=True
+        )
         url = reverse(WorkSessionDetailsView.view_name, args=[self.work_session1.id])
         response = self.client.delete(path=url)
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
-        self.assertEqual(1, len(self.invoice.work_sessions.all()))
-        self.assertIn(self.work_session2, self.invoice.work_sessions.all())
+        self.assertEqual(1, len(invoice.work_sessions.all()))
+        self.assertIn(self.work_session2, invoice.work_sessions.all())
 
     def test_delete_invoice_fixed_travel_sessions(self):
         self.work_session1.save()
         self.work_session2.save()
-        self.invoice.save()
+        invoice = create_random_invoice(
+            project=self.project,
+            work_sessions=[self.work_session1, self.work_session2],
+            fixed_travels=[self.fixed_travel],
+            hourly_travels=[self.hourly_travel],
+            save=True
+        )
         url = reverse(FixedTravelDetailsView.view_name, args=[self.fixed_travel.id])
         response = self.client.delete(path=url)
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
-        self.assertEqual(0, len(self.invoice.fixed_travels.all()))
+        self.assertEqual(0, len(invoice.fixed_travels.all()))
 
     def test_delete_invoice_hourly_travel_sessions(self):
         self.work_session1.save()
         self.work_session2.save()
-        self.invoice.save()
+        invoice = create_random_invoice(
+            project=self.project,
+            work_sessions=[self.work_session1, self.work_session2],
+            fixed_travels=[self.fixed_travel],
+            hourly_travels=[self.hourly_travel],
+            save=True
+        )
         url = reverse(HourlyTravelDetailsView.view_name, args=[self.hourly_travel.id])
         response = self.client.delete(path=url)
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
-        self.assertEqual(0, len(self.invoice.hourly_travels.all()))
+        self.assertEqual(0, len(invoice.hourly_travels.all()))

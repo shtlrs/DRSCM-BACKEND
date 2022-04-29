@@ -3,6 +3,12 @@ from datetime import datetime
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from drscm.proxies import (
+    InvoiceProxy,
+    WorkSessionProxy,
+    FixedTravelProxy,
+    HourlyTravelProxy,
+)
 from drscm.views import (
     InvoiceDetailsView,
     CreateAndListInvoicesView,
@@ -13,7 +19,12 @@ from drscm.views import (
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 from drscm.models import WorkSession, Invoice
-from drscm.serializers import InvoiceSerializer, FixedTravelSerializer, HourlyTravelSerializer, WorkSessionSerializer
+from drscm.serializers import (
+    InvoiceSerializer,
+    FixedTravelSerializer,
+    HourlyTravelSerializer,
+    WorkSessionSerializer,
+)
 from utils.date import date_time_to_timestamp
 from drscm.tests.helpers import (
     create_random_user,
@@ -76,11 +87,39 @@ class InvoiceViewTests(APITestCase):
         invoice.owner = self.superowner
         invoice.client = self.client_
         serializer = InvoiceSerializer(instance=invoice)
-        response = self.client.post(path=url, data=serializer.data, content_type="application/json")
+        response = self.client.post(
+            path=url, data=serializer.data, content_type="application/json"
+        )
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
 
     def test_invoice_total(self):
-        self.fail()
+        self.work_session1.save()
+        self.work_session2.save()
+        ws1_proxy = WorkSessionProxy.objects.get(pk=self.work_session1.id)
+        ws2_proxy = WorkSessionProxy.objects.get(pk=self.work_session2.id)
+        fixed_travel_proxy = FixedTravelProxy.objects.get(pk=self.fixed_travel.id)
+        hourly_travel_proxy = HourlyTravelProxy.objects.get(pk=self.hourly_travel.id)
+        self.work_session2.save()
+        new_invoice = create_random_invoice(
+            project=self.project,
+            owner=self.superowner,
+            client=self.client_,
+            work_sessions=[self.work_session1, self.work_session2],
+            fixed_travels=[self.fixed_travel],
+            hourly_travels=[self.hourly_travel],
+        )
+        serializer = InvoiceSerializer(instance=new_invoice)
+        url = reverse(CreateAndListInvoicesView.view_name)
+        self.client.post(path=url, data=serializer.data)
+
+        invoice = InvoiceProxy.objects.get(work_sessions__in=[self.work_session1, self.work_session2])
+        self.assertEqual(
+            invoice.get_total(),
+            ws1_proxy.get_total()
+            + ws2_proxy.get_total()
+            + fixed_travel_proxy.get_total()
+            + hourly_travel_proxy.get_total(),
+        )
 
     def test_invoice_total_with_particular_range(self):
         self.fail()
@@ -88,7 +127,11 @@ class InvoiceViewTests(APITestCase):
     def test_patch_invoice_work_sessions(self):
         self.work_session1.save()
         self.work_session2.save()
-        new_invoice = create_random_invoice(project=self.project, work_sessions=[self.work_session1, self.work_session2], save=True)
+        new_invoice = create_random_invoice(
+            project=self.project,
+            work_sessions=[self.work_session1, self.work_session2],
+            save=True,
+        )
         new_timestamp = self.work_session1.start_timestamp - 100
         self.work_session1.start_timestamp = new_timestamp
         url = reverse(WorkSessionDetailsView.view_name, args=[self.work_session1.id])
@@ -100,7 +143,9 @@ class InvoiceViewTests(APITestCase):
         self.assertEqual(new_timestamp, invoice_session1.start_timestamp)
 
     def test_patch_invoice_hourly_travel_sessions(self):
-        new_invoice = create_random_invoice(project=self.project, hourly_travels=[self.hourly_travel], save=True)
+        new_invoice = create_random_invoice(
+            project=self.project, hourly_travels=[self.hourly_travel], save=True
+        )
         new_hours = self.hourly_travel.hours - 1
         self.hourly_travel.hours = new_hours
         serializer = HourlyTravelSerializer(instance=self.hourly_travel)
@@ -112,8 +157,10 @@ class InvoiceViewTests(APITestCase):
         self.assertEqual(new_hours, invoice.hourly_travels.first().hours)
 
     def test_patch_invoice_fixed_travel_sessions(self):
-        new_invoice = create_random_invoice(project=self.project, fixed_travels=[self.fixed_travel], save=True)
-        new_occurrences = self.fixed_travel.occurrences-1
+        new_invoice = create_random_invoice(
+            project=self.project, fixed_travels=[self.fixed_travel], save=True
+        )
+        new_occurrences = self.fixed_travel.occurrences - 1
         self.fixed_travel.occurrences = new_occurrences
         serializer = FixedTravelSerializer(instance=self.fixed_travel)
         url = reverse(FixedTravelDetailsView.view_name, args=[self.fixed_travel.id])
@@ -123,7 +170,6 @@ class InvoiceViewTests(APITestCase):
         self.assertEqual(1, len(invoice.fixed_travels.all()))
         self.assertEqual(new_occurrences, invoice.fixed_travels.first().occurrences)
 
-
     def test_delete_invoice(self):
         self.work_session1.save()
         self.work_session2.save()
@@ -132,7 +178,7 @@ class InvoiceViewTests(APITestCase):
             work_sessions=[self.work_session1, self.work_session2],
             fixed_travels=[self.fixed_travel],
             hourly_travels=[self.hourly_travel],
-            save=True
+            save=True,
         )
         url = reverse(InvoiceDetailsView.view_name, args=[invoice.id])
 
@@ -148,7 +194,7 @@ class InvoiceViewTests(APITestCase):
             work_sessions=[self.work_session1, self.work_session2],
             fixed_travels=[self.fixed_travel],
             hourly_travels=[self.hourly_travel],
-            save=True
+            save=True,
         )
         url = reverse(WorkSessionDetailsView.view_name, args=[self.work_session1.id])
         response = self.client.delete(path=url)
@@ -164,7 +210,7 @@ class InvoiceViewTests(APITestCase):
             work_sessions=[self.work_session1, self.work_session2],
             fixed_travels=[self.fixed_travel],
             hourly_travels=[self.hourly_travel],
-            save=True
+            save=True,
         )
         url = reverse(FixedTravelDetailsView.view_name, args=[self.fixed_travel.id])
         response = self.client.delete(path=url)
@@ -179,7 +225,7 @@ class InvoiceViewTests(APITestCase):
             work_sessions=[self.work_session1, self.work_session2],
             fixed_travels=[self.fixed_travel],
             hourly_travels=[self.hourly_travel],
-            save=True
+            save=True,
         )
         url = reverse(HourlyTravelDetailsView.view_name, args=[self.hourly_travel.id])
         response = self.client.delete(path=url)

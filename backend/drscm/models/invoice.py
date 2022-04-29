@@ -9,9 +9,9 @@ class Invoice(models.Model):
     owner = models.ForeignKey(to="User", on_delete=models.CASCADE)
     client = models.ForeignKey(to=Client, on_delete=models.CASCADE)
     project = models.ForeignKey(to=Project, on_delete=models.CASCADE)
-    work_sessions = models.ManyToManyField(WorkSession)
-    fixed_travels = models.ManyToManyField(FixedTravel)
-    hourly_travels = models.ManyToManyField(HourlyTravel)
+    work_sessions = models.ManyToManyField(WorkSession, blank=True)
+    fixed_travels = models.ManyToManyField(FixedTravel, blank=True)
+    hourly_travels = models.ManyToManyField(HourlyTravel, blank=True)
 
     def __str__(self):
         return f"{self.id}"

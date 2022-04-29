@@ -41,6 +41,12 @@ class InvoiceViewTests(APITestCase):
         cls.fixed_travel = create_random_fixed_travel(project=cls.project, save=True)
         cls.hourly_travel = create_random_hourly_travel(project=cls.project, save=True)
         cls.super_token = RefreshToken.for_user(cls.superowner)
+        cls.invoice = create_random_invoice(
+            project=cls.project,
+            work_sessions=[cls.work_session1, cls.work_session2],
+            fixed_travels=[cls.fixed_travel],
+            hourly_travels=[cls.hourly_travel],
+        )
 
     def setUp(self) -> None:
         self.client.credentials(HTTP_AUTHORIZATION=f"JWT {self.super_token.access_token}")
@@ -73,6 +79,9 @@ class InvoiceViewTests(APITestCase):
     def test_invoice_total(self):
         self.fail()
 
+    def test_invoice_total_with_particular_range(self):
+        self.fail()
+
     def test_patch_invoice_work_sessions(self):
         self.fail()
 
@@ -83,7 +92,14 @@ class InvoiceViewTests(APITestCase):
         self.fail()
 
     def test_delete_invoice(self):
-        self.fail()
+        self.work_session1.save()
+        self.work_session2.save()
+        self.invoice.save()
+        url = reverse(InvoiceDetailsView.view_name, args=[self.invoice.id])
+
+        response = self.client.delete(path=url)
+        self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
+        self.assertEqual(2, len(WorkSession.objects.all()))
 
     def test_delete_invoice_work_sessions(self):
         self.fail()

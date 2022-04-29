@@ -13,7 +13,7 @@ from drscm.views import (
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 from drscm.models import WorkSession, Invoice
-from drscm.serializers import InvoiceSerializer
+from drscm.serializers import InvoiceSerializer, FixedTravelSerializer, HourlyTravelSerializer, WorkSessionSerializer
 from utils.date import date_time_to_timestamp
 from drscm.tests.helpers import (
     create_random_user,
@@ -67,8 +67,7 @@ class InvoiceViewTests(APITestCase):
         We're setting the relation to an empty one here because during fixture teardown
         Django uses the flush command which doesn't cascade deletions but just tries to delete everything
         """
-        invoice.work_sessions.set([])
-        invoice.save()
+        invoice.work_sessions.clear()
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
 
     def test_create_new_invoice_with_no_project(self):
@@ -87,13 +86,43 @@ class InvoiceViewTests(APITestCase):
         self.fail()
 
     def test_patch_invoice_work_sessions(self):
-        self.fail()
+        self.work_session1.save()
+        self.work_session2.save()
+        new_invoice = create_random_invoice(project=self.project, work_sessions=[self.work_session1, self.work_session2], save=True)
+        new_timestamp = self.work_session1.start_timestamp - 100
+        self.work_session1.start_timestamp = new_timestamp
+        url = reverse(WorkSessionDetailsView.view_name, args=[self.work_session1.id])
+        serializer = WorkSessionSerializer(instance=self.work_session1)
+        response = self.client.patch(path=url, data=serializer.data)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        invoice = Invoice.objects.get(pk=new_invoice.id)
+        invoice_session1 = invoice.work_sessions.get(pk=self.work_session1.id)
+        self.assertEqual(new_timestamp, invoice_session1.start_timestamp)
 
     def test_patch_invoice_hourly_travel_sessions(self):
-        self.fail()
+        new_invoice = create_random_invoice(project=self.project, hourly_travels=[self.hourly_travel], save=True)
+        new_hours = self.hourly_travel.hours - 1
+        self.hourly_travel.hours = new_hours
+        serializer = HourlyTravelSerializer(instance=self.hourly_travel)
+        url = reverse(HourlyTravelDetailsView.view_name, args=[self.hourly_travel.id])
+        response = self.client.patch(path=url, data=serializer.data)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        invoice = Invoice.objects.get(pk=new_invoice.id)
+        self.assertEqual(1, len(invoice.hourly_travels.all()))
+        self.assertEqual(new_hours, invoice.hourly_travels.first().hours)
 
     def test_patch_invoice_fixed_travel_sessions(self):
-        self.fail()
+        new_invoice = create_random_invoice(project=self.project, fixed_travels=[self.fixed_travel], save=True)
+        new_occurrences = self.fixed_travel.occurrences-1
+        self.fixed_travel.occurrences = new_occurrences
+        serializer = FixedTravelSerializer(instance=self.fixed_travel)
+        url = reverse(FixedTravelDetailsView.view_name, args=[self.fixed_travel.id])
+        response = self.client.patch(path=url, data=serializer.data)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        invoice = Invoice.objects.get(pk=new_invoice.id)
+        self.assertEqual(1, len(invoice.fixed_travels.all()))
+        self.assertEqual(new_occurrences, invoice.fixed_travels.first().occurrences)
+
 
     def test_delete_invoice(self):
         self.work_session1.save()

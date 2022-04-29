@@ -20,6 +20,8 @@ from drscm.tests.helpers import (
 
 
 class InvoiceViewTests(APITestCase):
+
+
     @classmethod
     def setUpTestData(cls):
         cls.superowner = create_random_user(is_superuser=True, save=True)
@@ -57,6 +59,12 @@ class InvoiceViewTests(APITestCase):
         invoice.client = self.client_
         serializer = InvoiceSerializer(instance=invoice)
         response = self.client.post(path=url, data=serializer.data)
+        """
+        We're setting the relation to an empty one here because during fixture teardown
+        Django uses the flush command which doesn't cascade deletions but just tries to delete everything
+        """
+        invoice.work_sessions.set([])
+        invoice.save()
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
 
     def test_create_new_invoice_with_no_project(self):

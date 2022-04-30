@@ -1,9 +1,10 @@
-from drscm.models import Invoice
+from drscm.models import Invoice, Billable
 from .work_sessions import WorkSessionProxy
 from .travel import HourlyTravelProxy, FixedTravelProxy
 
 
-class InvoiceProxy(Invoice):
+class InvoiceProxy(Invoice, Billable):
+
     class Meta:
         proxy = True
 

@@ -53,4 +53,8 @@ def timestamp_to_date_string(timestamp: float, date_format: str = "%Y-%m-%d %H:%
     Returns a string representing a timestamp in a particular format
     """
 
-    return datetime.utcfromtimestamp(timestamp).replace(tzinfo=timezone.utc).strftime(date_format)
+    return (
+        datetime.utcfromtimestamp(timestamp)
+        .replace(tzinfo=timezone.utc)
+        .strftime(date_format)
+    )

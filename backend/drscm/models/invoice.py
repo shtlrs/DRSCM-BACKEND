@@ -1,21 +1,6 @@
 import uuid
-from abc import abstractmethod, ABCMeta
 from django.db import models
 from drscm.models import Client, Project, WorkSession, FixedTravel, HourlyTravel
-
-
-class AbstractModelMeta(ABCMeta, type(models.Model)):
-    pass
-
-
-class Billable(models.Model, metaclass=AbstractModelMeta):
-
-    @abstractmethod
-    def get_total(self):
-        pass
-
-    class Meta:
-        abstract = True
 
 
 class Invoice(models.Model):

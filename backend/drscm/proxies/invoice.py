@@ -1,4 +1,5 @@
-from drscm.models import Invoice, Billable
+from drscm.models import Invoice
+from drscm.interfaces.billable import Billable
 from .work_sessions import WorkSessionProxy
 from .travel import HourlyTravelProxy, FixedTravelProxy
 

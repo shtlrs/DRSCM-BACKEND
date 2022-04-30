@@ -1,6 +1,6 @@
 from __future__ import annotations
 from datetime import datetime
-
+from pytz import UTC
 
 def date_time_to_timestamp(date_time: datetime):
     """
@@ -32,20 +32,20 @@ def seconds_to_hours(seconds: int):
     minutes, seconds = divmod(seconds, 60)
     hours, minutes = divmod(minutes, 60)
 
-    if seconds > 30:
+    if seconds >= 30:
         minutes += 1
 
     if hours > 0:
-        return round(hours + minutes / 60, 1)
+        return hours + round(minutes / 60, 2)
 
-    return round(minutes / 60, 1)
+    return round(minutes / 60, 2)
 
 
 def time_stamp_to_date_time(timestamp: int):
     """
     Returns a datetime object out of a timestamp
     """
-    return datetime.utcfromtimestamp(timestamp)
+    return datetime.utcfromtimestamp(timestamp).replace(tzinfo=UTC)
 
 
 def timestamp_to_date_string(timestamp: int, date_format: str = "%Y-%m-%d %H:%M"):
@@ -53,4 +53,4 @@ def timestamp_to_date_string(timestamp: int, date_format: str = "%Y-%m-%d %H:%M"
     Returns a string representing a timestamp in a particular format
     """
 
-    return datetime.utcfromtimestamp(timestamp).strftime(date_format)
+    return datetime.utcfromtimestamp(timestamp).replace(tzinfo=UTC).strftime(date_format)

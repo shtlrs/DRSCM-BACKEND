@@ -1,6 +1,4 @@
 from datetime import datetime
-
-from django.test import override_settings
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -38,8 +36,9 @@ from drscm.tests.helpers import (
 
 
 class InvoiceViewTests(APITestCase):
+
+
     @classmethod
-    @override_settings(DEBUG=True)
     def setUpTestData(cls):
         cls.superowner = create_random_user(is_superuser=True, save=True)
         cls.client_ = create_random_client(owner=cls.superowner, save=True)
@@ -88,7 +87,6 @@ class InvoiceViewTests(APITestCase):
         )
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
 
-    @override_settings(DEBUG=True)
     def test_invoice_total(self):
         self.work_session1.save()
         self.work_session2.save()

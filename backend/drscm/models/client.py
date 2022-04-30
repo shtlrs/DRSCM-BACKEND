@@ -12,5 +12,5 @@ class Client(models.Model):
     street = models.CharField(max_length=100)
     owner = models.ForeignKey(to="User", related_name="clients", on_delete=models.CASCADE)
 
-    def __repr__(self):
+    def __str__(self):
         return self.name

@@ -5,11 +5,8 @@ from drscm.tests.helpers.user import create_random_user
 
 class UserModelTests(TestCase):
     def test_create_user(self):
-        user1 = create_random_user()
-        user1.save()
-
-        user2 = create_random_user()
-        user2.save()
+        user1 = create_random_user(save=True)
+        user2 = create_random_user(save=True)
 
         users = User.objects.all()
         self.assertEqual(len(users), 2)
@@ -18,36 +15,10 @@ class UserModelTests(TestCase):
 
     def test_create_superuser(self):
 
-        superuser = create_random_user(is_superuser=True)
-        superuser.save()
-
-        user = create_random_user()
-        user.save()
+        superuser = create_random_user(is_superuser=True, save=True)
+        user = create_random_user(save=True)
 
         users = User.objects.filter(is_superuser=True)
         self.assertIn(superuser, users)
+        self.assertNotIn(user, users)
         self.assertEqual(1, len(users))
-
-    def list_all_clients_for_superuser(self):
-        """
-        Test that a super user can see all client
-        """
-        self.assertEqual(1, 2)
-
-    def list_all_projects_for_superuser(self):
-        """
-        Test that a superuser can see all projects
-        """
-        self.assertEqual(1, 2)
-
-    def list_appropriate_clients_for_user(self):
-        """
-        Test that each user can only see their clients
-        """
-        self.assertEqual(1, 2)
-
-    def list_appropriate_projects_for_user(self):
-        """
-        Test that each user can only see their clients
-        """
-        self.assertEqual(1, 2)

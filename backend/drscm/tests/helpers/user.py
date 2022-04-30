@@ -5,7 +5,7 @@ fake = Faker()
 
 
 def create_random_user(
-    username=None, email=None, password=None, is_superuser=False
+    username=None, email=None, password=None, is_superuser=False, save=False
 ) -> User:
     username = username if username else fake.name()
     email = email if email else fake.email()
@@ -19,4 +19,8 @@ def create_random_user(
         user = User.objects.create_user(username=username, email=email, password=password)
 
     user.raw_password = password
+
+    if save:
+        user.save()
+
     return user

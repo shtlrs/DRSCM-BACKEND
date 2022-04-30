@@ -123,9 +123,6 @@ class InvoiceViewTests(APITestCase):
     def _post_teardown(self):
         super(InvoiceViewTests, self)._post_teardown()
 
-    def test_invoice_total_with_particular_range(self):
-        self.fail()
-
     def test_patch_invoice_work_sessions(self):
         self.work_session1.save()
         self.work_session2.save()

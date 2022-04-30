@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.test import override_settings
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -38,6 +39,7 @@ from drscm.tests.helpers import (
 
 class InvoiceViewTests(APITestCase):
     @classmethod
+    @override_settings(DEBUG=True)
     def setUpTestData(cls):
         cls.superowner = create_random_user(is_superuser=True, save=True)
         cls.client_ = create_random_client(owner=cls.superowner, save=True)
@@ -64,21 +66,19 @@ class InvoiceViewTests(APITestCase):
         self.work_session1.save()
         self.work_session2.save()
         url = reverse(CreateAndListInvoicesView.view_name)
-        invoice = create_random_invoice(
-            project=self.project,
-            work_sessions=[self.work_session1, self.work_session2],
-            fixed_travels=[self.fixed_travel],
-            hourly_travels=[self.hourly_travel],
-        )
-        invoice.owner = self.superowner
-        invoice.client = self.client_
-        serializer = InvoiceSerializer(instance=invoice)
-        response = self.client.post(path=url, data=serializer.data)
+        data = {
+            'client': self.client_.id,
+            'owner': self.superowner.id,
+            'project': self.project.id,
+            'work_sessions': [self.work_session1.id, self.work_session2.id],
+            'fixed_travels': [self.fixed_travel.id],
+            'hourly_travels': [self.hourly_travel.id]
+        }
+        response = self.client.post(path=url, data=data)
         """
         We're setting the relation to an empty one here because during fixture teardown
         Django uses the flush command which doesn't cascade deletions but just tries to delete everything
         """
-        invoice.work_sessions.clear()
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
 
     def test_create_new_invoice_with_no_project(self):
@@ -92,6 +92,7 @@ class InvoiceViewTests(APITestCase):
         )
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
 
+    @override_settings(DEBUG=True)
     def test_invoice_total(self):
         self.work_session1.save()
         self.work_session2.save()
@@ -99,20 +100,18 @@ class InvoiceViewTests(APITestCase):
         ws2_proxy = WorkSessionProxy.objects.get(pk=self.work_session2.id)
         fixed_travel_proxy = FixedTravelProxy.objects.get(pk=self.fixed_travel.id)
         hourly_travel_proxy = HourlyTravelProxy.objects.get(pk=self.hourly_travel.id)
-        self.work_session2.save()
-        new_invoice = create_random_invoice(
-            project=self.project,
-            owner=self.superowner,
-            client=self.client_,
-            work_sessions=[self.work_session1, self.work_session2],
-            fixed_travels=[self.fixed_travel],
-            hourly_travels=[self.hourly_travel],
-        )
-        serializer = InvoiceSerializer(instance=new_invoice)
+        data = {
+            'client': self.client_.id,
+            'owner': self.superowner.id,
+            'project': self.project.id,
+            'work_sessions': [self.work_session1.id, self.work_session2.id],
+            'fixed_travels': [self.fixed_travel.id],
+            'hourly_travels': [self.hourly_travel.id]
+        }
         url = reverse(CreateAndListInvoicesView.view_name)
-        self.client.post(path=url, data=serializer.data)
+        self.client.post(path=url, data=data)
 
-        invoice = InvoiceProxy.objects.get(work_sessions__in=[self.work_session1, self.work_session2])
+        invoice = InvoiceProxy.objects.filter(work_sessions__in=[self.work_session1, self.work_session2]).distinct().first()
         self.assertEqual(
             invoice.get_total(),
             ws1_proxy.get_total()
@@ -120,6 +119,9 @@ class InvoiceViewTests(APITestCase):
             + fixed_travel_proxy.get_total()
             + hourly_travel_proxy.get_total(),
         )
+
+    def _post_teardown(self):
+        super(InvoiceViewTests, self)._post_teardown()
 
     def test_invoice_total_with_particular_range(self):
         self.fail()

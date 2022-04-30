@@ -23,6 +23,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Run Tests
+        uses: szenius/set-timezone@v1.0
+        with:
+          timezoneLinux: "UTC"
         working-directory: ./backend
         run: |
           python manage.py test

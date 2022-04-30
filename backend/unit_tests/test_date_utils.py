@@ -6,9 +6,8 @@ from utils.date import (
     timestamp_to_date_string,
     time_stamp_to_date_time,
 )
-from datetime import datetime
+from datetime import datetime, timezone
 from django.test import TestCase
-from pytz import UTC
 
 
 class DateUtilsTests(TestCase):
@@ -21,7 +20,7 @@ class DateUtilsTests(TestCase):
             minute=50,
             second=37,
             microsecond=0,
-            tzinfo=UTC,
+            tzinfo=timezone.utc,
         ).timestamp()
         timestamp = purify_timestamp(timestamp)
         self.assertEqual(timestamp, 1647787800.0)
@@ -35,7 +34,7 @@ class DateUtilsTests(TestCase):
             minute=50,
             second=37,
             microsecond=0,
-            tzinfo=UTC,
+            tzinfo=timezone.utc,
         )
         timestamp = date_time_to_timestamp(date)
         self.assertEqual(1647791400.0, timestamp)
@@ -50,7 +49,7 @@ class DateUtilsTests(TestCase):
             minute=50,
             second=37,
             microsecond=0,
-            tzinfo=UTC,
+            tzinfo=timezone.utc,
         )
         date = time_stamp_to_date_time(timestamp)
         self.assertEqual(target_date, date)
@@ -64,7 +63,7 @@ class DateUtilsTests(TestCase):
             minute=50,
             second=37,
             microsecond=0,
-            tzinfo=UTC,
+            tzinfo=timezone.utc,
         ).timestamp()
         date_string = timestamp_to_date_string(timestamp)
         self.assertEqual("2022-03-20 15:50", date_string)

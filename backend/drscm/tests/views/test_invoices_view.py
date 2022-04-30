@@ -36,8 +36,6 @@ from drscm.tests.helpers import (
 
 
 class InvoiceViewTests(APITestCase):
-
-
     @classmethod
     def setUpTestData(cls):
         cls.superowner = create_random_user(is_superuser=True, save=True)

@@ -2,6 +2,7 @@ from __future__ import annotations
 from datetime import datetime
 from pytz import UTC
 
+
 def date_time_to_timestamp(date_time: datetime):
     """
     Transforms a datetime object into a timestamp with 0 seconds and microseconds

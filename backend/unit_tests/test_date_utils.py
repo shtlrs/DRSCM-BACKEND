@@ -1,5 +1,5 @@
-from utils.date import purify_timestamp, date_time_to_timestamp
-from datetime import datetime, tzinfo
+from utils.date import purify_timestamp
+from datetime import datetime
 from django.test import TestCase
 
 

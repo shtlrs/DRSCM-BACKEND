@@ -6,23 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('drscm', '0011_auto_20220428_0140'),
+        ("drscm", "0011_auto_20220428_0140"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='invoice',
-            name='fixed_travels',
-            field=models.ManyToManyField(blank=True, to='drscm.FixedTravel'),
+            model_name="invoice",
+            name="fixed_travels",
+            field=models.ManyToManyField(blank=True, to="drscm.FixedTravel"),
         ),
         migrations.AlterField(
-            model_name='invoice',
-            name='hourly_travels',
-            field=models.ManyToManyField(blank=True, to='drscm.HourlyTravel'),
+            model_name="invoice",
+            name="hourly_travels",
+            field=models.ManyToManyField(blank=True, to="drscm.HourlyTravel"),
         ),
         migrations.AlterField(
-            model_name='invoice',
-            name='work_sessions',
-            field=models.ManyToManyField(blank=True, to='drscm.WorkSession'),
+            model_name="invoice",
+            name="work_sessions",
+            field=models.ManyToManyField(blank=True, to="drscm.WorkSession"),
         ),
     ]

@@ -67,18 +67,14 @@ class InvoiceViewTests(APITestCase):
         self.work_session2.save()
         url = reverse(CreateAndListInvoicesView.view_name)
         data = {
-            'client': self.client_.id,
-            'owner': self.superowner.id,
-            'project': self.project.id,
-            'work_sessions': [self.work_session1.id, self.work_session2.id],
-            'fixed_travels': [self.fixed_travel.id],
-            'hourly_travels': [self.hourly_travel.id]
+            "client": self.client_.id,
+            "owner": self.superowner.id,
+            "project": self.project.id,
+            "work_sessions": [self.work_session1.id, self.work_session2.id],
+            "fixed_travels": [self.fixed_travel.id],
+            "hourly_travels": [self.hourly_travel.id],
         }
         response = self.client.post(path=url, data=data)
-        """
-        We're setting the relation to an empty one here because during fixture teardown
-        Django uses the flush command which doesn't cascade deletions but just tries to delete everything
-        """
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
 
     def test_create_new_invoice_with_no_project(self):
@@ -101,17 +97,23 @@ class InvoiceViewTests(APITestCase):
         fixed_travel_proxy = FixedTravelProxy.objects.get(pk=self.fixed_travel.id)
         hourly_travel_proxy = HourlyTravelProxy.objects.get(pk=self.hourly_travel.id)
         data = {
-            'client': self.client_.id,
-            'owner': self.superowner.id,
-            'project': self.project.id,
-            'work_sessions': [self.work_session1.id, self.work_session2.id],
-            'fixed_travels': [self.fixed_travel.id],
-            'hourly_travels': [self.hourly_travel.id]
+            "client": self.client_.id,
+            "owner": self.superowner.id,
+            "project": self.project.id,
+            "work_sessions": [self.work_session1.id, self.work_session2.id],
+            "fixed_travels": [self.fixed_travel.id],
+            "hourly_travels": [self.hourly_travel.id],
         }
         url = reverse(CreateAndListInvoicesView.view_name)
         self.client.post(path=url, data=data)
 
-        invoice = InvoiceProxy.objects.filter(work_sessions__in=[self.work_session1, self.work_session2]).distinct().first()
+        invoice = (
+            InvoiceProxy.objects.filter(
+                work_sessions__in=[self.work_session1, self.work_session2]
+            )
+            .distinct()
+            .first()
+        )
         self.assertEqual(
             invoice.get_total(),
             ws1_proxy.get_total()

@@ -26,4 +26,3 @@ class Invoice(models.Model):
             using=using,
             update_fields=update_fields,
         )
-

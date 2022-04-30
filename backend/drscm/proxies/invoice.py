@@ -5,7 +5,6 @@ from .travel import HourlyTravelProxy, FixedTravelProxy
 
 
 class InvoiceProxy(Invoice, Billable):
-
     class Meta:
         proxy = True
 

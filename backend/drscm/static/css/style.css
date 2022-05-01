@@ -1,8 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Hind:wght@600&display=swap');
+
 table, th, td {
   border: 1px solid black;
   border-collapse: collapse;
+  font-family: Arial, serif;
 }
 
 thead {
     background-color: grey;
+    font-family: Arial, serif;
+}
+
+.red {
+    color: red;
+    font-family: Hind, serif;
+}
+
+.blue {
+    color: blue;
+    font-family: Hind, sans-serif;
 }

@@ -1,7 +1,8 @@
 from drscm.models import FixedTravel
+from drscm.interfaces import Billable
 
 
-class FixedTravelProxy(FixedTravel):
+class FixedTravelProxy(FixedTravel, Billable):
     class Meta:
         proxy = True
 

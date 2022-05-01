@@ -30,14 +30,20 @@ def get_current_timestamp_with_null_seconds():
 
 
 def seconds_to_hours_and_minutes(seconds: Union[float, int]):
+    """
+    Returns the number of hours and minutes out of pure seconds
+    """
     minutes, seconds = divmod(seconds, 60)
     hours, minutes = divmod(minutes, 60)
     return hours, minutes
 
 
 def seconds_to_hours(seconds: int):
-    minutes, seconds = divmod(seconds, 60)
-    hours, minutes = divmod(minutes, 60)
+    """
+        Returns the number of hours out of pure seconds
+    """
+
+    hours, minutes = seconds_to_hours_and_minutes(seconds)
 
     if seconds >= 30:
         minutes += 1

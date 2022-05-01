@@ -40,7 +40,7 @@ def seconds_to_hours_and_minutes(seconds: Union[float, int]):
 
 def seconds_to_hours(seconds: int):
     """
-        Returns the number of hours out of pure seconds
+    Returns the number of hours out of pure seconds
     """
 
     hours, minutes = seconds_to_hours_and_minutes(seconds)

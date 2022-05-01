@@ -8,4 +8,5 @@ class AbstractModelMeta(ABCMeta, ModelBase):
     """
     A meta class that will be used to create abstract proxy models
     """
+
     pass

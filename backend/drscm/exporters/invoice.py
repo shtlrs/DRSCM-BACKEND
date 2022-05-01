@@ -8,27 +8,23 @@ from backend.settings.dev import BASE_INVOICE_TEMPLATE
 
 
 class InvoiceExporter(AbstractExporter):
-
     def export(self, invoice: Billable, template_path: str):
         try:
             invoice_proxy = InvoiceProxy.objects.get(pk=invoice.id)
             document = Document(BASE_INVOICE_TEMPLATE)
-            # First thing to check is the tax regulations
-            # We'd need to make some kind of a generator per TAX regulation
-            if invoice_proxy.fixed_travels.exists():
-                # Add fixed travel row here
+            billables_table = document.tables[1]
+            if invoice_proxy.is_dutch():
+                table_generator = None
                 pass
-            if invoice_proxy.hourly_travels_proxy.exists():
-                # Add fixed travel row here
+            elif invoice_proxy.is_european():
+                table_generator = None
+                pass
+            elif invoice_proxy.is_non_european():
+                table_generator = None
                 pass
 
-            # add total rows here with styling
-
-
-
-
+            table_generator.generate()
+            # Export here
         except ObjectDoesNotExist:
             # To be defined later
             pass
-
-

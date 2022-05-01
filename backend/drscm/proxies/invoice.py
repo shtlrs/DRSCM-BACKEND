@@ -1,6 +1,6 @@
 from django.db.models import QuerySet
 
-from drscm.models import Invoice
+from drscm.models import Invoice, TaxRegulation
 from drscm.interfaces.billable import Billable
 from utils.date import seconds_to_hours_and_minutes
 from .work_sessions import WorkSessionProxy
@@ -22,9 +22,13 @@ class InvoiceProxy(Invoice, Billable):
         self.hourly_travels_proxy = HourlyTravelProxy.objects.filter(invoice=self).all()
         self.work_sessions_proxy = WorkSessionProxy.objects.filter(invoice=self).all()
 
-
     def get_work_sessions_total_duration(self):
-        total_seconds = sum([work_session.session_duration.seconds for work_session in self.work_sessions_proxy])
+        total_seconds = sum(
+            [
+                work_session.session_duration.seconds
+                for work_session in self.work_sessions_proxy
+            ]
+        )
         hours, minutes = seconds_to_hours_and_minutes(total_seconds)
         return f"{hours:02}:{minutes:02}"
 
@@ -53,3 +57,21 @@ class InvoiceProxy(Invoice, Billable):
             + self.get_hourly_travels_total()
             + self.get_work_sessions_total()
         )
+
+    def is_dutch(self):
+        """
+        A predicate indicating whether the invoice follows Dutch tax regulations
+        """
+        return self.tax_regulation == TaxRegulation.DUTCH.value
+
+    def is_european(self):
+        """
+        A predicate indicating whether the invoice follows European tax regulations
+        """
+        return self.tax_regulation == TaxRegulation.EUROPEAN.value
+
+    def is_non_european(self):
+        """
+        A predicate indicating whether the invoice follows non-European tax regulations
+        """
+        return self.tax_regulation == TaxRegulation.NON_EUROPEAN.value

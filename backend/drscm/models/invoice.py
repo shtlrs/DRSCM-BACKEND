@@ -1,6 +1,21 @@
 import uuid
+from enum import Enum
 from django.db import models
 from drscm.models import Client, Project, WorkSession, FixedTravel, HourlyTravel
+
+
+class TaxRegulation(Enum):
+
+    DUTCH = 0
+    EUROPEAN = 1
+    NON_EUROPEAN = 2
+
+    @classmethod
+    def generate_choices(cls):
+        choices = []
+        for member in cls:
+            choices.append((member.value, member.name))
+        return choices
 
 
 class Invoice(models.Model):
@@ -12,6 +27,12 @@ class Invoice(models.Model):
     work_sessions = models.ManyToManyField(WorkSession, blank=True)
     fixed_travels = models.ManyToManyField(FixedTravel, blank=True)
     hourly_travels = models.ManyToManyField(HourlyTravel, blank=True)
+    tax_regulation = models.PositiveSmallIntegerField(
+        choices=TaxRegulation.generate_choices(),
+        blank=False,
+        null=False,
+        default=TaxRegulation.DUTCH.value,
+    )
 
     def __str__(self):
         return f"{self.id}"

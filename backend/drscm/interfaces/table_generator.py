@@ -68,7 +68,6 @@ class AbstractBilledAmountTableGenerator(AbstractTableGenerator):
         """
         pass
 
-
     def add_blank_row(self):
         """
         Adds a blank row, for style purposes

@@ -1,8 +1,13 @@
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.response import Response
+
 from drscm.models import Invoice
 from drscm.permissions.model.is_owner import IsSuperUserOrOwner
+from drscm.proxies import InvoiceProxy
 from drscm.serializers import InvoiceSerializer
 from drf_spectacular.utils import extend_schema, extend_schema_view
+from rest_framework.views import APIView
+from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework import generics
 
 
@@ -60,3 +65,16 @@ class InvoiceDetailsView(generics.RetrieveUpdateDestroyAPIView):
         IsAuthenticated,
         IsSuperUserOrOwner,
     )
+
+
+class InvoiceReportView(APIView):
+    view_name = "invoice_report_view"
+    model = InvoiceProxy
+    permission_classes = [AllowAny,]
+    renderer_classes = [TemplateHTMLRenderer]
+
+
+    def get(self, request, pk):
+        invoice = InvoiceProxy.objects.get(pk=pk)
+        print("aloha")
+        return Response({"work_sessions": invoice.work_sessions_proxy, "invoice": invoice}, template_name="invoice/base.html")

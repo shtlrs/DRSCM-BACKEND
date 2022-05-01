@@ -1,6 +1,10 @@
 from abc import ABC, abstractmethod
 from drscm.interfaces import Billable
-from docx.table import Table
+from docx.table import Table, _Row
+from docx.text.run import Font
+from docx.styles.style import _TableStyle
+
+from drscm.proxies import InvoiceProxy
 
 
 class AbstractTableGenerator(ABC):
@@ -14,9 +18,13 @@ class AbstractTableGenerator(ABC):
     """
 
     table_: Table
+    table_style: _TableStyle
+    base_font: Font
+    base_font_bold: Font
 
     def __init__(self, table: Table):
         self.table_ = table
+        self.table_style = table.style
 
     @abstractmethod
     def generate(self) -> Table:
@@ -26,21 +34,21 @@ class AbstractTableGenerator(ABC):
         pass
 
 
-class AbstractBilledAmountTableGenerator(AbstractTableGenerator):
+class AbstractBillsTableGenerator(AbstractTableGenerator):
     """
     The class that generates the table containing the amounts that will be billed
 
     Attributes
     ----------
-    billable_: Billable
-        The billable we will be using to extend the table
+    invoice_proxy: InvoiceProxy
+        The invoice proxy we will be using to extend the table
     """
 
-    billable: Billable
+    invoice_proxy : InvoiceProxy
 
     def __init__(self, billable: Billable, table: Table):
-        self.billable_ = billable
-        super(AbstractBilledAmountTableGenerator, self).__init__(table=table)
+        self.invoice_proxy = billable
+        super(AbstractBillsTableGenerator, self).__init__(table=table)
 
     @abstractmethod
     def add_fixed_travel_rows(self):
@@ -55,18 +63,22 @@ class AbstractBilledAmountTableGenerator(AbstractTableGenerator):
         """
 
     @abstractmethod
-    def add_tax_row(self):
+    def add_tax_rows(self):
         """
         Adds the row containing the tax-related values
         """
         pass
 
-    @abstractmethod
     def add_footer_row(self):
         """
         Adds the footer row containing the total
         """
-        pass
+        footer_row: _Row = self.table_.add_row()
+        footer_row_cells = footer_row.cells
+        # Add bold styling here
+        footer_row_cells[0].text = "Total to be paid incl. VAT"
+        footer_row_cells[2].text = f"{self.invoice_proxy.get_total()}"
+
 
     def add_blank_row(self):
         """

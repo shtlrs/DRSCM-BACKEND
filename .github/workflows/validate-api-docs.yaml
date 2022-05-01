@@ -1,0 +1,36 @@
+name: Validate api docs
+
+on: [push]
+
+jobs:
+  test_swagger_editor_validator_service:
+    runs-on: ubuntu-latest
+    name: Swagger Editor Validator Service
+
+
+    services:
+      swagger-editor:
+        image: swaggerapi/swagger-editor
+        ports:
+          - 80:8080
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Dependencies
+        working-directory: ./backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Generate API Schema
+        working-directory: ./backend
+        run: |
+          python manage.py spectacular --file schema.yaml --validate
+
+      - name: Validate OpenAPI definition
+        uses: char0n/swagger-editor-validate@v1
+        with:
+          definition-file: ./backend/schema.yaml

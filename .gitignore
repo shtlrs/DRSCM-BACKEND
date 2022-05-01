@@ -7,3 +7,10 @@
 /.idea/dataSources.local.xml
 /.idea/dataSources/10a6b1ba-b876-4e32-950e-30553a760cd4.xml
 .idea
+/backend/test-db.sqlite3
+/backend/venv
+/backend/schema.yaml
+/.idea/dataSources/b8c508b6-0e94-4d92-ba44-f918c156c33b.xml
+**/__pycache__/
+/backend/dev.env
+/backend/prod.env

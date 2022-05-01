@@ -5,25 +5,19 @@ from drscm.tests.helpers.user import create_random_user
 
 
 class ClientModelTests(TestCase):
-
     def test_add_new_client(self):
         """
         Test adding a new client
         """
 
-        owner = create_random_user()
-        owner.save()
-        new_client = create_random_client()
-        client_id = new_client.id
-        new_client.owner = owner
-        new_client.save()
+        owner = create_random_user(save=True)
+        new_client = create_random_client(owner=owner, save=True)
 
         available_clients = Client.objects.all()
         self.assertEqual(len(available_clients), 1)
 
-        client = Client.objects.get(id=client_id)
-
-        self.assertEqual(client.id, client_id)
+        client = Client.objects.get(id=new_client.id)
+        self.assertEqual(client.id, new_client.id)
         self.assertEqual(client.name, new_client.name)
         self.assertEqual(client.country, new_client.country)
         self.assertEqual(client.postal_code, new_client.postal_code)
@@ -38,12 +32,10 @@ class ClientModelTests(TestCase):
         owner = create_random_user()
         owner.save()
 
-        first_client = create_random_client()
-        first_client.owner = owner
+        first_client = create_random_client(owner=owner)
         first_client.save()
 
-        second_client = create_random_client()
-        second_client.owner = owner
+        second_client = create_random_client(owner=owner)
         second_client.save()
 
         available_clients = Client.objects.all()
@@ -60,19 +52,16 @@ class ClientModelTests(TestCase):
 
     def test_update_client(self):
 
-        owner = create_random_user()
-        owner.save()
-
+        owner = create_random_user(save=True)
         new_name = "new_name"
 
-        first_client = create_random_client()
-        first_client.owner = owner
-        first_client.save()
+        new_client = create_random_client(owner=owner)
+        new_client.save()
 
         clients = Client.objects.all()
         self.assertEqual(len(clients), 1)
-        first_client.name = new_name
-        first_client.save()
+        new_client.name = new_name
+        new_client.save()
 
         clients = Client.objects.all()
         client = clients[0]

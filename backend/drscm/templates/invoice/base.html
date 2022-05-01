@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+    <div style='color: #0063dd' id="client_info">
+        {% block client_info %}
+        <ul>
+            <li> {{ invoice.client.name }}</li>
+            <li> Fao: CHANGE ME </li>
+            <li> {{ invoice.client.street }}</li>
+            <li> {{ invoice.client.postal_code }} {{ invoice.client.city }}</li>
+            <li> {{ invoice.client.country }}</li>
+        </ul>
+        {% endblock %}
+    </div>
+
+    <div id="work_sessions">
+        <table class="table">
+            <thead>
+                <tr>
+                      <th>Date</th>
+                      <th>Start</th>
+                      <th>Stop</th>
+                      <th>Hrs</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for work_session in work_sessions %}
+                <tr>
+                  <td>{{ work_session.get_date }}</td>
+                  <td>{{ work_session.start_timestamp }}</td>
+                  <td>{{ work_session.end_timestamp }}</td>
+                  <td>{{ work_session.get_session_duration }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

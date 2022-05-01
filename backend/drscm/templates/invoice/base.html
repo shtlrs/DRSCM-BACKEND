@@ -1,8 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
+<head>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
 <body>
-    <div style='color: #0063dd' id="client_info">
+    <div id="client_info">
         {% block client_info %}
         <ul>
             <li> {{ invoice.client.name }}</li>
@@ -15,22 +18,22 @@
     </div>
 
     <div id="work_sessions">
-        <table style="border: 1px solid black; border-collapse: collapse" class="table">
+        <table class="table">
             <thead>
-                <tr style="background-color: grey">
-                      <th style="border: 1px solid black; border-collapse: collapse">Date</th>
-                      <th style="border: 1px solid black; border-collapse: collapse">Start</th>
-                      <th style="border: 1px solid black; border-collapse: collapse">Stop</th>
-                      <th style="border: 1px solid black; border-collapse: collapse">Hrs</th>
+                <tr>
+                      <th>Date</th>
+                      <th>Start</th>
+                      <th>Stop</th>
+                      <th>Hrs (hr:min)</th>
                 </tr>
             </thead>
             <tbody>
                 {% for work_session in work_sessions %}
                 <tr>
-                  <td style="border: 1px solid black; border-collapse: collapse">{{ work_session.get_date_string }}</td>
-                  <td style="border: 1px solid black; border-collapse: collapse">{{ work_session.start_date_string }}</td>
-                  <td style="border: 1px solid black; border-collapse: collapse">{{ work_session.end_date_string }}</td>
-                  <td style="border: 1px solid black; border-collapse: collapse">{{ work_session.get_session_duration_date_string }}</td>
+                  <td>{{ work_session.get_date_string }}</td>
+                  <td>{{ work_session.start_date_string }}</td>
+                  <td>{{ work_session.end_date_string }}</td>
+                  <td>{{ work_session.get_session_duration_date_string }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

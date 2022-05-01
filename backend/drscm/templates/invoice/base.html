@@ -27,10 +27,10 @@
             <tbody>
                 {% for work_session in work_sessions %}
                 <tr>
-                  <td>{{ work_session.get_date }}</td>
-                  <td>{{ work_session.start_timestamp }}</td>
-                  <td>{{ work_session.end_timestamp }}</td>
-                  <td>{{ work_session.get_session_duration }}</td>
+                  <td>{{ work_session.get_date_string }}</td>
+                  <td>{{ work_session.start_date_string }}</td>
+                  <td>{{ work_session.end_date_string }}</td>
+                  <td>{{ work_session.get_session_duration_date_string }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

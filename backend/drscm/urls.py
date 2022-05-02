@@ -1,5 +1,6 @@
 from django.urls import path
-from drscm.views import ListUsersView, InvoiceReportView
+# from drscm.views import InvoiceReportView
+from drscm.views import ListUsersView
 from drscm.views import CreateAndListClientsView, ClientDetailsView
 from drscm.views import ProjectDetailsView, CreateAndListProjectsView
 from drscm.views import WorkSessionDetailsView, CreateAndListWorkSessionView
@@ -74,9 +75,9 @@ urlpatterns = [
         InvoiceDetailsView.as_view(),
         name=InvoiceDetailsView.view_name,
     ),
-    path(
-        "invoices/report/<uuid:pk>",
-        InvoiceReportView.as_view(),
-        name=InvoiceReportView.view_name,
-    ),
+    # path(
+    #     "invoices/report/<uuid:pk>",
+    #     InvoiceReportView.as_view(),
+    #     name=InvoiceReportView.view_name,
+    # ),
 ]

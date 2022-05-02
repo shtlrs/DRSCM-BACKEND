@@ -3,7 +3,6 @@ from rest_framework.response import Response
 from django.template.loader import render_to_string
 from drscm.models import Invoice
 from drscm.permissions.model.is_owner import IsSuperUserOrOwner
-from drscm.proxies import InvoiceProxy
 from drscm.serializers import InvoiceSerializer
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.views import APIView
@@ -67,28 +66,28 @@ class InvoiceDetailsView(generics.RetrieveUpdateDestroyAPIView):
     )
 
 
-class InvoiceReportView(APIView):
-    view_name = "invoice_report_view"
-    model = InvoiceProxy
-    permission_classes = [
-        AllowAny,
-    ]
-    renderer_classes = [TemplateHTMLRenderer]
-    template_name = "invoice/base.html"
-
-    def get(self, request, pk):
-        invoice = InvoiceProxy.objects.get(pk=pk)
-        html_string = render_to_string(
-            template_name=self.template_name,
-            context={"work_sessions": invoice.work_sessions_proxy, "invoice": invoice},
-        )
-        with open(rf"C:\Users\bellaluna\Documents\{pk}.html", "w+") as file:
-            file.write(html_string)
-        # with open(f"{pk}.html", 'rb') as fh:
-        #     response = HttpResponse(fh.read(), content_type="text/html")
-        #     response['Content-Disposition'] = 'inline; filename=' + f"{pk}.html"
-        #     return response
-        return Response(
-            {"work_sessions": invoice.work_sessions_proxy, "invoice": invoice},
-            template_name=self.template_name,
-        )
+# class InvoiceReportView(APIView):
+#     view_name = "invoice_report_view"
+#     model = InvoiceProxy
+#     permission_classes = [
+#         AllowAny,
+#     ]
+#     renderer_classes = [TemplateHTMLRenderer]
+#     template_name = "invoice/base.html"
+#
+#     def get(self, request, pk):
+#         invoice = InvoiceProxy.objects.get(pk=pk)
+#         html_string = render_to_string(
+#             template_name=self.template_name,
+#             context={"work_sessions": invoice.work_sessions_proxy, "invoice": invoice},
+#         )
+#         with open(rf"C:\Users\bellaluna\Documents\{pk}.html", "w+") as file:
+#             file.write(html_string)
+#         # with open(f"{pk}.html", 'rb') as fh:
+#         #     response = HttpResponse(fh.read(), content_type="text/html")
+#         #     response['Content-Disposition'] = 'inline; filename=' + f"{pk}.html"
+#         #     return response
+#         return Response(
+#             {"work_sessions": invoice.work_sessions_proxy, "invoice": invoice},
+#             template_name=self.template_name,
+#         )

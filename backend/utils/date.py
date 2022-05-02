@@ -29,13 +29,13 @@ def get_current_timestamp_with_null_seconds():
     return date_time_to_timestamp(now)
 
 
-def seconds_to_hours_and_minutes(seconds: Union[float, int]):
+def seconds_to_hours_minutes_and_seconds(seconds: Union[float, int]):
     """
     Returns the number of hours and minutes out of pure seconds
     """
     minutes, seconds = divmod(seconds, 60)
     hours, minutes = divmod(minutes, 60)
-    return hours, minutes
+    return hours, minutes, seconds
 
 
 def seconds_to_hours(seconds: int):
@@ -43,7 +43,7 @@ def seconds_to_hours(seconds: int):
     Returns the number of hours out of pure seconds
     """
 
-    hours, minutes = seconds_to_hours_and_minutes(seconds)
+    hours, minutes, seconds = seconds_to_hours_minutes_and_seconds(seconds)
 
     if seconds >= 30:
         minutes += 1

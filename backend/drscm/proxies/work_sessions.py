@@ -5,7 +5,7 @@ from utils.date import (
     timestamp_to_date_string,
     seconds_to_hours,
     time_stamp_to_date_time,
-    seconds_to_hours_and_minutes,
+    seconds_to_hours_minutes_and_seconds,
     purify_timestamp,
 )
 
@@ -35,7 +35,7 @@ class WorkSessionProxy(WorkSession, Billable):
         return date_string
 
     def get_session_duration_date_string(self):
-        hours, minutes = seconds_to_hours_and_minutes(self.session_duration.seconds)
+        hours, minutes, seconds = seconds_to_hours_minutes_and_seconds(self.session_duration.seconds)
         return f"{hours:02}:{minutes:02}"
 
     def get_session_duration_in_hours(self):

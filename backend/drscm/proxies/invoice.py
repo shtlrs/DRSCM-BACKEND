@@ -1,7 +1,7 @@
 from django.db.models import QuerySet
 from drscm.models import Invoice, TaxRegulation
 from drscm.interfaces.billable import Billable
-from utils.date import seconds_to_hours_and_minutes
+from utils.date import seconds_to_hours_minutes_and_seconds
 from .work_sessions import WorkSessionProxy
 from .travel import HourlyTravelProxy, FixedTravelProxy
 
@@ -46,7 +46,7 @@ class InvoiceProxy(Invoice, Billable):
                 for work_session in self.work_sessions_proxy
             ]
         )
-        hours, minutes = seconds_to_hours_and_minutes(total_seconds)
+        hours, minutes, seconds = seconds_to_hours_minutes_and_seconds(total_seconds)
         return f"{hours:02}:{minutes:02}"
 
     def get_work_sessions_total(self):

@@ -21,6 +21,9 @@ class InvoiceProxy(Invoice, Billable):
         self.hourly_travels_proxy = HourlyTravelProxy.objects.filter(invoice=self).all()
         self.work_sessions_proxy = WorkSessionProxy.objects.filter(invoice=self).all()
 
+    def get_total_work_session_hours(self):
+        return sum(work_session.get_session_duration_in_hours() for work_session in self.work_sessions_proxy)
+
     def get_number_of_travel_hours(self):
         total_travel_hours = sum(
             [
@@ -66,7 +69,7 @@ class InvoiceProxy(Invoice, Billable):
 
     def get_hourly_travels_total(self):
         hourly_travel_total = sum(
-            [fixed_rate.get_total() for fixed_rate in self.hourly_travels_proxy]
+            [hourly_travel.get_total() for hourly_travel in self.hourly_travels_proxy]
         )
         return hourly_travel_total
 

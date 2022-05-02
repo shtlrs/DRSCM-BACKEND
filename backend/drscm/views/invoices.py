@@ -78,5 +78,5 @@ class InvoiceReportView(APIView):
     def get(self, request, pk):
         invoice = InvoiceProxy.objects.get(pk=pk)
         exporter = InvoiceExporter()
-        exporter.export(invoice=invoice)
+        exporter.export(invoice_proxy=invoice)
         return Response()

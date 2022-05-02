@@ -6,9 +6,9 @@ from docx.styles.style import _TableStyle
 import drscm.proxies as proxies
 
 
-class AbstractTableGenerator(ABC):
+class AbstractTableExtender(ABC):
     """
-    An abstract class that generates a docx table
+    An abstract class that extends a pre-existing a docx table
 
     Attributes
     ----------
@@ -33,9 +33,9 @@ class AbstractTableGenerator(ABC):
         pass
 
 
-class AbstractBillsTableGenerator(AbstractTableGenerator):
+class AbstractBillsTableExtender(AbstractTableExtender):
     """
-    The class that generates the table containing the amounts that will be billed
+    The class that extends the table containing the amounts that will be billed
 
     Attributes
     ----------
@@ -47,7 +47,7 @@ class AbstractBillsTableGenerator(AbstractTableGenerator):
 
     def __init__(self, invoice_proxy: proxies.InvoiceProxy, table: Table):
         self.invoice_proxy = invoice_proxy
-        super(AbstractBillsTableGenerator, self).__init__(table=table)
+        super(AbstractBillsTableExtender, self).__init__(table=table)
 
     def add_header_row(self):
         row = self.table_.add_row()

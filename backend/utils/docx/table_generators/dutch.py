@@ -1,8 +1,8 @@
-from drscm.interfaces import AbstractBillsTableGenerator
+from drscm.interfaces import AbstractBillsTableExtender
 from docx.table import Table, _Row
 
 
-class DutchBillsTableGenerator(AbstractBillsTableGenerator):
+class DutchBillsTableExtender(AbstractBillsTableExtender):
 
 
     def generate(self) -> Table:

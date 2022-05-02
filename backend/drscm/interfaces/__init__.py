@@ -1,2 +1,2 @@
 from .billable import Billable
-from .table_generator import AbstractBillsTableGenerator
+from .table_extender import AbstractBillsTableExtender

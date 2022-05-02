@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from mailmerge import MailMerge
+from typing import List
 
 
 class DocumentMerger(ABC):
@@ -13,15 +13,23 @@ class DocumentMerger(ABC):
         self.file_path = file_path
 
     @abstractmethod
-    def merge(self, fields_to_merge: dict):
+    def merge(self, output_file_path: str, *args, **kwargs):
         """
-        Merges the data provided in the word file
+        Preps the Word document for merging and does the magic
         """
         pass
+
 
     @abstractmethod
     def prep_data_for_merge(self, *args, **kwargs) -> dict:
         """
-        Preps the data necessary for merging the word document
+        Preps the data necessary used to populate scattered field in the document
+        """
+        pass
+
+    @abstractmethod
+    def prep_table_data_for_merge(self, *args, **kwargs) -> List[dict]:
+        """
+        Preps the data necessary used to populate tables in the document
         """
         pass

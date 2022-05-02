@@ -56,6 +56,47 @@ class InvoiceModelTests(APITestCase):
         invoice = Invoice(project=None)
         self.assertRaises(ObjectDoesNotExist, invoice.save)
 
+    def test_invoice_work_session_total_hours_date_string(self):
+        invoice = Invoice(project=self.project)
+        invoice.save()
+        now = datetime.now()
+        #  12 minutes
+        start_date = now.replace(hour=15, minute=40, second=40)
+        end_date = now.replace(hour=15, minute=52, second=55)
+        work_session = WorkSession(
+            project=self.project,
+            start_timestamp=start_date.timestamp(),
+            end_timestamp=end_date.timestamp(),
+        )
+        work_session.save()
+        invoice.work_sessions.set([work_session])
+        proxy = InvoiceProxy.objects.get(id=invoice.id)
+        self.assertEqual("00:12", proxy.get_work_sessions_total_duration())
+        #  Add a session of 1 hour & 33 minutes
+        start_date = now.replace(hour=15, minute=50, second=40)
+        end_date = now.replace(hour=17, minute=23, second=55)
+        work_session = WorkSession(
+            project=self.project,
+            start_timestamp=start_date.timestamp(),
+            end_timestamp=end_date.timestamp(),
+        )
+        work_session.save()
+        invoice.work_sessions.add(work_session)
+        proxy = InvoiceProxy.objects.get(id=invoice.id)
+        self.assertEqual("01:45", proxy.get_work_sessions_total_duration())
+        #  Add 2 hours
+        start_date = now.replace(hour=15, minute=50, second=40)
+        end_date = now.replace(hour=17, minute=50, second=40)
+        work_session = WorkSession(
+            project=self.project,
+            start_timestamp=start_date.timestamp(),
+            end_timestamp=end_date.timestamp(),
+        )
+        work_session.save()
+        invoice.work_sessions.add(work_session)
+        proxy = InvoiceProxy.objects.get(id=invoice.id)
+        self.assertEqual("03:45", proxy.get_work_sessions_total_duration())
+
     def test_invoice_total(self):
         invoice_total = 0.0
         invoice = Invoice(project=self.project)

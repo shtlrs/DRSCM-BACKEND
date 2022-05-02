@@ -7,19 +7,17 @@ class DutchBillsTableGenerator(AbstractBillsTableGenerator):
 
     def generate(self) -> Table:
         self.add_header_row()
+
         if self.invoice_proxy.fixed_travels_proxy.exists():
             self.add_fixed_travel_rows()
-            self.add_tax_rows()
-            self.add_travel_costs_row()
 
         elif self.invoice_proxy.hourly_travels_proxy.exists():
             self.add_flexible_travel_rows()
-            self.add_tax_rows()
+
+        if self.invoice_proxy.fixed_travels_proxy.exists() or self.invoice_proxy.hourly_travels_proxy.exists():
             self.add_travel_costs_row()
 
-        else:
-            self.add_tax_rows()
-
+        self.add_tax_rows()
         self.add_footer_row()
         return self.table_
 
@@ -38,7 +36,8 @@ class DutchBillsTableGenerator(AbstractBillsTableGenerator):
     def add_fixed_travel_rows(self):
         travel_fee_row: _Row = self.table_.add_row()
         travel_row_cells = travel_fee_row.cells
-        travel_row_cells[0].text = "Travel fee:"
+        total_occurrences = sum([fixed_travel.occurrences for fixed_travel in self.invoice_proxy.fixed_travels_proxy])
+        travel_row_cells[0].text = f"Travel fee: {total_occurrences} times"
         travel_row_cells[2].text = self.invoice_proxy.get_fixed_travels_total()
         travel_row_cells[3].text = "+"
         self.add_blank_row()

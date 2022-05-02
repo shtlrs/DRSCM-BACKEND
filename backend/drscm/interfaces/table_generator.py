@@ -49,6 +49,15 @@ class AbstractBillsTableGenerator(AbstractTableGenerator):
         self.invoice_proxy = invoice_proxy
         super(AbstractBillsTableGenerator, self).__init__(table=table)
 
+    def add_header_row(self):
+        row = self.table_.add_row()
+        total_hours_worked = self.invoice_proxy.get_total_work_session_hours()
+        row.cells[0].text = f"""Consultancy: {total_hours_worked} hours
+        as executed at DRS premisis in 
+        Doetinchem, the Netherlands"""
+        row.cells[2].text = f"{total_hours_worked * self.invoice_proxy.project.hourly_rate} €"
+        self.add_blank_row()
+
     @abstractmethod
     def add_fixed_travel_rows(self):
         """

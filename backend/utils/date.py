@@ -54,7 +54,7 @@ def seconds_to_hours(seconds: int):
     return round(minutes / 60, 2)
 
 
-def time_stamp_to_date_time(timestamp: int):
+def time_stamp_to_date_time(timestamp: float):
     """
     Returns a datetime object out of a timestamp
     """

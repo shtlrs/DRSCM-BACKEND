@@ -6,6 +6,7 @@ from utils.date import (
     seconds_to_hours,
     time_stamp_to_date_time,
     seconds_to_hours_and_minutes,
+    purify_timestamp,
 )
 
 
@@ -23,9 +24,11 @@ class WorkSessionProxy(WorkSession, Billable):
         super(WorkSessionProxy, self).__init__(*args, **kwargs)
         self.start_date_string = timestamp_to_date_string(self.start_timestamp, "%H:%M")
         self.end_date_string = timestamp_to_date_string(self.end_timestamp, "%H:%M")
+        pure_start_timestamp = purify_timestamp(self.start_timestamp)
+        pure_end_timestamp = purify_timestamp(self.end_timestamp)
         self.session_duration = time_stamp_to_date_time(
-            self.end_timestamp
-        ) - time_stamp_to_date_time(self.start_timestamp)
+            pure_end_timestamp
+        ) - time_stamp_to_date_time(pure_start_timestamp)
 
     def get_date_string(self):
         date_string = timestamp_to_date_string(self.start_timestamp)
@@ -40,3 +43,5 @@ class WorkSessionProxy(WorkSession, Billable):
 
     def get_total(self):
         return self.project.hourly_rate * self.get_session_duration_in_hours()
+
+

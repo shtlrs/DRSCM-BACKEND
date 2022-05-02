@@ -46,14 +46,14 @@ class DutchBillsTableGenerator(AbstractBillsTableGenerator):
         travel_costs_row: _Row = self.table_.add_row()
         travel_costs_cells = travel_costs_row.cells
         travel_costs_cells[0].text = "Travel costs"
-        travel_costs_cells[2].text = "costs val"
-        travel_costs_cells[3].text = ""
+        travel_costs_cells[2].text = f"{self.invoice_proxy.get_extra_travel_costs()} €"
+        travel_costs_cells[3].text = "+"
         self.add_blank_row()
 
     def add_flexible_travel_rows(self):
         travel_fee_row: _Row = self.table_.add_row()
         travel_row_cells = travel_fee_row.cells
-        travel_row_cells[0].text = f"Travel fee: {self.invoice_proxy.get_number_of_travel_hours()}"
+        travel_row_cells[0].text = f"Travel fee: {self.invoice_proxy.get_number_of_travel_hours()} hours"
         travel_row_cells[2].text = f"{self.invoice_proxy.get_hourly_travels_total()} €"
         travel_row_cells[3].text = "+"
         self.add_blank_row()

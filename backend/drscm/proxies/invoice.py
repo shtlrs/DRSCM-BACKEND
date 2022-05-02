@@ -46,6 +46,18 @@ class InvoiceProxy(Invoice, Billable):
         )
         return work_sessions_total
 
+    def get_extra_travel_costs(self):
+        extra_costs = 0
+        extra_costs += sum(
+            [fixed_travel.extra_costs for fixed_travel in self.fixed_travels_proxy]
+        )
+
+        extra_costs += sum(
+            [hourly_travel.extra_costs for hourly_travel in self.hourly_travels_proxy]
+        )
+
+        return extra_costs
+
     def get_fixed_travels_total(self):
         fixed_travel_total = sum(
             [fixed_rate.get_total() for fixed_rate in self.fixed_travels_proxy]

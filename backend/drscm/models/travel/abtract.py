@@ -12,5 +12,7 @@ class Travel(models.Model):
 
     rate = models.FloatField(null=True, blank=True)
 
+    extra_costs = models.FloatField(null=False, blank=False, default=0)
+
     class Meta:
         abstract = True

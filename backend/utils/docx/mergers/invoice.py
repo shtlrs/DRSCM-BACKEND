@@ -6,7 +6,6 @@ from mailmerge import MailMerge
 
 
 class InvoiceMerger(DocumentMerger):
-
     def prep_data_for_merge(self, invoice_proxy: InvoiceProxy) -> dict:
         data = {
             "client_name": f"{invoice_proxy.client.name}",
@@ -18,7 +17,7 @@ class InvoiceMerger(DocumentMerger):
             "purchase_order": "TEST PO",
             "invoice_number": "TEST INVOICE NUMBER",
             "hourly_rate": f"{invoice_proxy.project.hourly_rate}",
-            "time_worked": f"{invoice_proxy.get_work_sessions_total_duration()}"
+            "time_worked": f"{invoice_proxy.get_work_sessions_total_duration()}",
         }
         return data
 

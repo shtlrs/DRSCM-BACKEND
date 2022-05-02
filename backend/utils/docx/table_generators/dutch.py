@@ -3,8 +3,6 @@ from docx.table import Table, _Row
 
 
 class DutchBillsTableExtender(AbstractBillsTableExtender):
-
-
     def generate(self) -> Table:
         self.add_header_row()
 
@@ -14,7 +12,10 @@ class DutchBillsTableExtender(AbstractBillsTableExtender):
         elif self.invoice_proxy.hourly_travels_proxy.exists():
             self.add_flexible_travel_rows()
 
-        if self.invoice_proxy.fixed_travels_proxy.exists() or self.invoice_proxy.hourly_travels_proxy.exists():
+        if (
+            self.invoice_proxy.fixed_travels_proxy.exists()
+            or self.invoice_proxy.hourly_travels_proxy.exists()
+        ):
             self.add_travel_costs_row()
 
         self.add_tax_rows()
@@ -36,7 +37,12 @@ class DutchBillsTableExtender(AbstractBillsTableExtender):
     def add_fixed_travel_rows(self):
         travel_fee_row: _Row = self.table_.add_row()
         travel_row_cells = travel_fee_row.cells
-        total_occurrences = sum([fixed_travel.occurrences for fixed_travel in self.invoice_proxy.fixed_travels_proxy])
+        total_occurrences = sum(
+            [
+                fixed_travel.occurrences
+                for fixed_travel in self.invoice_proxy.fixed_travels_proxy
+            ]
+        )
         travel_row_cells[0].text = f"Travel fee: {total_occurrences} times"
         travel_row_cells[2].text = self.invoice_proxy.get_fixed_travels_total()
         travel_row_cells[3].text = "+"
@@ -53,7 +59,9 @@ class DutchBillsTableExtender(AbstractBillsTableExtender):
     def add_flexible_travel_rows(self):
         travel_fee_row: _Row = self.table_.add_row()
         travel_row_cells = travel_fee_row.cells
-        travel_row_cells[0].text = f"Travel fee: {self.invoice_proxy.get_number_of_travel_hours()} hours"
+        travel_row_cells[
+            0
+        ].text = f"Travel fee: {self.invoice_proxy.get_number_of_travel_hours()} hours"
         travel_row_cells[2].text = f"{self.invoice_proxy.get_hourly_travels_total()} €"
         travel_row_cells[3].text = "+"
         self.add_blank_row()

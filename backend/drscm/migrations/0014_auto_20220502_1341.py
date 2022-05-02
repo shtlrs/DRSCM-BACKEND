@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('drscm', '0013_invoice_tax_regulation'),
+        ("drscm", "0013_invoice_tax_regulation"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='fixedtravel',
-            name='extra_costs',
+            model_name="fixedtravel",
+            name="extra_costs",
             field=models.FloatField(default=0),
         ),
         migrations.AddField(
-            model_name='hourlytravel',
-            name='extra_costs',
+            model_name="hourlytravel",
+            name="extra_costs",
             field=models.FloatField(default=0),
         ),
     ]

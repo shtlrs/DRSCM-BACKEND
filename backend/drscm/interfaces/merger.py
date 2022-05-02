@@ -19,7 +19,6 @@ class DocumentMerger(ABC):
         """
         pass
 
-
     @abstractmethod
     def prep_data_for_merge(self, *args, **kwargs) -> dict:
         """

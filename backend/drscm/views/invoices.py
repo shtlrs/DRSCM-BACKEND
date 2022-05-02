@@ -8,7 +8,6 @@ from drscm.permissions.model.is_owner import IsSuperUserOrOwner
 from drscm.serializers import InvoiceSerializer
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.views import APIView
-from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework import generics
 
 

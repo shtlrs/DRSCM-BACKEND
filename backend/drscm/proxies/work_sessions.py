@@ -43,5 +43,3 @@ class WorkSessionProxy(WorkSession, Billable):
 
     def get_total(self):
         return self.project.hourly_rate * self.get_session_duration_in_hours()
-
-

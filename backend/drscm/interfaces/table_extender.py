@@ -52,10 +52,14 @@ class AbstractBillsTableExtender(AbstractTableExtender):
     def add_header_row(self):
         row = self.table_.add_row()
         total_hours_worked = self.invoice_proxy.get_total_work_session_hours()
-        row.cells[0].text = f"""Consultancy: {total_hours_worked} hours
-        as executed at DRS premisis in 
+        row.cells[
+            0
+        ].text = f"""Consultancy: {total_hours_worked} hours
+        as executed at DRS premisis in
         Doetinchem, the Netherlands"""
-        row.cells[2].text = f"{total_hours_worked * self.invoice_proxy.project.hourly_rate} €"
+        row.cells[
+            2
+        ].text = f"{total_hours_worked * self.invoice_proxy.project.hourly_rate} €"
         self.add_blank_row()
 
     @abstractmethod
@@ -86,7 +90,6 @@ class AbstractBillsTableExtender(AbstractTableExtender):
         # Add bold styling here
         footer_row_cells[0].text = "Total to be paid incl. VAT"
         footer_row_cells[2].text = f"{self.invoice_proxy.total_including_vat} €"
-
 
     def add_blank_row(self):
         """

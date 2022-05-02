@@ -28,14 +28,14 @@ class InvoiceProxy(Invoice, Billable):
         self.total_including_vat = self.total_excluding_vat + self.vat_total
 
     def get_total_work_session_hours(self):
-        return sum(work_session.get_session_duration_in_hours() for work_session in self.work_sessions_proxy)
+        return sum(
+            work_session.get_session_duration_in_hours()
+            for work_session in self.work_sessions_proxy
+        )
 
     def get_number_of_travel_hours(self):
         total_travel_hours = sum(
-            [
-                hourly_travel.hours
-                for hourly_travel in self.hourly_travels_proxy
-            ]
+            [hourly_travel.hours for hourly_travel in self.hourly_travels_proxy]
         )
         return total_travel_hours
 

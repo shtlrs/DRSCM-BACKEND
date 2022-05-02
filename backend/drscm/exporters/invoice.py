@@ -1,4 +1,3 @@
-
 from django.core.exceptions import ObjectDoesNotExist
 from docx import Document
 
@@ -18,13 +17,21 @@ class InvoiceExporter(AbstractExporter):
             billables_table = document.tables[1]
 
             if invoice_proxy.is_dutch():
-                table_generator = DutchBillsTableExtender(invoice_proxy=invoice_proxy, table=billables_table)
+                table_generator = DutchBillsTableExtender(
+                    invoice_proxy=invoice_proxy, table=billables_table
+                )
             elif invoice_proxy.is_european():
-                table_generator = DutchBillsTableExtender(invoice_proxy=invoice_proxy, table=billables_table)
+                table_generator = DutchBillsTableExtender(
+                    invoice_proxy=invoice_proxy, table=billables_table
+                )
             elif invoice_proxy.is_non_european():
-                table_generator = DutchBillsTableExtender(invoice_proxy=invoice_proxy, table=billables_table)
+                table_generator = DutchBillsTableExtender(
+                    invoice_proxy=invoice_proxy, table=billables_table
+                )
             else:
-                table_generator = DutchBillsTableExtender(invoice_proxy=invoice_proxy, table=billables_table)
+                table_generator = DutchBillsTableExtender(
+                    invoice_proxy=invoice_proxy, table=billables_table
+                )
             table_generator.generate()
             document.save(path)
             merger = InvoiceMerger(path)

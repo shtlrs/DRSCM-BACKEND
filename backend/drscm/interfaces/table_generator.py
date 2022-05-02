@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from docx.table import Table, _Row
 from docx.text.run import Font
 from docx.styles.style import _TableStyle
-from drscm.proxies import InvoiceProxy
+import drscm.proxies as proxies
 
 
 class AbstractTableGenerator(ABC):
@@ -43,9 +43,9 @@ class AbstractBillsTableGenerator(AbstractTableGenerator):
         The invoice proxy we will be using to extend the table
     """
 
-    invoice_proxy: InvoiceProxy
+    invoice_proxy: proxies.InvoiceProxy
 
-    def __init__(self, invoice_proxy: InvoiceProxy, table: Table):
+    def __init__(self, invoice_proxy: proxies.InvoiceProxy, table: Table):
         self.invoice_proxy = invoice_proxy
         super(AbstractBillsTableGenerator, self).__init__(table=table)
 

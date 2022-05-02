@@ -11,6 +11,9 @@ class InvoiceProxy(Invoice, Billable):
     fixed_travels_proxy: QuerySet[FixedTravelProxy]
     hourly_travels_proxy: QuerySet[HourlyTravelProxy]
     work_sessions_proxy: QuerySet[WorkSessionProxy]
+    total_excluding_vat: float
+    vat_total: float
+    total_including_vat: float
 
     class Meta:
         proxy = True
@@ -20,6 +23,9 @@ class InvoiceProxy(Invoice, Billable):
         self.fixed_travels_proxy = FixedTravelProxy.objects.filter(invoice=self).all()
         self.hourly_travels_proxy = HourlyTravelProxy.objects.filter(invoice=self).all()
         self.work_sessions_proxy = WorkSessionProxy.objects.filter(invoice=self).all()
+        self.total_excluding_vat = self.get_total()
+        self.vat_total = self.total_excluding_vat * 0.21
+        self.total_including_vat = self.total_excluding_vat + self.vat_total
 
     def get_total_work_session_hours(self):
         return sum(work_session.get_session_duration_in_hours() for work_session in self.work_sessions_proxy)

@@ -27,12 +27,12 @@ class DutchBillsTableGenerator(AbstractBillsTableGenerator):
         total_excl_vat_row: _Row = self.table_.add_row()
         total_excl_vat_row_cells = total_excl_vat_row.cells
         total_excl_vat_row_cells[0].text = "Total excl. VAT"
-        total_excl_vat_row_cells[2].text = f"{self.invoice_proxy.get_total()} €"
+        total_excl_vat_row_cells[2].text = f"{self.invoice_proxy.total_excluding_vat} €"
         self.add_blank_row()
         vat_21_row: _Row = self.table_.add_row()
         vat_21_row_cells = vat_21_row.cells
         vat_21_row_cells[1].text = "VAT 21%"
-        vat_21_row_cells[2].text = f"{self.invoice_proxy.get_total() * 0.21} €"
+        vat_21_row_cells[2].text = f"{self.invoice_proxy.vat_total} €"
         self.add_blank_row()
 
     def add_fixed_travel_rows(self):

@@ -85,7 +85,7 @@ class AbstractBillsTableGenerator(AbstractTableGenerator):
         footer_row_cells = footer_row.cells
         # Add bold styling here
         footer_row_cells[0].text = "Total to be paid incl. VAT"
-        footer_row_cells[2].text = f"{self.invoice_proxy.get_total()} €"
+        footer_row_cells[2].text = f"{self.invoice_proxy.total_including_vat} €"
 
 
     def add_blank_row(self):

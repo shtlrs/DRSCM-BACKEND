@@ -1,5 +1,4 @@
 from django.db.models import QuerySet
-
 from drscm.models import Invoice, TaxRegulation
 from drscm.interfaces.billable import Billable
 from utils.date import seconds_to_hours_and_minutes
@@ -21,6 +20,15 @@ class InvoiceProxy(Invoice, Billable):
         self.fixed_travels_proxy = FixedTravelProxy.objects.filter(invoice=self).all()
         self.hourly_travels_proxy = HourlyTravelProxy.objects.filter(invoice=self).all()
         self.work_sessions_proxy = WorkSessionProxy.objects.filter(invoice=self).all()
+
+    def get_number_of_travel_hours(self):
+        total_travel_hours = sum(
+            [
+                hourly_travel.hours
+                for hourly_travel in self.hourly_travels_proxy
+            ]
+        )
+        return total_travel_hours
 
     def get_work_sessions_total_duration(self):
         total_seconds = sum(

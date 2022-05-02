@@ -1,10 +1,8 @@
+from __future__ import annotations
 from abc import ABC, abstractmethod
-from drscm.interfaces import Billable
 from docx.table import Table, _Row
 from docx.text.run import Font
 from docx.styles.style import _TableStyle
-
-from drscm.proxies import InvoiceProxy
 
 
 class AbstractTableGenerator(ABC):
@@ -44,10 +42,10 @@ class AbstractBillsTableGenerator(AbstractTableGenerator):
         The invoice proxy we will be using to extend the table
     """
 
-    invoice_proxy : InvoiceProxy
+    invoice_proxy: 'InvoiceProxy'
 
-    def __init__(self, billable: Billable, table: Table):
-        self.invoice_proxy = billable
+    def __init__(self, invoice_proxy: 'InvoiceProxy', table: Table):
+        self.invoice_proxy = invoice_proxy
         super(AbstractBillsTableGenerator, self).__init__(table=table)
 
     @abstractmethod
@@ -77,7 +75,7 @@ class AbstractBillsTableGenerator(AbstractTableGenerator):
         footer_row_cells = footer_row.cells
         # Add bold styling here
         footer_row_cells[0].text = "Total to be paid incl. VAT"
-        footer_row_cells[2].text = f"{self.invoice_proxy.get_total()}"
+        footer_row_cells[2].text = f"{self.invoice_proxy.get_total()} €"
 
 
     def add_blank_row(self):

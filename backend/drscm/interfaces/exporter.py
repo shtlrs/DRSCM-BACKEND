@@ -4,5 +4,5 @@ from .billable import Billable
 
 class AbstractExporter(ABC):
     @abstractmethod
-    def export(self, billable: Billable, template_path: str):
+    def export(self, billable: Billable):
         pass

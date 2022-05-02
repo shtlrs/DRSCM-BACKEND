@@ -18,6 +18,7 @@ class InvoiceMerger(DocumentMerger):
             "purchase_order": "TEST PO",
             "invoice_number": "TEST INVOICE NUMBER",
             "hourly_rate": f"{invoice_proxy.project.hourly_rate}",
+            "time_worked": f"{invoice_proxy.get_work_sessions_total_duration()}"
         }
         return data
 

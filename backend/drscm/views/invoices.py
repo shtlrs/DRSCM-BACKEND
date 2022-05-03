@@ -9,7 +9,6 @@ from drscm.models import Invoice
 from drscm.permissions.model.is_owner import IsSuperUserOrOwner
 from drscm.serializers import InvoiceSerializer
 from drf_spectacular.utils import extend_schema, extend_schema_view
-from rest_framework.views import APIView
 from rest_framework import generics
 
 
@@ -67,6 +66,7 @@ class InvoiceDetailsView(generics.RetrieveUpdateDestroyAPIView):
         IsAuthenticated,
         IsSuperUserOrOwner,
     )
+
 
 @extend_schema_view(
     get=extend_schema(

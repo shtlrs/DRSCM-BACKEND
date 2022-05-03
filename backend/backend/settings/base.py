@@ -139,3 +139,4 @@ SPECTACULAR_SETTINGS = {
 }
 
 TEMP_DIR = Path(tempfile.gettempdir())
+TEST_FILES_DIR = BASE_DIR / "test_files"

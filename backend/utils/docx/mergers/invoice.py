@@ -1,4 +1,3 @@
-import os
 from typing import List
 from drscm.interfaces.merger import DocumentMerger
 from drscm.proxies import InvoiceProxy

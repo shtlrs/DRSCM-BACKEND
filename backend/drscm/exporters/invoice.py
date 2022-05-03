@@ -1,4 +1,3 @@
-from django.core.exceptions import ObjectDoesNotExist
 from django.http import FileResponse, HttpResponseNotFound
 from docx import Document
 
@@ -40,10 +39,12 @@ class InvoiceExporter(AbstractExporter):
             document.save(path)
             merger = InvoiceMerger(path)
             merger.merge(output_path, invoice_proxy=invoice_proxy)
-            response = FileResponse(open(output_path, "rb"), filename=output_path, as_attachment=True)
-            response['Content-Disposition'] = 'attachment; filename="{}"'.format(
+            response = FileResponse(
+                open(output_path, "rb"), filename=output_path, as_attachment=True
+            )
+            response["Content-Disposition"] = 'attachment; filename="{}"'.format(
                 output_path
             )
         except IOError:
-            response = HttpResponseNotFound('Could not generate invoice')
+            response = HttpResponseNotFound("Could not generate invoice")
         return response

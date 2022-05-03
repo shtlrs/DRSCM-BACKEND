@@ -1,7 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseNotFound
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.response import Response
 
 from drscm.exporters.invoice import InvoiceExporter
 from drscm.proxies import InvoiceProxy
@@ -82,6 +81,6 @@ class InvoiceReportView(APIView):
             exporter = InvoiceExporter()
             response = exporter.export(invoice_proxy=invoice)
         except ObjectDoesNotExist:
-            response = HttpResponseNotFound(f'Invoice {pk} does not exist')
+            response = HttpResponseNotFound(f"Invoice {pk} does not exist")
 
         return response

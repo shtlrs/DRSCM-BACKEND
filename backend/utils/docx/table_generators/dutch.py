@@ -9,7 +9,7 @@ class DutchBillsTableExtender(AbstractBillsTableExtender):
         if self.invoice_proxy.fixed_travels_proxy.exists():
             self.add_fixed_travel_rows()
 
-        elif self.invoice_proxy.hourly_travels_proxy.exists():
+        if self.invoice_proxy.hourly_travels_proxy.exists():
             self.add_flexible_travel_rows()
 
         if (

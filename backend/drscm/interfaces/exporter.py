@@ -8,4 +8,6 @@ from .billable import Billable
 class AbstractExporter(ABC):
     @abstractmethod
     def export(self, billable: Billable) -> HttpResponse:
-        pass
+        """
+        Exports the provided billable and sends it over to the client over HTTP
+        """

@@ -30,7 +30,6 @@ class AbstractTableExtender(ABC):
         """
         The method that holds the core logic of generating the entire table
         """
-        pass
 
 
 class AbstractBillsTableExtender(AbstractTableExtender):
@@ -79,7 +78,6 @@ class AbstractBillsTableExtender(AbstractTableExtender):
         """
         Adds the row containing the tax-related values
         """
-        pass
 
     def add_footer_row(self):
         """

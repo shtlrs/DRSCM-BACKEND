@@ -17,18 +17,15 @@ class DocumentMerger(ABC):
         """
         Preps the Word document for merging and does the magic
         """
-        pass
 
     @abstractmethod
     def prep_data_for_merge(self, *args, **kwargs) -> dict:
         """
         Preps the data necessary used to populate scattered field in the document
         """
-        pass
 
     @abstractmethod
     def prep_table_data_for_merge(self, *args, **kwargs) -> List[dict]:
         """
         Preps the data necessary used to populate tables in the document
         """
-        pass

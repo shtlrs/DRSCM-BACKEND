@@ -28,10 +28,13 @@ class InvoiceProxy(Invoice, Billable):
         self.total_including_vat = round(self.total_excluding_vat + self.vat_total, 2)
 
     def get_total_work_session_hours(self):
-        return round(sum(
-            work_session.get_session_duration_in_hours()
-            for work_session in self.work_sessions_proxy
-        ), 2)
+        return round(
+            sum(
+                work_session.get_session_duration_in_hours()
+                for work_session in self.work_sessions_proxy
+            ),
+            2,
+        )
 
     def get_number_of_travel_hours(self):
         total_travel_hours = sum(
@@ -85,7 +88,7 @@ class InvoiceProxy(Invoice, Billable):
             self.get_fixed_travels_total()
             + self.get_hourly_travels_total()
             + self.get_work_sessions_total(),
-            2
+            2,
         )
 
     def is_dutch(self):

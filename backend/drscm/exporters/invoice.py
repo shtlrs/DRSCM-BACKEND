@@ -3,7 +3,11 @@ from docx import Document
 
 
 from utils.docx.mergers.invoice import InvoiceMerger
-from utils.docx.table_generators import DutchBillsTableExtender
+from utils.docx.table_generators import (
+    DutchBillsTableExtender,
+    EuropeanBillsTableExtender,
+    NonEuropeanBillsTableExtender,
+)
 from drscm.interfaces.exporter import AbstractExporter
 from drscm.proxies import InvoiceProxy
 from backend.settings.dev import BASE_INVOICE_TEMPLATE, TEMP_DIR
@@ -24,11 +28,11 @@ class InvoiceExporter(AbstractExporter):
                     invoice_proxy=invoice_proxy, table=billables_table
                 )
             elif invoice_proxy.is_european():
-                table_generator = DutchBillsTableExtender(
+                table_generator = EuropeanBillsTableExtender(
                     invoice_proxy=invoice_proxy, table=billables_table
                 )
             elif invoice_proxy.is_non_european():
-                table_generator = DutchBillsTableExtender(
+                table_generator = NonEuropeanBillsTableExtender(
                     invoice_proxy=invoice_proxy, table=billables_table
                 )
             else:

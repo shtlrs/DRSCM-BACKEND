@@ -1,3 +1,4 @@
+import os
 from typing import List
 from drscm.interfaces.merger import DocumentMerger
 from drscm.proxies import InvoiceProxy
@@ -39,7 +40,7 @@ class InvoiceMerger(DocumentMerger):
         field_data = self.prep_data_for_merge(invoice_proxy=invoice_proxy)
         row_data = self.prep_table_data_for_merge(invoice_proxy=invoice_proxy)
 
-        document = MailMerge(self.file_path)
-        document.merge(**field_data)
-        document.merge_rows("date", row_data)
-        document.write(output_file_path)
+        with MailMerge(self.file_path) as document:
+            document.merge(**field_data)
+            document.merge_rows("date", row_data)
+            document.write(output_file_path)

@@ -1,4 +1,8 @@
+import tempfile
+import os
+
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import FileResponse, HttpResponseNotFound
 from docx import Document
 
 from utils.docx.mergers.invoice import InvoiceMerger
@@ -11,8 +15,10 @@ from backend.settings.dev import BASE_INVOICE_TEMPLATE
 class InvoiceExporter(AbstractExporter):
     def export(self, invoice_proxy: InvoiceProxy):
         try:
-            path = f"{invoice_proxy.id}.docx"
-            output_path = f"{invoice_proxy.id}-output.docx"
+            print(tempfile.gettempdir())
+            temp_dir = tempfile.gettempdir()
+            path = os.path.join(temp_dir, f"{invoice_proxy.id}.docx")
+            output_path = os.path.join(temp_dir, f"{invoice_proxy.id}-output.docx")
             document = Document(BASE_INVOICE_TEMPLATE)
             billables_table = document.tables[1]
 
@@ -36,7 +42,12 @@ class InvoiceExporter(AbstractExporter):
             document.save(path)
             merger = InvoiceMerger(path)
             merger.merge(output_path, invoice_proxy=invoice_proxy)
+            response = FileResponse(open(output_path, "rb"), filename=output_path, as_attachment=True)
+            response['Content-Disposition'] = 'attachment; filename="{}"'.format(
+                output_path
+            )
         except ObjectDoesNotExist:
-            pass
-        # finally:
-        #     os.remove(path=path)
+            response = HttpResponseNotFound(f'Invoice {invoice_proxy.id} does not exist')
+        except IOError:
+            response = HttpResponseNotFound('Could not generate invoice')
+        return response

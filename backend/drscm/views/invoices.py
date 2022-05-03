@@ -1,3 +1,5 @@
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponseNotFound
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
@@ -75,6 +77,11 @@ class InvoiceReportView(APIView):
     ]
 
     def get(self, request, pk):
-        invoice = InvoiceProxy.objects.get(pk=pk)
-        exporter = InvoiceExporter()
-        return exporter.export(invoice_proxy=invoice)
+        try:
+            invoice = InvoiceProxy.objects.get(pk=pk)
+            exporter = InvoiceExporter()
+            response = exporter.export(invoice_proxy=invoice)
+        except ObjectDoesNotExist:
+            response = HttpResponseNotFound(f'Invoice {pk} does not exist')
+
+        return response

@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -247,6 +248,9 @@ class InvoiceViewTests(APITestCase):
         )
 
         url = reverse(InvoiceReportView.view_name, args=[invoice.id])
+        invalid_url = reverse(InvoiceReportView.view_name, args=[uuid.uuid4()])
+        response = self.client.get(path=invalid_url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         response = self.client.get(path=url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         path = TEMP_DIR / f"{invoice.id}.docx"

@@ -44,8 +44,6 @@ class InvoiceExporter(AbstractExporter):
             response['Content-Disposition'] = 'attachment; filename="{}"'.format(
                 output_path
             )
-        except ObjectDoesNotExist:
-            response = HttpResponseNotFound(f'Invoice {invoice_proxy.id} does not exist')
         except IOError:
             response = HttpResponseNotFound('Could not generate invoice')
         return response

@@ -1,6 +1,7 @@
 from datetime import datetime
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
+from backend.settings.base import TEMP_DIR
 
 from drscm.proxies import (
     InvoiceProxy,
@@ -10,6 +11,7 @@ from drscm.proxies import (
 )
 from drscm.views import (
     InvoiceDetailsView,
+    InvoiceReportView,
     CreateAndListInvoicesView,
     FixedTravelDetailsView,
     HourlyTravelDetailsView,
@@ -228,3 +230,27 @@ class InvoiceViewTests(APITestCase):
         response = self.client.delete(path=url)
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
         self.assertEqual(0, len(invoice.hourly_travels.all()))
+
+
+    def test_check_report_content(self):
+        self.skipTest("We need to think of a way to make a document comparer")
+
+    def test_create_invoice_report(self):
+        self.work_session1.save()
+        self.work_session2.save()
+        invoice = create_random_invoice(
+            project=self.project,
+            work_sessions=[self.work_session1, self.work_session2],
+            fixed_travels=[self.fixed_travel],
+            hourly_travels=[self.hourly_travel],
+            save=True,
+        )
+
+        url = reverse(InvoiceReportView.view_name, args=[invoice.id])
+        response = self.client.get(path=url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        path = TEMP_DIR / f"{invoice.id}.docx"
+        output_path = TEMP_DIR / f"{invoice.id}-output.docx"
+        self.assertEqual(True, path.exists())
+        self.assertEqual(True, output_path.exists())
+        path.unlink()

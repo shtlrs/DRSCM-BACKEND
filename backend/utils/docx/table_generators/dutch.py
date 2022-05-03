@@ -44,7 +44,7 @@ class DutchBillsTableExtender(AbstractBillsTableExtender):
             ]
         )
         travel_row_cells[0].text = f"Travel fee: {total_occurrences} times"
-        travel_row_cells[2].text = self.invoice_proxy.get_fixed_travels_total()
+        travel_row_cells[2].text = f"{self.invoice_proxy.get_fixed_travels_total()}"
         travel_row_cells[3].text = "+"
         self.add_blank_row()
 

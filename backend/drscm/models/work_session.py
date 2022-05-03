@@ -49,7 +49,4 @@ class WorkSession(models.Model):
         )
 
     def __str__(self):
-        return (
-            f"Session: {timestamp_to_date_string(self.start_timestamp)} ->"
-            f" {timestamp_to_date_string(self.end_timestamp)}"
-        )
+        return f"Session: {self.start_timestamp} -> {self.end_timestamp}"

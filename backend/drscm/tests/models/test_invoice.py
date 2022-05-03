@@ -56,32 +56,76 @@ class InvoiceModelTests(APITestCase):
         invoice = Invoice(project=None)
         self.assertRaises(ObjectDoesNotExist, invoice.save)
 
+    def test_invoice_work_session_total_hours_date_string(self):
+        invoice = Invoice(project=self.project)
+        invoice.save()
+        now = datetime.now()
+        #  12 minutes
+        start_date = now.replace(hour=15, minute=40, second=40)
+        end_date = now.replace(hour=15, minute=52, second=55)
+        work_session = WorkSession(
+            project=self.project,
+            start_timestamp=start_date.timestamp(),
+            end_timestamp=end_date.timestamp(),
+        )
+        work_session.save()
+        invoice.work_sessions.set([work_session])
+        proxy = InvoiceProxy.objects.get(id=invoice.id)
+        self.assertEqual("00:12", proxy.get_work_sessions_total_duration())
+        #  Add a session of 1 hour & 33 minutes
+        start_date = now.replace(hour=15, minute=50, second=40)
+        end_date = now.replace(hour=17, minute=23, second=55)
+        work_session = WorkSession(
+            project=self.project,
+            start_timestamp=start_date.timestamp(),
+            end_timestamp=end_date.timestamp(),
+        )
+        work_session.save()
+        invoice.work_sessions.add(work_session)
+        proxy = InvoiceProxy.objects.get(id=invoice.id)
+        self.assertEqual("01:45", proxy.get_work_sessions_total_duration())
+        #  Add 2 hours
+        start_date = now.replace(hour=15, minute=50, second=40)
+        end_date = now.replace(hour=17, minute=50, second=40)
+        work_session = WorkSession(
+            project=self.project,
+            start_timestamp=start_date.timestamp(),
+            end_timestamp=end_date.timestamp(),
+        )
+        work_session.save()
+        invoice.work_sessions.add(work_session)
+        proxy = InvoiceProxy.objects.get(id=invoice.id)
+        self.assertEqual("03:45", proxy.get_work_sessions_total_duration())
+
     def test_invoice_total(self):
         invoice_total = 0.0
-        invoice_proxy = InvoiceProxy(project=self.project)
-        invoice_proxy.save()
+        invoice = Invoice(project=self.project)
+        invoice.save()
+        invoice_proxy = InvoiceProxy.objects.get(pk=invoice.id)
         self.assertEqual(0, invoice_proxy.get_total())
         self.work_session1.save()
         self.work_session2.save()
         session1_proxy = WorkSessionProxy.objects.get(id=self.work_session1.id)
         session2_proxy = WorkSessionProxy.objects.get(id=self.work_session2.id)
-        invoice_proxy.work_sessions.set([self.work_session1, self.work_session2])
-        invoice_proxy.save()
+        invoice.work_sessions.set([self.work_session1, self.work_session2])
         invoice_total += session1_proxy.get_total() + session2_proxy.get_total()
+        invoice_proxy = InvoiceProxy.objects.get(pk=invoice.id)
         self.assertEqual(invoice_proxy.get_total(), invoice_total)
 
         fixed_travel = create_random_fixed_travel(project=self.project, save=True)
         fixed_travel_proxy = FixedTravelProxy.objects.get(id=fixed_travel.id)
         invoice_total += fixed_travel_proxy.get_total()
-        invoice_proxy.fixed_travels.set([fixed_travel])
-        invoice_proxy.save()
+        invoice.fixed_travels.set([fixed_travel])
+        invoice.save()
+        invoice_proxy = InvoiceProxy.objects.get(pk=invoice.id)
         self.assertEqual(invoice_proxy.get_total(), invoice_total)
 
         hourly_travel = create_random_hourly_travel(project=self.project, save=True)
         hourly_travel_proxy = HourlyTravelProxy.objects.get(id=hourly_travel.id)
         invoice_total += hourly_travel_proxy.get_total()
-        invoice_proxy.hourly_travels.set([hourly_travel])
-        invoice_proxy.save()
+        invoice.hourly_travels.set([hourly_travel])
+        invoice.save()
+        invoice_proxy = InvoiceProxy.objects.get(pk=invoice.id)
         self.assertEqual(invoice_proxy.get_total(), invoice_total)
 
     def test_patch_invoice_work_sessions(self):

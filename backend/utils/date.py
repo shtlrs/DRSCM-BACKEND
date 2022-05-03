@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Union
 from datetime import datetime, timezone
 
 
@@ -28,9 +29,21 @@ def get_current_timestamp_with_null_seconds():
     return date_time_to_timestamp(now)
 
 
-def seconds_to_hours(seconds: int):
+def seconds_to_hours_minutes_and_seconds(seconds: Union[float, int]):
+    """
+    Returns the number of hours and minutes out of pure seconds
+    """
     minutes, seconds = divmod(seconds, 60)
     hours, minutes = divmod(minutes, 60)
+    return hours, minutes, seconds
+
+
+def seconds_to_hours(seconds: int):
+    """
+    Returns the number of hours out of pure seconds
+    """
+
+    hours, minutes, seconds = seconds_to_hours_minutes_and_seconds(seconds)
 
     if seconds >= 30:
         minutes += 1
@@ -41,14 +54,14 @@ def seconds_to_hours(seconds: int):
     return round(minutes / 60, 2)
 
 
-def time_stamp_to_date_time(timestamp: int):
+def time_stamp_to_date_time(timestamp: float):
     """
     Returns a datetime object out of a timestamp
     """
     return datetime.utcfromtimestamp(timestamp).replace(tzinfo=timezone.utc)
 
 
-def timestamp_to_date_string(timestamp: float, date_format: str = "%Y-%m-%d %H:%M"):
+def timestamp_to_date_string(timestamp: float, date_format: str = "%Y-%m-%d"):
     """
     Returns a string representing a timestamp in a particular format
     """

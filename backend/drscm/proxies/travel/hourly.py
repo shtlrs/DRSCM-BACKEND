@@ -1,7 +1,8 @@
 from drscm.models import HourlyTravel
+from drscm.interfaces import Billable
 
 
-class HourlyTravelProxy(HourlyTravel):
+class HourlyTravelProxy(HourlyTravel, Billable):
     class Meta:
         proxy = True
 

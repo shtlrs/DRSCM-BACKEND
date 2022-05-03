@@ -9,6 +9,7 @@ DATABASES = {
     }
 }
 
+BASE_INVOICE_TEMPLATE = BASE_DIR / "drscm/templates/invoice/base.docx"
 
 # LOGGING = {
 #     "version": 1,

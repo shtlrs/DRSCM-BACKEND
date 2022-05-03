@@ -1,6 +1,9 @@
-from datetime import datetime
+import uuid
+from datetime import datetime, date
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
+from backend.settings.base import TEMP_DIR, BASE_DIR
+import aspose.words as aw
 
 from drscm.proxies import (
     InvoiceProxy,
@@ -10,6 +13,7 @@ from drscm.proxies import (
 )
 from drscm.views import (
     InvoiceDetailsView,
+    InvoiceReportView,
     CreateAndListInvoicesView,
     FixedTravelDetailsView,
     HourlyTravelDetailsView,
@@ -17,7 +21,7 @@ from drscm.views import (
 )
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
-from drscm.models import WorkSession, Invoice
+from drscm.models import WorkSession, Invoice, FixedTravel, HourlyTravel
 from drscm.serializers import (
     InvoiceSerializer,
     FixedTravelSerializer,
@@ -228,3 +232,95 @@ class InvoiceViewTests(APITestCase):
         response = self.client.delete(path=url)
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
         self.assertEqual(0, len(invoice.hourly_travels.all()))
+
+    def test_check_report_content(self):
+        owner = create_random_user(save=True)
+        client = create_random_client(
+            save=True,
+            owner=owner,
+            name="Amrou Bellalouna",
+            city="Msaken",
+            country="Tunisia",
+            street="Taieb Mhiri",
+            postal_code="4070",
+        )
+        project = create_random_project(
+            client=client,
+            hourly_rate=134,
+            travel_fixed_rate=120,
+            travel_hourly_rate=45,
+            save=True,
+        )
+        session1 = WorkSession(
+            project=project, start_timestamp=100000, end_timestamp=101800
+        )
+        session2 = WorkSession(
+            project=project, start_timestamp=102000, end_timestamp=102000 + 47 * 60
+        )
+        session3 = WorkSession(
+            project=project, start_timestamp=104000, end_timestamp=104000 + 13 * 60
+        )
+        session4 = WorkSession(
+            project=project, start_timestamp=106000, end_timestamp=106000 + 3 * 3600
+        )
+        session1.save()
+        session2.save()
+        session3.save()
+        session4.save()
+        fixed_travel1 = FixedTravel(
+            project=project, rate=75, occurrences=1, timestamp=106000
+        )
+        fixed_travel1.save()
+        fixed_travel2 = FixedTravel(project=project, occurrences=3, timestamp=107000)
+        fixed_travel2.save()
+        hourly_travel1 = HourlyTravel(project=project, hours=2, rate=30, timestamp=108000)
+        hourly_travel1.save()
+        hourly_travel2 = HourlyTravel(project=project, hours=1.5, timestamp=109000)
+        hourly_travel2.save()
+        invoice = Invoice(project=project)
+        invoice.save()
+        invoice.fixed_travels.set([fixed_travel1, fixed_travel2])
+        invoice.hourly_travels.set([hourly_travel1, hourly_travel2])
+        invoice.work_sessions.set([session1, session2, session3, session4])
+        invoice_proxy = InvoiceProxy.objects.get(pk=invoice.id)
+        total = invoice_proxy.get_total()
+        self.assertEqual(1165.5, total)
+        url = reverse(InvoiceReportView.view_name, args=[invoice.id])
+        self.client.get(path=url)
+        target_invoice_path = BASE_DIR / "test_files/generated_invoice.docx"
+        newly_generated_invoice_path = TEMP_DIR / f"{invoice.id}-output.docx"
+        generated_document = aw.Document(newly_generated_invoice_path.as_posix())
+        target_document = aw.Document(target_invoice_path.as_posix())
+        generated_document.compare(target_document, "user", date.today())
+        revisions = target_document.revisions
+        differences = []
+        creation_date = date.today().strftime("%d %B %Y")
+
+        fields_to_ignore = ["03 May 2022", creation_date]
+        for revision in revisions:
+            group = revision.group
+            if group and group.text not in fields_to_ignore:
+                differences.append(group.text)
+        self.assertEqual([], differences)
+
+    def test_create_invoice_report(self):
+        self.work_session1.save()
+        self.work_session2.save()
+        invoice = create_random_invoice(
+            project=self.project,
+            work_sessions=[self.work_session1, self.work_session2],
+            fixed_travels=[self.fixed_travel],
+            hourly_travels=[self.hourly_travel],
+            save=True,
+        )
+
+        url = reverse(InvoiceReportView.view_name, args=[invoice.id])
+        invalid_url = reverse(InvoiceReportView.view_name, args=[uuid.uuid4()])
+        response = self.client.get(path=invalid_url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        response = self.client.get(path=url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        path = TEMP_DIR / f"{invoice.id}.docx"
+        output_path = TEMP_DIR / f"{invoice.id}-output.docx"
+        self.assertEqual(True, path.exists())
+        self.assertEqual(True, output_path.exists())

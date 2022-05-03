@@ -294,9 +294,12 @@ class InvoiceViewTests(APITestCase):
         generated_document.compare(target_document, "user", date.today())
         revisions = target_document.revisions
         differences = []
+        creation_date = date.today().strftime("%d %B %Y")
+
+        fields_to_ignore = ["03 May 2022", creation_date]
         for revision in revisions:
             group = revision.group
-            if group:
+            if group and group.text not in fields_to_ignore:
                 differences.append(group.text)
         self.assertEqual([], differences)
 

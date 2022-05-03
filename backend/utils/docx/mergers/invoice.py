@@ -3,6 +3,7 @@ from drscm.interfaces.merger import DocumentMerger
 from drscm.proxies import InvoiceProxy
 from utils.date import timestamp_to_date_string
 from mailmerge import MailMerge
+from datetime import date
 
 
 class InvoiceMerger(DocumentMerger):
@@ -18,6 +19,7 @@ class InvoiceMerger(DocumentMerger):
             "invoice_number": "TEST INVOICE NUMBER",
             "hourly_rate": f"{invoice_proxy.project.hourly_rate}",
             "time_worked": f"{invoice_proxy.get_work_sessions_total_duration()}",
+            "invoice_date": date.today().strftime("%d %B %Y"),
         }
         return data
 

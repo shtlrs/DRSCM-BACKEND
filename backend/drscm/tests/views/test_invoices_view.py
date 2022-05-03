@@ -84,13 +84,19 @@ class InvoiceViewTests(APITestCase):
             project=cls.project_for_report, start_timestamp=100000, end_timestamp=101800
         )
         cls.session2_for_report = WorkSession(
-            project=cls.project_for_report, start_timestamp=102000, end_timestamp=102000 + 47 * 60
+            project=cls.project_for_report,
+            start_timestamp=102000,
+            end_timestamp=102000 + 47 * 60,
         )
         cls.session3_for_report = WorkSession(
-            project=cls.project_for_report, start_timestamp=104000, end_timestamp=104000 + 13 * 60
+            project=cls.project_for_report,
+            start_timestamp=104000,
+            end_timestamp=104000 + 13 * 60,
         )
         cls.session4_for_report = WorkSession(
-            project=cls.project_for_report, start_timestamp=106000, end_timestamp=106000 + 3 * 3600
+            project=cls.project_for_report,
+            start_timestamp=106000,
+            end_timestamp=106000 + 3 * 3600,
         )
         cls.session1_for_report.save()
         cls.session2_for_report.save()
@@ -100,11 +106,17 @@ class InvoiceViewTests(APITestCase):
             project=cls.project_for_report, rate=75, occurrences=1, timestamp=106000
         )
         cls.fixed_travel1_for_report.save()
-        cls.fixed_travel2_for_report = FixedTravel(project=cls.project_for_report, occurrences=3, timestamp=107000)
+        cls.fixed_travel2_for_report = FixedTravel(
+            project=cls.project_for_report, occurrences=3, timestamp=107000
+        )
         cls.fixed_travel2_for_report.save()
-        cls.hourly_travel1_for_report = HourlyTravel(project=cls.project_for_report, hours=2, rate=30, timestamp=108000)
+        cls.hourly_travel1_for_report = HourlyTravel(
+            project=cls.project_for_report, hours=2, rate=30, timestamp=108000
+        )
         cls.hourly_travel1_for_report.save()
-        cls.hourly_travel2_for_report = HourlyTravel(project=cls.project_for_report, hours=1.5, timestamp=109000)
+        cls.hourly_travel2_for_report = HourlyTravel(
+            project=cls.project_for_report, hours=1.5, timestamp=109000
+        )
         cls.hourly_travel2_for_report.save()
 
     def setUp(self) -> None:
@@ -280,13 +292,25 @@ class InvoiceViewTests(APITestCase):
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
         self.assertEqual(0, len(invoice.hourly_travels.all()))
 
-
     def test_check_non_european_report_content(self):
-        invoice = Invoice(project=self.project_for_report, tax_regulation=TaxRegulation.NON_EUROPEAN.value)
+        invoice = Invoice(
+            project=self.project_for_report, tax_regulation=TaxRegulation.NON_EUROPEAN.value
+        )
         invoice.save()
-        invoice.fixed_travels.set([self.fixed_travel1_for_report, self.fixed_travel2_for_report])
-        invoice.hourly_travels.set([self.hourly_travel1_for_report, self.hourly_travel2_for_report])
-        invoice.work_sessions.set([self.session1_for_report, self.session2_for_report, self.session3_for_report, self.session4_for_report])
+        invoice.fixed_travels.set(
+            [self.fixed_travel1_for_report, self.fixed_travel2_for_report]
+        )
+        invoice.hourly_travels.set(
+            [self.hourly_travel1_for_report, self.hourly_travel2_for_report]
+        )
+        invoice.work_sessions.set(
+            [
+                self.session1_for_report,
+                self.session2_for_report,
+                self.session3_for_report,
+                self.session4_for_report,
+            ]
+        )
         invoice_proxy = InvoiceProxy.objects.get(pk=invoice.id)
         total = invoice_proxy.get_total()
         self.assertEqual(1165.5, total)
@@ -309,11 +333,24 @@ class InvoiceViewTests(APITestCase):
         self.assertEqual([], differences)
 
     def test_check_european_report_content(self):
-        invoice = Invoice(project=self.project_for_report, tax_regulation=TaxRegulation.EUROPEAN.value)
+        invoice = Invoice(
+            project=self.project_for_report, tax_regulation=TaxRegulation.EUROPEAN.value
+        )
         invoice.save()
-        invoice.fixed_travels.set([self.fixed_travel1_for_report, self.fixed_travel2_for_report])
-        invoice.hourly_travels.set([self.hourly_travel1_for_report, self.hourly_travel2_for_report])
-        invoice.work_sessions.set([self.session1_for_report, self.session2_for_report, self.session3_for_report, self.session4_for_report])
+        invoice.fixed_travels.set(
+            [self.fixed_travel1_for_report, self.fixed_travel2_for_report]
+        )
+        invoice.hourly_travels.set(
+            [self.hourly_travel1_for_report, self.hourly_travel2_for_report]
+        )
+        invoice.work_sessions.set(
+            [
+                self.session1_for_report,
+                self.session2_for_report,
+                self.session3_for_report,
+                self.session4_for_report,
+            ]
+        )
         invoice_proxy = InvoiceProxy.objects.get(pk=invoice.id)
         total = invoice_proxy.get_total()
         self.assertEqual(1165.5, total)
@@ -338,9 +375,20 @@ class InvoiceViewTests(APITestCase):
     def test_check_dutch_report_content(self):
         invoice = Invoice(project=self.project_for_report)
         invoice.save()
-        invoice.fixed_travels.set([self.fixed_travel1_for_report, self.fixed_travel2_for_report])
-        invoice.hourly_travels.set([self.hourly_travel1_for_report, self.hourly_travel2_for_report])
-        invoice.work_sessions.set([self.session1_for_report, self.session2_for_report, self.session3_for_report, self.session4_for_report])
+        invoice.fixed_travels.set(
+            [self.fixed_travel1_for_report, self.fixed_travel2_for_report]
+        )
+        invoice.hourly_travels.set(
+            [self.hourly_travel1_for_report, self.hourly_travel2_for_report]
+        )
+        invoice.work_sessions.set(
+            [
+                self.session1_for_report,
+                self.session2_for_report,
+                self.session3_for_report,
+                self.session4_for_report,
+            ]
+        )
         invoice_proxy = InvoiceProxy.objects.get(pk=invoice.id)
         total = invoice_proxy.get_total()
         self.assertEqual(1165.5, total)

@@ -1,6 +1,6 @@
 from pathlib import Path
 from datetime import timedelta
-
+import tempfile
 
 AUTH_USER_MODEL = "drscm.User"
 
@@ -137,3 +137,5 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
 }
+
+TEMP_DIR = Path(tempfile.gettempdir())

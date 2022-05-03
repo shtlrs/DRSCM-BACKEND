@@ -1,24 +1,22 @@
-import tempfile
-import os
-
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import FileResponse, HttpResponseNotFound
 from docx import Document
+
 
 from utils.docx.mergers.invoice import InvoiceMerger
 from utils.docx.table_generators import DutchBillsTableExtender
 from drscm.interfaces.exporter import AbstractExporter
 from drscm.proxies import InvoiceProxy
-from backend.settings.dev import BASE_INVOICE_TEMPLATE
+from backend.settings.dev import BASE_INVOICE_TEMPLATE, TEMP_DIR
 
 
 class InvoiceExporter(AbstractExporter):
     def export(self, invoice_proxy: InvoiceProxy):
         try:
-            print(tempfile.gettempdir())
-            temp_dir = tempfile.gettempdir()
-            path = os.path.join(temp_dir, f"{invoice_proxy.id}.docx")
-            output_path = os.path.join(temp_dir, f"{invoice_proxy.id}-output.docx")
+            path = TEMP_DIR / f"{invoice_proxy.id}.docx"
+            path = path.as_posix()
+            output_path = TEMP_DIR / f"{invoice_proxy.id}-output.docx"
+            output_path = output_path.as_posix()
             document = Document(BASE_INVOICE_TEMPLATE)
             billables_table = document.tables[1]
 

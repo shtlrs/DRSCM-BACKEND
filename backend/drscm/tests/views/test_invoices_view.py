@@ -1,8 +1,10 @@
 import uuid
 from datetime import datetime, date
+
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-from backend.settings.base import TEMP_DIR, BASE_DIR
+from backend.settings.base import TEMP_DIR, TEST_FILES_DIR
 import aspose.words as aw
 
 from drscm.proxies import (
@@ -21,7 +23,7 @@ from drscm.views import (
 )
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
-from drscm.models import WorkSession, Invoice, FixedTravel, HourlyTravel
+from drscm.models import WorkSession, Invoice, FixedTravel, HourlyTravel, TaxRegulation
 from drscm.serializers import (
     InvoiceSerializer,
     FixedTravelSerializer,
@@ -59,6 +61,51 @@ class InvoiceViewTests(APITestCase):
         cls.fixed_travel = create_random_fixed_travel(project=cls.project, save=True)
         cls.hourly_travel = create_random_hourly_travel(project=cls.project, save=True)
         cls.super_token = RefreshToken.for_user(cls.superowner)
+        # data for report generation
+
+        cls.owner_for_report = create_random_user(save=True)
+        cls.client_for_report = create_random_client(
+            save=True,
+            owner=cls.owner_for_report,
+            name="Amrou Bellalouna",
+            city="Msaken",
+            country="Tunisia",
+            street="Taieb Mhiri",
+            postal_code="4070",
+        )
+        cls.project_for_report = create_random_project(
+            client=cls.client_for_report,
+            hourly_rate=134,
+            travel_fixed_rate=120,
+            travel_hourly_rate=45,
+            save=True,
+        )
+        cls.session1_for_report = WorkSession(
+            project=cls.project_for_report, start_timestamp=100000, end_timestamp=101800
+        )
+        cls.session2_for_report = WorkSession(
+            project=cls.project_for_report, start_timestamp=102000, end_timestamp=102000 + 47 * 60
+        )
+        cls.session3_for_report = WorkSession(
+            project=cls.project_for_report, start_timestamp=104000, end_timestamp=104000 + 13 * 60
+        )
+        cls.session4_for_report = WorkSession(
+            project=cls.project_for_report, start_timestamp=106000, end_timestamp=106000 + 3 * 3600
+        )
+        cls.session1_for_report.save()
+        cls.session2_for_report.save()
+        cls.session3_for_report.save()
+        cls.session4_for_report.save()
+        cls.fixed_travel1_for_report = FixedTravel(
+            project=cls.project_for_report, rate=75, occurrences=1, timestamp=106000
+        )
+        cls.fixed_travel1_for_report.save()
+        cls.fixed_travel2_for_report = FixedTravel(project=cls.project_for_report, occurrences=3, timestamp=107000)
+        cls.fixed_travel2_for_report.save()
+        cls.hourly_travel1_for_report = HourlyTravel(project=cls.project_for_report, hours=2, rate=30, timestamp=108000)
+        cls.hourly_travel1_for_report.save()
+        cls.hourly_travel2_for_report = HourlyTravel(project=cls.project_for_report, hours=1.5, timestamp=109000)
+        cls.hourly_travel2_for_report.save()
 
     def setUp(self) -> None:
         self.client.credentials(HTTP_AUTHORIZATION=f"JWT {self.super_token.access_token}")
@@ -185,7 +232,7 @@ class InvoiceViewTests(APITestCase):
 
         response = self.client.delete(path=url)
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
-        self.assertEqual(2, len(WorkSession.objects.all()))
+        self.assertRaises(ObjectDoesNotExist, Invoice.objects.get, id=invoice.id)
 
     def test_delete_invoice_work_sessions(self):
         self.work_session1.save()
@@ -233,66 +280,78 @@ class InvoiceViewTests(APITestCase):
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
         self.assertEqual(0, len(invoice.hourly_travels.all()))
 
-    def test_check_report_content(self):
-        owner = create_random_user(save=True)
-        client = create_random_client(
-            save=True,
-            owner=owner,
-            name="Amrou Bellalouna",
-            city="Msaken",
-            country="Tunisia",
-            street="Taieb Mhiri",
-            postal_code="4070",
-        )
-        project = create_random_project(
-            client=client,
-            hourly_rate=134,
-            travel_fixed_rate=120,
-            travel_hourly_rate=45,
-            save=True,
-        )
-        session1 = WorkSession(
-            project=project, start_timestamp=100000, end_timestamp=101800
-        )
-        session2 = WorkSession(
-            project=project, start_timestamp=102000, end_timestamp=102000 + 47 * 60
-        )
-        session3 = WorkSession(
-            project=project, start_timestamp=104000, end_timestamp=104000 + 13 * 60
-        )
-        session4 = WorkSession(
-            project=project, start_timestamp=106000, end_timestamp=106000 + 3 * 3600
-        )
-        session1.save()
-        session2.save()
-        session3.save()
-        session4.save()
-        fixed_travel1 = FixedTravel(
-            project=project, rate=75, occurrences=1, timestamp=106000
-        )
-        fixed_travel1.save()
-        fixed_travel2 = FixedTravel(project=project, occurrences=3, timestamp=107000)
-        fixed_travel2.save()
-        hourly_travel1 = HourlyTravel(project=project, hours=2, rate=30, timestamp=108000)
-        hourly_travel1.save()
-        hourly_travel2 = HourlyTravel(project=project, hours=1.5, timestamp=109000)
-        hourly_travel2.save()
-        invoice = Invoice(project=project)
+
+    def test_check_non_european_report_content(self):
+        invoice = Invoice(project=self.project_for_report, tax_regulation=TaxRegulation.NON_EUROPEAN.value)
         invoice.save()
-        invoice.fixed_travels.set([fixed_travel1, fixed_travel2])
-        invoice.hourly_travels.set([hourly_travel1, hourly_travel2])
-        invoice.work_sessions.set([session1, session2, session3, session4])
+        invoice.fixed_travels.set([self.fixed_travel1_for_report, self.fixed_travel2_for_report])
+        invoice.hourly_travels.set([self.hourly_travel1_for_report, self.hourly_travel2_for_report])
+        invoice.work_sessions.set([self.session1_for_report, self.session2_for_report, self.session3_for_report, self.session4_for_report])
         invoice_proxy = InvoiceProxy.objects.get(pk=invoice.id)
         total = invoice_proxy.get_total()
         self.assertEqual(1165.5, total)
         url = reverse(InvoiceReportView.view_name, args=[invoice.id])
         self.client.get(path=url)
-        target_invoice_path = BASE_DIR / "test_files/generated_invoice.docx"
+        target_invoice_path = TEST_FILES_DIR / "non_european_invoice.docx"
         newly_generated_invoice_path = TEMP_DIR / f"{invoice.id}-output.docx"
         generated_document = aw.Document(newly_generated_invoice_path.as_posix())
         target_document = aw.Document(target_invoice_path.as_posix())
         generated_document.compare(target_document, "user", date.today())
-        revisions = target_document.revisions
+        revisions = generated_document.revisions
+        differences = []
+        creation_date = date.today().strftime("%d %B %Y")
+
+        fields_to_ignore = ["03 May 2022", creation_date]
+        for revision in revisions:
+            group = revision.group
+            if group and group.text not in fields_to_ignore:
+                differences.append(group.text)
+        self.assertEqual([], differences)
+
+    def test_check_european_report_content(self):
+        invoice = Invoice(project=self.project_for_report, tax_regulation=TaxRegulation.EUROPEAN.value)
+        invoice.save()
+        invoice.fixed_travels.set([self.fixed_travel1_for_report, self.fixed_travel2_for_report])
+        invoice.hourly_travels.set([self.hourly_travel1_for_report, self.hourly_travel2_for_report])
+        invoice.work_sessions.set([self.session1_for_report, self.session2_for_report, self.session3_for_report, self.session4_for_report])
+        invoice_proxy = InvoiceProxy.objects.get(pk=invoice.id)
+        total = invoice_proxy.get_total()
+        self.assertEqual(1165.5, total)
+        url = reverse(InvoiceReportView.view_name, args=[invoice.id])
+        self.client.get(path=url)
+        target_invoice_path = TEST_FILES_DIR / "european_invoice.docx"
+        newly_generated_invoice_path = TEMP_DIR / f"{invoice.id}-output.docx"
+        generated_document = aw.Document(newly_generated_invoice_path.as_posix())
+        target_document = aw.Document(target_invoice_path.as_posix())
+        generated_document.compare(target_document, "user", date.today())
+        revisions = generated_document.revisions
+        differences = []
+        creation_date = date.today().strftime("%d %B %Y")
+
+        fields_to_ignore = ["03 May 2022", creation_date]
+        for revision in revisions:
+            group = revision.group
+            if group and group.text not in fields_to_ignore:
+                differences.append(group.text)
+        self.assertEqual([], differences)
+
+    def test_check_dutch_report_content(self):
+        invoice = Invoice(project=self.project_for_report)
+        invoice.save()
+        invoice.fixed_travels.set([self.fixed_travel1_for_report, self.fixed_travel2_for_report])
+        invoice.hourly_travels.set([self.hourly_travel1_for_report, self.hourly_travel2_for_report])
+        invoice.work_sessions.set([self.session1_for_report, self.session2_for_report, self.session3_for_report, self.session4_for_report])
+        invoice_proxy = InvoiceProxy.objects.get(pk=invoice.id)
+        total = invoice_proxy.get_total()
+        self.assertEqual(1165.5, total)
+        url = reverse(InvoiceReportView.view_name, args=[invoice.id])
+        self.client.get(path=url)
+        target_invoice_path = TEST_FILES_DIR / "dutch_invoice.docx"
+        newly_generated_invoice_path = TEMP_DIR / f"{invoice.id}-output.docx"
+        generated_document = aw.Document(newly_generated_invoice_path.as_posix())
+        target_document = aw.Document(target_invoice_path.as_posix())
+        generated_document.compare(target_document, "user", date.today())
+        revisions = generated_document.revisions
         differences = []
         creation_date = date.today().strftime("%d %B %Y")
 

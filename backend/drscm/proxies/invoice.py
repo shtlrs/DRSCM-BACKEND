@@ -24,7 +24,10 @@ class InvoiceProxy(Invoice, Billable):
         self.hourly_travels_proxy = HourlyTravelProxy.objects.filter(invoice=self).all()
         self.work_sessions_proxy = WorkSessionProxy.objects.filter(invoice=self).all()
         self.total_excluding_vat = self.get_total()
-        self.vat_total = round(self.total_excluding_vat * 0.21, 2)
+        if self.is_dutch():
+            self.vat_total = round(self.total_excluding_vat * 0.21, 2)
+        else:
+            self.vat_total = 0
         self.total_including_vat = round(self.total_excluding_vat + self.vat_total, 2)
 
     def get_total_work_session_hours(self):

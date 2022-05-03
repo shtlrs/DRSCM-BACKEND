@@ -3,6 +3,7 @@ from docx.table import _Row
 
 
 class EuropeanBillsTableExtender(DutchBillsTableExtender):
+
     def add_tax_rows(self):
         """
         Vat is transferred if client is european

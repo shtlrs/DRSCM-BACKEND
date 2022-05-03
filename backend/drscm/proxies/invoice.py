@@ -24,14 +24,14 @@ class InvoiceProxy(Invoice, Billable):
         self.hourly_travels_proxy = HourlyTravelProxy.objects.filter(invoice=self).all()
         self.work_sessions_proxy = WorkSessionProxy.objects.filter(invoice=self).all()
         self.total_excluding_vat = self.get_total()
-        self.vat_total = self.total_excluding_vat * 0.21
-        self.total_including_vat = self.total_excluding_vat + self.vat_total
+        self.vat_total = round(self.total_excluding_vat * 0.21, 2)
+        self.total_including_vat = round(self.total_excluding_vat + self.vat_total, 2)
 
     def get_total_work_session_hours(self):
-        return sum(
+        return round(sum(
             work_session.get_session_duration_in_hours()
             for work_session in self.work_sessions_proxy
-        )
+        ), 2)
 
     def get_number_of_travel_hours(self):
         total_travel_hours = sum(
@@ -53,7 +53,7 @@ class InvoiceProxy(Invoice, Billable):
         work_sessions_total = sum(
             [work_session.get_total() for work_session in self.work_sessions_proxy]
         )
-        return work_sessions_total
+        return round(work_sessions_total, 2)
 
     def get_extra_travel_costs(self):
         extra_costs = 0
@@ -65,26 +65,27 @@ class InvoiceProxy(Invoice, Billable):
             [hourly_travel.extra_costs for hourly_travel in self.hourly_travels_proxy]
         )
 
-        return extra_costs
+        return round(extra_costs, 2)
 
     def get_fixed_travels_total(self):
         fixed_travel_total = sum(
             [fixed_rate.get_total() for fixed_rate in self.fixed_travels_proxy]
         )
-        return fixed_travel_total
+        return round(fixed_travel_total, 2)
 
     def get_hourly_travels_total(self):
         hourly_travel_total = sum(
             [hourly_travel.get_total() for hourly_travel in self.hourly_travels_proxy]
         )
-        return hourly_travel_total
+        return round(hourly_travel_total, 2)
 
     def get_total(self):
 
-        return (
+        return round(
             self.get_fixed_travels_total()
             + self.get_hourly_travels_total()
-            + self.get_work_sessions_total()
+            + self.get_work_sessions_total(),
+            2
         )
 
     def is_dutch(self):

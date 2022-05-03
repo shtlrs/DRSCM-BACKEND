@@ -8,4 +8,4 @@ class FixedTravelProxy(FixedTravel, Billable):
 
     def get_total(self):
         rate = self.rate or self.project.travel_fixed_rate
-        return rate * self.occurrences
+        return round(rate * self.occurrences, 2)

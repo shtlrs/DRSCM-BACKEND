@@ -8,4 +8,4 @@ class HourlyTravelProxy(HourlyTravel, Billable):
 
     def get_total(self):
         rate = self.rate or self.project.travel_hourly_rate
-        return rate * self.hours
+        return round(rate * self.hours, 2)

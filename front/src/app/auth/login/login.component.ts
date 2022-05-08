@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
   selector: 'app-login',
@@ -12,8 +13,10 @@ export class LoginComponent implements OnInit {
   submitted = false;
   error =''
 
+// TODO-KAREM: refresh check on send
   constructor(
     private formBuilder: FormBuilder,
+    private authService: AuthenticationService
   ) {
     // also navigate to dashboard if already logged in
   }
@@ -30,8 +33,11 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
+    this.authService.login(this.f['username'].value, this.f['password'].value).pipe(
 
-    // I Submitted 
+    );
+
+
 }
 
 }

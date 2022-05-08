@@ -1,4 +1,10 @@
-from rest_framework.permissions import IsAuthenticated
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponseNotFound
+from rest_framework.generics import GenericAPIView
+from rest_framework.permissions import IsAuthenticated, AllowAny
+
+from drscm.exporters.invoice import InvoiceExporter
+from drscm.proxies import InvoiceProxy
 from drscm.models import Invoice
 from drscm.permissions.model.is_owner import IsSuperUserOrOwner
 from drscm.serializers import InvoiceSerializer
@@ -60,3 +66,27 @@ class InvoiceDetailsView(generics.RetrieveUpdateDestroyAPIView):
         IsAuthenticated,
         IsSuperUserOrOwner,
     )
+
+
+@extend_schema_view(
+    get=extend_schema(
+        description="Creates the invoice in Word document and downloads it",
+        operation_id="Download invoice report",
+    ),
+)
+class InvoiceReportView(GenericAPIView):
+    view_name = "invoice_report_view"
+    model = InvoiceProxy
+    permission_classes = [
+        AllowAny,
+    ]
+
+    def get(self, request, pk):
+        try:
+            invoice = InvoiceProxy.objects.get(pk=pk)
+            exporter = InvoiceExporter()
+            response = exporter.export(invoice_proxy=invoice)
+        except ObjectDoesNotExist:
+            response = HttpResponseNotFound(f"Invoice {pk} does not exist")
+
+        return response

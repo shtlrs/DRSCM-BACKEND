@@ -1,5 +1,7 @@
+from datetime import datetime
 from django.test import TestCase
 from drscm.models import WorkSession
+from drscm.proxies import WorkSessionProxy
 from drscm.tests.helpers.project import create_random_project
 from drscm.tests.helpers.client import create_random_client
 from drscm.tests.helpers.user import create_random_user
@@ -7,6 +9,12 @@ from drscm.tests.helpers.work_session import create_random_work_session
 
 
 class WorkSessionModelTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.owner = create_random_user(save=True)
+        cls.client = create_random_client(owner=cls.owner, save=True)
+        cls.project = create_random_project(client=cls.client, save=True)
+
     def test_add_new_work_session(self):
         """
         Tests adding a new work session
@@ -61,3 +69,39 @@ class WorkSessionModelTests(TestCase):
 
         work_session = WorkSession.objects.first()
         self.assertEqual(work_session.end_timestamp, new_work_session.end_timestamp)
+
+    def test_work_session_date_string(self):
+        now = datetime.now()
+        #  12 minutes
+        start_date = now.replace(hour=15, minute=40, second=40)
+        end_date = now.replace(hour=15, minute=52, second=55)
+        work_session = WorkSession(
+            project=self.project,
+            start_timestamp=start_date.timestamp(),
+            end_timestamp=end_date.timestamp(),
+        )
+        work_session.save()
+        proxy = WorkSessionProxy.objects.get(id=work_session.id)
+        self.assertEqual("00:12", proxy.get_session_duration_date_string())
+        #  1 hour & 33 minutes
+        start_date = now.replace(hour=15, minute=50, second=40)
+        end_date = now.replace(hour=17, minute=23, second=55)
+        work_session = WorkSession(
+            project=self.project,
+            start_timestamp=start_date.timestamp(),
+            end_timestamp=end_date.timestamp(),
+        )
+        work_session.save()
+        proxy = WorkSessionProxy.objects.get(id=work_session.id)
+        self.assertEqual("01:33", proxy.get_session_duration_date_string())
+        #  2 hours
+        start_date = now.replace(hour=15, minute=50, second=40)
+        end_date = now.replace(hour=17, minute=50, second=40)
+        work_session = WorkSession(
+            project=self.project,
+            start_timestamp=start_date.timestamp(),
+            end_timestamp=end_date.timestamp(),
+        )
+        work_session.save()
+        proxy = WorkSessionProxy.objects.get(id=work_session.id)
+        self.assertEqual("02:00", proxy.get_session_duration_date_string())

@@ -69,7 +69,7 @@ class DateUtilsTests(TestCase):
             tzinfo=timezone.utc,
         ).timestamp()
         date_string = timestamp_to_date_string(timestamp)
-        self.assertEqual("2022-03-20 15:50", date_string)
+        self.assertEqual("2022-03-20", date_string)
 
     def test_get_current_timestamp_with_null_seconds(self):
         now = datetime.now().replace(second=0, microsecond=0)

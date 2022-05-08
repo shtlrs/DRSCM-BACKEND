@@ -323,9 +323,17 @@ class InvoiceViewTests(APITestCase):
         generated_document.compare(target_document, "user", date.today())
         revisions = generated_document.revisions
         differences = []
-        creation_date = date.today().strftime("%d %B %Y")
+        creation_date = date.today()
+        creation_date_string = creation_date.strftime("%d %B %Y")
 
-        fields_to_ignore = ["03 May 2022", creation_date]
+        fields_to_ignore = [
+            "03 May 2022",
+            creation_date_string,
+            "03",
+            "May",
+            creation_date.strftime("%B"),
+            f"{creation_date.day:02}",
+        ]
         for revision in revisions:
             group = revision.group
             if group and group.text not in fields_to_ignore:
@@ -363,9 +371,17 @@ class InvoiceViewTests(APITestCase):
         generated_document.compare(target_document, "user", date.today())
         revisions = generated_document.revisions
         differences = []
-        creation_date = date.today().strftime("%d %B %Y")
+        creation_date = date.today()
+        creation_date_string = creation_date.strftime("%d %B %Y")
 
-        fields_to_ignore = ["03 May 2022", creation_date]
+        fields_to_ignore = [
+            "03 May 2022",
+            creation_date_string,
+            "03",
+            "May",
+            creation_date.strftime("%B"),
+            f"{creation_date.day:02}",
+        ]
         for revision in revisions:
             group = revision.group
             if group and group.text not in fields_to_ignore:
@@ -401,9 +417,17 @@ class InvoiceViewTests(APITestCase):
         generated_document.compare(target_document, "user", date.today())
         revisions = generated_document.revisions
         differences = []
-        creation_date = date.today().strftime("%d %B %Y")
+        creation_date = date.today()
+        creation_date_string = creation_date.strftime("%d %B %Y")
 
-        fields_to_ignore = ["03 May 2022", creation_date]
+        fields_to_ignore = [
+            "03 May 2022",
+            creation_date_string,
+            "03",
+            "May",
+            creation_date.strftime("%B"),
+            f"{creation_date.day:02}",
+        ]
         for revision in revisions:
             group = revision.group
             if group and group.text not in fields_to_ignore:

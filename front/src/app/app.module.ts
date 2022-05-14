@@ -6,7 +6,9 @@ import { AppComponent } from './app.component';
 import { AuthModule } from './auth/auth.module';
 import { NavbarModule } from './navbar/navbar.module';
 import { DashboardModule } from './dashboard/dashboard.module';
-import { ClientsModule } from './clients/clients.module';
+import { ClientsModule } from '@clients/clients.module';
+import { HttpClientModule } from '@angular/common/http';
+
 
 @NgModule({
   declarations: [
@@ -18,7 +20,8 @@ import { ClientsModule } from './clients/clients.module';
     AuthModule,
     NavbarModule,
     DashboardModule,
-    ClientsModule
+    ClientsModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

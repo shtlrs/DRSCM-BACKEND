@@ -1,8 +1,11 @@
-
 <h1>Clients list</h1>
 <div>
+  <input placeholder="Client name" (input)="filter($event)">
+</div>
+
+<div>
   <ul>
-    <li *ngFor="let client of clients">
+    <li *ngFor="let client of clientsToDisplay">
       {{ client.name }}
     </li>
   </ul>

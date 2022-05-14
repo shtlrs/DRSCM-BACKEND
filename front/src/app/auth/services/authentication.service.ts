@@ -21,4 +21,10 @@ export class AuthenticationService {
 					this.tokenStorageService.setRefreshToken(loginResponse.refresh);
 				}));
 	}
+
+	refreshToken(refreshToken: string){
+		return this.http.post<LoginResponse>(`${environment.apiUrl}/token/refresh`, {
+			refresh: this.tokenStorageService.getRefreshToken()
+		});
+	}
 }

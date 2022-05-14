@@ -13,7 +13,9 @@ export class ClientsService {
   constructor(private http: HttpClient) {}
 
   getClients(): Observable<Array<Client>>{
-    const url = urlJoin(environment.apiUrl, 'clients');
+    // const url = urlJoin(environment.apiUrl, 'clients/');
+    const url = `${environment.apiUrl}/clients/`;
+    console.log(url);
     return this.http.get<Array<Client>>(url);
   }
 

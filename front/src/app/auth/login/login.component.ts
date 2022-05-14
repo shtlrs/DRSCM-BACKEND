@@ -11,9 +11,9 @@ export class LoginComponent implements OnInit {
   loginForm?: FormGroup;
   loading = false;
   submitted = false;
-  error =''
+  error = ''
 
-// TODO-KAREM: refresh check on send
+  // TODO-KAREM: refresh check on send
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthenticationService
@@ -29,15 +29,14 @@ export class LoginComponent implements OnInit {
   }
 
   // convenience getter for easy access to form fields
-  get f() { return this.loginForm!.controls; }
+  get formControls() { return this.loginForm!.controls; }
 
   onSubmit() {
     this.submitted = true;
-    this.authService.login(this.f['username'].value, this.f['password'].value).pipe(
-
+    console.log(this.formControls);
+    this.authService.login(this.formControls['username'].value, this.formControls['password'].value).subscribe(
+      // Do nothing for now, TODO-KAREM: redirect url wanted to go to
     );
-
-
-}
+  }
 
 }

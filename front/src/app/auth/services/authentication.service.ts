@@ -17,8 +17,8 @@ export class AuthenticationService {
 			.pipe(
 				tap(loginResponse => {
 					console.log(loginResponse);
-					this.localStorageService.setItem("token", loginResponse.accessToken);
-					this.localStorageService.setItem("refreshToken", loginResponse.refreshToken);
+					this.localStorageService.setItem("token", loginResponse.access);
+					this.localStorageService.setItem("refreshToken", loginResponse.refresh);
 				}));
 	}
 }

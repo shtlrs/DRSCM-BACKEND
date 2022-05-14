@@ -5,18 +5,18 @@
         <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" [formGroup]="loginForm!" (ngSubmit)="onSubmit()">
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="username">Username</label>
-                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['username'].errors }"
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && formControls['username'].errors }"
                 />
-                <div *ngIf="submitted && f['username'].errors" class="invalid-feedback">
-                    <div *ngIf="f['username'].errors['required']">Username is required</div>
+                <div *ngIf="submitted && formControls['username'].errors" class="invalid-feedback">
+                    <div *ngIf="formControls['username'].errors['required']">Username is required</div>
                 </div>
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="password">Password</label>
-                <input class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" type="password" formControlName="password" class="form-control " [ngClass]="{ 'is-invalid': submitted && f['password'].errors } "
+                <input class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" type="password" formControlName="password" class="form-control " [ngClass]="{ 'is-invalid': submitted && formControls['password'].errors } "
                 />
-                <div *ngIf="submitted && f['password'].errors " class="invalid-feedback ">
-                    <div *ngIf="f['password'].errors[ 'required'] ">Password is required</div>
+                <div *ngIf="submitted && formControls['password'].errors " class="invalid-feedback ">
+                    <div *ngIf="formControls['password'].errors[ 'required'] ">Password is required</div>
                 </div>
             </div>
             <button [disabled]="loading " class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ">

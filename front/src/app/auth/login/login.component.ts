@@ -29,16 +29,14 @@ export class LoginComponent implements OnInit {
   }
 
   // convenience getter for easy access to form fields
-  get f() { return this.loginForm!.controls; }
+  get formControls() { return this.loginForm!.controls; }
 
   onSubmit() {
     this.submitted = true;
-    console.log(this.f);
-    this.authService.login(this.f['username'].value, this.f['password'].value).subscribe(
-      resp => console.log(resp)
+    console.log(this.formControls);
+    this.authService.login(this.formControls['username'].value, this.formControls['password'].value).subscribe(
+      // Do nothing for now, TODO-KAREM: redirect url wanted to go to
     );
-
-
   }
 
 }

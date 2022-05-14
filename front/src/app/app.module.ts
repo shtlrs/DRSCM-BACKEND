@@ -7,6 +7,8 @@ import { AuthModule } from './auth/auth.module';
 import { NavbarModule } from './navbar/navbar.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { ClientsModule } from './clients/clients.module';
+import { JWTInterceptor } from './auth/interceptors/jwt-interceptor';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,9 @@ import { ClientsModule } from './clients/clients.module';
     DashboardModule,
     ClientsModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JWTInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

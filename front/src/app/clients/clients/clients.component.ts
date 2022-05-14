@@ -25,4 +25,8 @@ export class ClientsComponent implements OnInit {
     this.clientsToDisplay = this.clients.filter(client => client.name.toLowerCase().includes(val));
   }
 
+  openAddClientForm(){
+    console.log("Mazelna");
+  }
+
 }

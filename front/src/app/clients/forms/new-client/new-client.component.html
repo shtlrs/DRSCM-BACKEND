@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="card mt-3">
+    <form class="card-body" [formGroup]="newClientForm">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label>Name</label>
+          <input type="text" class="form-control" formControlName="name">
+        </div>
+        <div class="col-md-6 mb-3">
+          <label>Street</label>
+          <input type="text" class="form-control" formControlName="street">
+        </div>
+      </div>
+      <hr class="mb-4">
+      <button class="btn btn-primary btn-lg btn-block" type="submit">Add client</button>
+    </form>
+  </div>
+</div>
+
+<div>Values: {{ newClientForm.value | json }}</div>
+<div>Valid: {{ newClientForm.valid }}</div>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ClientsService } from "@clients/services/clients.service";
 import {Client} from "@clients/models/client";
 import {tap} from "rxjs";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-clients',
@@ -12,7 +13,7 @@ export class ClientsComponent implements OnInit {
 
   clients: Array<Client> = [];
   clientsToDisplay: Array<Client> = [];
-  constructor(private clientService: ClientsService) { }
+  constructor(private clientService: ClientsService, private router: Router) { }
 
   ngOnInit(): void {
     this.clientService.getClients().subscribe(
@@ -26,7 +27,7 @@ export class ClientsComponent implements OnInit {
   }
 
   openAddClientForm(){
-    console.log("Mazelna");
+    this.router.navigate(["clients/add"]);
   }
 
 }

@@ -12,7 +12,12 @@ environment = environ.Env(
 AUTH_USER_MODEL = "drscm.User"
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+BASE_DIR = Path(__file__).resolve().parent
+
+while not (BASE_DIR / "manage.py").exists():
+    BASE_DIR = BASE_DIR.parent
+
 
 environment.read_env(BASE_DIR / ".env")
 

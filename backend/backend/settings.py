@@ -1,7 +1,6 @@
 from pathlib import Path
 from datetime import timedelta
 import tempfile
-import os
 import environ
 
 environment = environ.Env(

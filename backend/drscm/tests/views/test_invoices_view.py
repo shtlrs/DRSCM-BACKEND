@@ -4,7 +4,7 @@ from datetime import datetime, date
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-from backend.settings.base import TEMP_DIR, TEST_FILES_DIR
+from backend.settings import TEMP_DIR, TEST_FILES_DIR
 import aspose.words as aw
 
 from drscm.proxies import (

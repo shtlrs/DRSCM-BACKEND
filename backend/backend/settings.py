@@ -140,3 +140,32 @@ SPECTACULAR_SETTINGS = {
 
 TEMP_DIR = Path(tempfile.gettempdir())
 TEST_FILES_DIR = BASE_DIR / "test_files"
+
+
+DB_NAME = "webdrscm"
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_HOST = os.getenv("DB_HOST")
+
+if not DB_USER:
+    raise Exception("DB_USER wasn't provided")
+
+if not DB_PASSWORD:
+    raise Exception("DB_PASSWORD wasn't provided")
+
+if not DB_HOST:
+    raise Exception("DB_HOST wasn't provided")
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": DB_NAME,
+        "USER": DB_USER,
+        "PASSWORD": DB_PASSWORD,
+        "HOST": DB_HOST,
+        "PORT": "5432",
+    }
+}
+
+BASE_INVOICE_TEMPLATE = BASE_DIR / "drscm/templates/invoice/base.docx"
+

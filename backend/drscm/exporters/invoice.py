@@ -10,7 +10,7 @@ from utils.docx.table_generators import (
 )
 from drscm.interfaces.exporter import AbstractExporter
 from drscm.proxies import InvoiceProxy
-from backend.settings.dev import BASE_INVOICE_TEMPLATE, TEMP_DIR
+from backend.settings import BASE_INVOICE_TEMPLATE, TEMP_DIR
 
 
 class InvoiceExporter(AbstractExporter):

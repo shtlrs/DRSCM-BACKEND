@@ -11,5 +11,5 @@
 /backend/schema.yaml
 /.idea/dataSources/b8c508b6-0e94-4d92-ba44-f918c156c33b.xml
 **/__pycache__/
-/backend/dev.env
-/backend/prod.env
+.idea
+**/*.env

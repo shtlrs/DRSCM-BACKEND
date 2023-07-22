@@ -1,18 +1,31 @@
 from pathlib import Path
 from datetime import timedelta
 import tempfile
+import environ
+
+environment = environ.Env(
+    DEBUG=(bool, False)
+)
+
 
 AUTH_USER_MODEL = "drscm.User"
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+BASE_DIR = Path(__file__).resolve().parent
+
+while not (BASE_DIR / "manage.py").exists():
+    BASE_DIR = BASE_DIR.parent
+
+DEBUG = environment("DEBUG")
+
+environment.read_env(BASE_DIR / ".env")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-azg*81=#c_p9+u=i#1c82n6hrr+l&#7eagfoq=2r3m0%mvbyby"
+SECRET_KEY = environment("SECRET_KEY")
 
 ALLOWED_HOSTS = []
 
@@ -64,7 +77,6 @@ SIMPLE_JWT = {
     "TOKEN_TYPE_CLAIM": "token_type",
 }
 
-
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -82,10 +94,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "backend.wsgi.application"
-
-# Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -140,3 +148,20 @@ SPECTACULAR_SETTINGS = {
 
 TEMP_DIR = Path(tempfile.gettempdir())
 TEST_FILES_DIR = BASE_DIR / "test_files"
+
+# Database
+# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+
+if DEBUG:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "test-db.sqlite3",
+        }
+    }
+else:
+    DATABASES = {
+        "default": environment.db()
+    }
+
+BASE_INVOICE_TEMPLATE = BASE_DIR / "drscm/templates/invoice/base.docx"

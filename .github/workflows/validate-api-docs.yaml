@@ -2,6 +2,10 @@ name: Validate api docs
 
 on: [push]
 
+env:
+    DEBUG: true
+    SECRET_KEY: ${{ secrets.SECRET_KEY }}
+
 jobs:
   test_swagger_editor_validator_service:
     runs-on: ubuntu-latest
@@ -15,9 +19,9 @@ jobs:
           - 80:8080
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install Dependencies

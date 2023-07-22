@@ -18,6 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent
 while not (BASE_DIR / "manage.py").exists():
     BASE_DIR = BASE_DIR.parent
 
+DEBUG = environment("DEBUG")
 
 environment.read_env(BASE_DIR / ".env")
 
@@ -152,8 +153,16 @@ TEST_FILES_DIR = BASE_DIR / "test_files"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    "default": environment.db()
-}
+if DEBUG:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "test-db.sqlite3",
+        }
+    }
+else:
+    DATABASES = {
+        "default": environment.db()
+    }
 
 BASE_INVOICE_TEMPLATE = BASE_DIR / "drscm/templates/invoice/base.docx"

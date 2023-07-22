@@ -2,6 +2,10 @@ name: Validate api docs
 
 on: [push]
 
+env:
+    DEBUG: true
+    SECRET_KEY: ${{ secrets.SECRET_KEY }}
+
 jobs:
   test_swagger_editor_validator_service:
     runs-on: ubuntu-latest

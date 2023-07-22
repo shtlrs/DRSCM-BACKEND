@@ -3,6 +3,10 @@ name: Run django tests
 on:
   [push, pull_request]
 
+env:
+  DEBUG: true
+  SECRET_KEY: ${{ secrets.SECRET_KEY }}
+
 jobs:
   build:
     runs-on: ubuntu-latest

@@ -27,7 +27,7 @@ DEBUG = environment("DEBUG")
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = environment("SECRET_KEY")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",

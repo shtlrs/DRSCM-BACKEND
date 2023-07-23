@@ -17,9 +17,9 @@ BASE_DIR = Path(__file__).resolve().parent
 while not (BASE_DIR / "manage.py").exists():
     BASE_DIR = BASE_DIR.parent
 
-DEBUG = environment("DEBUG")
-
 environment.read_env(BASE_DIR / ".env")
+
+DEBUG = environment("DEBUG")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/

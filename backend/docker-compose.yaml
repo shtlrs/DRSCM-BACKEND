@@ -1,0 +1,47 @@
+version: "3.9"
+
+
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-file: "5"
+    max-size: "10m"
+
+services:
+  postgres:
+    logging: *default-logging
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: webdrscm
+      POSTGRES_USER: amrouna
+      POSTGRES_PASSWORD: mysecretpassword
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U amrouna -d webdrscm"]
+      interval: 2s
+      timeout: 1s
+      retries: 5
+
+  api:
+    logging: *default-logging
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    ports:
+      - "8000:8000"
+
+    command: ["runserver", "0.0.0.0:8000"]
+
+    tty: true
+    environment:
+      DEBUG: 0
+      DATABASE_URL: postgres://amrouna:mysecretpassword@postgres:5432/webdrscm
+      SECRET_KEY: suitable-for-development--only
+      PYTHONDONTWRITEBYTECODE: 1
+      PYTHONUNBUFFERED: 1

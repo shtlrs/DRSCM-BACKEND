@@ -3,9 +3,7 @@ from datetime import timedelta
 import tempfile
 import environ
 
-environment = environ.Env(
-    DEBUG=(bool, False)
-)
+environment = environ.Env(DEBUG=(bool, False))
 
 
 AUTH_USER_MODEL = "drscm.User"
@@ -17,9 +15,9 @@ BASE_DIR = Path(__file__).resolve().parent
 while not (BASE_DIR / "manage.py").exists():
     BASE_DIR = BASE_DIR.parent
 
-DEBUG = environment("DEBUG")
-
 environment.read_env(BASE_DIR / ".env")
+
+DEBUG = environment("DEBUG")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -27,7 +25,7 @@ environment.read_env(BASE_DIR / ".env")
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = environment("SECRET_KEY")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -160,8 +158,6 @@ if DEBUG:
         }
     }
 else:
-    DATABASES = {
-        "default": environment.db()
-    }
+    DATABASES = {"default": environment.db()}
 
 BASE_INVOICE_TEMPLATE = BASE_DIR / "drscm/templates/invoice/base.docx"

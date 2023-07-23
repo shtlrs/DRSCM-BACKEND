@@ -22,8 +22,6 @@ class ApplicationBootstrapper:
 
     Inspired by Python Discord's `SiteManager` class
     https://github.com/python-discord/site/blob/bd1479736ec172752b897ebe0559100e93c996ad/manage.py#L29
-
-    This approach is fairly simple compared to the original one as we only serve with Django's WSGI for now.
     """
 
     def __init__(self):

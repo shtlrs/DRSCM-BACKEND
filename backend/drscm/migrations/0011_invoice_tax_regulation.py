@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("drscm", "0012_auto_20220429_1712"),
+        ("drscm", "00010_alter_fixed_rate_field_to_float"),
     ]
 
     operations = [

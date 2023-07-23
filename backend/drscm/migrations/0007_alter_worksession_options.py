@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("drscm", "0006_invoice"),
+        ("drscm", "0006_add_invoice_model"),
     ]
 
     operations = [

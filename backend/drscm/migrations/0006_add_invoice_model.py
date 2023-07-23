@@ -9,7 +9,7 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("drscm", "0005_auto_20220427_0106"),
+        ("drscm", "0005_add_rate_column_to_travel_table"),
     ]
 
     operations = [

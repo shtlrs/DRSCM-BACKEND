@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("drscm", "0008_worksessionproxy"),
+        ("drscm", "0007_alter_worksession_options"),
     ]
 
     operations = [

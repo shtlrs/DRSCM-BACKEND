@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("drscm", "0010_fixedtravelproxy_hourlytravelproxy_invoiceproxy"),
+        ("drscm", "0008_remove_project_hourly_rate"),
     ]
 
     operations = [

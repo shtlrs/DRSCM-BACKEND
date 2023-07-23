@@ -3,9 +3,7 @@ from datetime import timedelta
 import tempfile
 import environ
 
-environment = environ.Env(
-    DEBUG=(bool, False)
-)
+environment = environ.Env(DEBUG=(bool, False))
 
 
 AUTH_USER_MODEL = "drscm.User"
@@ -160,8 +158,6 @@ if DEBUG:
         }
     }
 else:
-    DATABASES = {
-        "default": environment.db()
-    }
+    DATABASES = {"default": environment.db()}
 
 BASE_INVOICE_TEMPLATE = BASE_DIR / "drscm/templates/invoice/base.docx"

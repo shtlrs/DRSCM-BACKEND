@@ -1,7 +1,10 @@
-name: Run django tests
+name: Run linter checks
 
 on:
-  [push, pull_request]
+  workflow_call:
+    secrets:
+      SECRET_KEY:
+        required: true
 
 env:
   DEBUG: true
@@ -15,7 +18,6 @@ jobs:
       matrix:
         python-version: ['3.10']
 
-
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
@@ -28,7 +30,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install -r dev.requirements.txt
+      - name: Run linter
+        working-directory: ./backend
+        run: |
+          flake8 .
       - name: Run Tests
+        if: always()
         working-directory: ./backend
         run: |
           python manage.py test

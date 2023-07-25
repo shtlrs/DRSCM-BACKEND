@@ -1,16 +1,19 @@
 name: Validate api docs
 
-on: [push]
+on:
+  workflow_call:
+    secrets:
+      SECRET_KEY:
+        required: true
+
 
 env:
     DEBUG: true
-    SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
 jobs:
   test_swagger_editor_validator_service:
     runs-on: ubuntu-latest
     name: Swagger Editor Validator Service
-
 
     services:
       swagger-editor:

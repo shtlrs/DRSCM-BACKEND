@@ -1,0 +1,34 @@
+name: Backend CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+
+concurrency:
+  group: ${{ github.workflow }}-${{  github.ref }}
+  cancel-in-progress: true
+
+
+jobs:
+  lint-test:
+    uses: ./.github/workflows/backend-lint-test.yaml
+    secrets: inherit
+
+  api-docs:
+    uses: ./.github/workflows/validate-api-docs.yaml
+    secrets: inherit
+
+  generate-sha-tag:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    outputs:
+      sha-tag: ${{ steps.sha-tag.outputs.sha-tag }}
+    steps:
+      - name: Create the SHA tag for the Docker Image to be deployed.
+        id: sha-tag
+        run: |
+          tag=$(cut -c 1-7 <<< $GITHUB_SHA)
+          echo "sha-tag=$tag" >> $GITHUB_OUTPUT

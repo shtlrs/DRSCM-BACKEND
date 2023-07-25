@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: site
+          image: ghcr.io/shtlrs/drscm:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1000Mi
+            requests:
+              cpu: 250m
+              memory: 400Mi
+          env:
+            - name: DEBUG
+              value: "False"
+          envFrom:
+            - secretRef:
+                name: backend-secret
+          volumeMounts:
+            - mountPath: /tmp
+              name: django-tmp
+          securityContext:
+            readOnlyRootFilesystem: true
+      volumes:
+        - name: django-tmp
+          emptyDir:
+            medium: Memory
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+        runAsNonRoot: true

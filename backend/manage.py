@@ -62,9 +62,11 @@ class ApplicationBootstrapper:
         sys.argv = [
             "gunicorn",
             "--preload",
-            "-b", "0.0.0.0:8000",
+            "-b",
+            "0.0.0.0:8000",
             "backend.wsgi:application",
-            "-w", "2",
+            "-w",
+            "2",
         ]
         print("YO")
         # Run gunicorn for the production server.

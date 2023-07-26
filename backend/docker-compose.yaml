@@ -36,7 +36,7 @@ services:
     ports:
       - "8000:8000"
 
-    command: ["run"]
+    command: ["run", "--debug"]
 
     tty: true
     env_file:
@@ -44,4 +44,3 @@ services:
     environment:
       PYTHONDONTWRITEBYTECODE: 1
       PYTHONUNBUFFERED: 1
-

@@ -24,9 +24,18 @@ class ApplicationBootstrapper:
     https://github.com/python-discord/site/blob/bd1479736ec172752b897ebe0559100e93c996ad/manage.py#L29
     """
 
-    def __init__(self):
-        self.verbosity = 1
-        self.debug = False
+    def __init__(self, args: list[str]):
+        self.debug = "--debug" in args
+        self.silent = "--silent" in args
+
+        if self.silent:
+            self.verbosity = 0
+        else:
+            self.verbosity = 2 if "--verbose" in args else 1
+
+        if self.debug:
+            os.environ.setdefault("DEBUG", "true")
+            print("Starting in debug mode.")
 
     def apply_migrations(self) -> None:
         """Applies pending migrations"""
@@ -42,7 +51,24 @@ class ApplicationBootstrapper:
 
         self.apply_migrations()
 
-        call_command("runserver", "0.0.0.0:8000")
+        if self.debug:
+            call_command("runserver", "0.0.0.0:8000")
+            return
+
+        # Import gunicorn only if we aren't in debug mode.
+        import gunicorn.app.wsgiapp
+
+        # Patch the arguments for gunicorn
+        sys.argv = [
+            "gunicorn",
+            "--preload",
+            "-b", "0.0.0.0:8000",
+            "backend.wsgi:application",
+            "-w", "2",
+        ]
+        print("YO")
+        # Run gunicorn for the production server.
+        gunicorn.app.wsgiapp.run()
 
 
 def main():
@@ -58,7 +84,7 @@ def main():
         ) from exc
 
     if sys.argv[1] == "run":
-        bootsrapper = ApplicationBootstrapper()
+        bootsrapper = ApplicationBootstrapper(sys.argv)
         bootsrapper.run_server()
         return
 

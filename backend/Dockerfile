@@ -3,18 +3,18 @@ FROM python:3.10.10-alpine
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-ENV APP_HOME=/app
-
-RUN mkdir $APP_HOME
-RUN mkdir $APP_HOME/staticfiles
-RUN mkdir $APP_HOME/mediafiles
-WORKDIR $APP_HOME
+WORKDIR /app
 
 COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
 COPY . .
+
+RUN \
+    SECRET_KEY=dummy_value \
+    DEBUG=1 \
+    python manage.py collectstatic --noinput --clear
 
 EXPOSE 8000
 

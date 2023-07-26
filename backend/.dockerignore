@@ -1,1 +1,9 @@
 *.sqlite3
+
+unit_tests
+test_files
+drscm/tests
+.flake8
+docker-compose.yaml
+environment.variables.readme.md
+readme.md

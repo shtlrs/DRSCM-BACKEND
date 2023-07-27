@@ -68,7 +68,6 @@ class ApplicationBootstrapper:
             "-w",
             "2",
         ]
-        print("YO")
         # Run gunicorn for the production server.
         gunicorn.app.wsgiapp.run()
 

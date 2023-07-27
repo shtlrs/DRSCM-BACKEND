@@ -1,5 +1,5 @@
-*.sqlite3
-
+test-db.sqlite3
+*sqlite3
 unit_tests
 test_files
 drscm/tests

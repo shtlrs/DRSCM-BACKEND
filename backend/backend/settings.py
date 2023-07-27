@@ -129,7 +129,7 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 DEFAULT_STATIC_ROOT = BASE_DIR / "staticfiles"
-STATIC_ROOT = environment('STATIC_ROOT', default=DEFAULT_STATIC_ROOT)
+STATIC_ROOT = environment("STATIC_ROOT", default=DEFAULT_STATIC_ROOT)
 
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",

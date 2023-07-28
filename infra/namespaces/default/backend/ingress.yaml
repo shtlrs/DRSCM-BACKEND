@@ -8,7 +8,7 @@ metadata:
   name: backend-ingress
 spec:
   rules:
-  - host: "test1.drscm.nl"
+  - host: "api.drscm.nl"
     http:
       paths:
       - pathType: Prefix

@@ -13,7 +13,7 @@ spec:
         app: backend
     spec:
       containers:
-        - name: site
+        - name: backend
           image: ghcr.io/shtlrs/drscm:latest
           imagePullPolicy: Always
           ports:

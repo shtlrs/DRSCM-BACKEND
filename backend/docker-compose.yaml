@@ -24,6 +24,9 @@ services:
       retries: 5
 
   api:
+    ports:
+      - "8000:8000"
+
     logging: *default-logging
     build:
       context: .
@@ -34,9 +37,6 @@ services:
         condition: service_healthy
 
     command: ["run"]
-    volumes:
-      - ./staticfiles:/var/www/static
-
     tty: true
     environment:
       SECRET_KEY: for-dev-only
@@ -44,17 +44,5 @@ services:
       PYTHONDONTWRITEBYTECODE: 1
       PYTHONUNBUFFERED: 1
       DATABASE_URL: postgres://amrouna:mysecretpassword@postgres:5432/webdrscm
-      STATIC_ROOT: /var/www/static
-
-  nginx:
-    logging: *default-logging
-    image: pagespeed/nginx-pagespeed:latest
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./staticfiles:/var/www/static
-    depends_on:
-      - api
 volumes:
   staticfiles:

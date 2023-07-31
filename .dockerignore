@@ -5,5 +5,11 @@ test_files
 drscm/tests
 .flake8
 docker-compose.yaml
-environment.variables.readme.md
-readme.md
+*.md
+.github
+.gitignore
+__pycache__
+venv
+.pytest_cache
+.cache
+Dockerfile
